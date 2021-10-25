@@ -1,0 +1,4 @@
+.vs/api
+bin/Debug/net5.0
+obj
+api.csproj.user
