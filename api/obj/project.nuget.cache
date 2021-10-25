@@ -1,15 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "akTFPxmCpIucwdqHWQFgBhp/GPvEi3VbC5rW6HpfFp0N6FyHpjaNAAYSxm/9ZipcWnuUfxfJ4DfPWVVqpJO6kA==",
+  "dgSpecHash": "BSOxMQMmllqmNojpjvZeeoWUDTb2Cn/f8dgEnE9mNMDLNsdxjrG40RLr4KetkR2Pbl/8WpWxOapHMz8/57CUJw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Tatsiana.Maltsava\\Desktop\\Hotel\\api\\api.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\6.13.1\\microsoft.identitymodel.jsonwebtokens.6.13.1.nupkg.sha512",
+    "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\microsoft.identitymodel.logging\\6.13.1\\microsoft.identitymodel.logging.6.13.1.nupkg.sha512",
+    "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.13.1\\microsoft.identitymodel.tokens.6.13.1.nupkg.sha512",
     "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
     "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",
     "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.6.3\\swashbuckle.aspnetcore.swaggergen.5.6.3.nupkg.sha512",
-    "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\5.6.3\\swashbuckle.aspnetcore.swaggerui.5.6.3.nupkg.sha512"
+    "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\5.6.3\\swashbuckle.aspnetcore.swaggerui.5.6.3.nupkg.sha512",
+    "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.13.1\\system.identitymodel.tokens.jwt.6.13.1.nupkg.sha512",
+    "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\system.security.cryptography.cng\\4.5.0\\system.security.cryptography.cng.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }

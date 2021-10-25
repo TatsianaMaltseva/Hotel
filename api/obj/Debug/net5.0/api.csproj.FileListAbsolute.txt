@@ -27,3 +27,7 @@ C:\Users\Tatsiana.Maltsava\Desktop\Hotel\api\obj\Debug\net5.0\api.dll
 C:\Users\Tatsiana.Maltsava\Desktop\Hotel\api\obj\Debug\net5.0\ref\api.dll
 C:\Users\Tatsiana.Maltsava\Desktop\Hotel\api\obj\Debug\net5.0\api.pdb
 C:\Users\Tatsiana.Maltsava\Desktop\Hotel\api\obj\Debug\net5.0\api.genruntimeconfig.cache
+C:\Users\Tatsiana.Maltsava\Desktop\Hotel\api\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Tatsiana.Maltsava\Desktop\Hotel\api\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Tatsiana.Maltsava\Desktop\Hotel\api\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Tatsiana.Maltsava\Desktop\Hotel\api\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
