@@ -13,7 +13,7 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : Controller
+    public class AuthController : Controller // put accounts to db in future
     {
         private readonly IOptions<AuthOptions> authOptions;
         public AuthController(IOptions<AuthOptions> authOptions) 
