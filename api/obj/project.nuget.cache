@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tNB9cuZsOhkkMIXFDu8DHyI6I/uV072HQ2uuQG4eg6lmEZI/X1psB4YOAIXHz/pXIkVI2jqtjeUIePfig9X4rw==",
+  "dgSpecHash": "LKas8kwasqSz279oqenXVl3XICKUjfdURXFndHV3KsP9E+/jJwuNDmlfSV3o7LGgsov5bWTMd8YgnYud8TQUMQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Tatsiana.Maltsava\\Desktop\\Hotel\\api\\api.csproj",
+  "projectFilePath": "C:\\Users\\Tatsiana.Maltsava\\Desktop\\Hotel\\api\\iTechArt.Hotels.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.11\\microsoft.aspnetcore.authentication.jwtbearer.5.0.11.nupkg.sha512",
     "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

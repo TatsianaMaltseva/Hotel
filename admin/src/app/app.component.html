@@ -1,23 +1,5 @@
 <div>
-    <!--Navigation-->
-    <div class="topnav">
-        <a class="active" [routerLink]="['']" routerLinkAtive='active'> Hotels store</a>
-        <a class="active" [routerLink]="['/orders']" routerLinkAcrive='active' *ngIf='isLoggedIn'>Orders</a>
-    </div>
-    <mat-card *ngIf='!isLoggedIn'>
-        <mat-form-field class="example-form-field">
-            <mat-label>Email</mat-label>
-            <input type="email" matInput placeholder="user@gmail.com" #email>
-        </mat-form-field>
-        <mat-form-field class="example-form-field">
-            <mat-label>Password</mat-label>
-            <input type="password" matInput #password>
-        </mat-form-field>
-        <button mat-flar-button color="primary" (click)='login(email.value, password.value)'>Login</button>
-    </mat-card>
-
-    <mat-card *ngIf='isLoggedIn'>
-        <button mat-flat-button color="primary" (click) = 'logout()'>Logout</button>
-    </mat-card>
+    <app-navbar></app-navbar>
     <router-outlet></router-outlet>
+    <!--footer-->
 </div>

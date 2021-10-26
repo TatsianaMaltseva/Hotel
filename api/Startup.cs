@@ -1,4 +1,4 @@
-using api.Models;
+using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api
+namespace iTechArt.Hotels.Api
 {
     public class Startup
     {
@@ -63,8 +63,6 @@ namespace Api
                             .AllowAnyHeader();
                     });
             }); // about cors: should allow request just from my applications
-            services.AddSingleton(new OrdersDb());
-            services.AddSingleton(new HotelsDb());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,7 +5,6 @@
 export const environment = {
   production: false,
   authApi: 'http://localhost:5000/',
-  storeApi: 'http://localhost:5000/',
   tokenWhiteListedDomains: ['http://localhost:5000/']
 };
 

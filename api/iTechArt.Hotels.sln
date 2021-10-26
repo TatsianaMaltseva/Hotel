@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api.csproj", "{4DF71673-56B5-4A4C-BBCC-90B7D92ADA6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iTechArt.Hotels.Api", "iTechArt.Hotels.Api.csproj", "{4DF71673-56B5-4A4C-BBCC-90B7D92ADA6A}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "iTechArt.Hotels.Database", "..\iTechArt.Hotels.Database\iTechArt.Hotels.Database.sqlproj", "{59B49FE8-59B0-4627-AA6D-E0895F3CE4E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,12 @@ Global
 		{4DF71673-56B5-4A4C-BBCC-90B7D92ADA6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DF71673-56B5-4A4C-BBCC-90B7D92ADA6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DF71673-56B5-4A4C-BBCC-90B7D92ADA6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59B49FE8-59B0-4627-AA6D-E0895F3CE4E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59B49FE8-59B0-4627-AA6D-E0895F3CE4E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59B49FE8-59B0-4627-AA6D-E0895F3CE4E5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{59B49FE8-59B0-4627-AA6D-E0895F3CE4E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59B49FE8-59B0-4627-AA6D-E0895F3CE4E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59B49FE8-59B0-4627-AA6D-E0895F3CE4E5}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

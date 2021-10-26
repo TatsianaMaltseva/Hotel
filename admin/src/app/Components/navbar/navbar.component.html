@@ -1,0 +1,4 @@
+<nav>
+    <button mat-raised-button *ngIf='isLoggedIn' (click) = 'logout()'>Logout</button> <!--should be and account with orders and log out menu-->
+    <button mat-raised-button *ngIf='!isLoggedIn' (click)='openDialog()'>Register</button>
+</nav>

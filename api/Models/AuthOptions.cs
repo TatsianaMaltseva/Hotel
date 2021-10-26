@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace api.Models
+namespace iTechArt.Hotels.Api.Models
 {
     public class AuthOptions
     {

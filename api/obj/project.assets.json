@@ -572,9 +572,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Tatsiana.Maltsava\\Desktop\\Hotel\\api\\api.csproj",
-      "projectName": "api",
-      "projectPath": "C:\\Users\\Tatsiana.Maltsava\\Desktop\\Hotel\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\Tatsiana.Maltsava\\Desktop\\Hotel\\api\\iTechArt.Hotels.Api.csproj",
+      "projectName": "iTechArt.Hotels.Api",
+      "projectPath": "C:\\Users\\Tatsiana.Maltsava\\Desktop\\Hotel\\api\\iTechArt.Hotels.Api.csproj",
       "packagesPath": "C:\\Users\\Tatsiana.Maltsava\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Tatsiana.Maltsava\\Desktop\\Hotel\\api\\obj\\",
       "projectStyle": "PackageReference",

@@ -1,13 +1,15 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { AUTH_API_URL } from '../app-injection-tokens';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
-import { Token } from '../Models/token';
 
-export const ACCESS_TOKEN_KEY = 'bookstore_access_token'
+import { API_URL } from './app-injection-tokens';
+import { Token } from './Models/token';
+
+
+export const ACCESS_TOKEN_KEY = 'hotels_access_token'
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    @Inject(AUTH_API_URL) private apiUrl: string,
+    @Inject(API_URL) private apiUrl: string,
     private jwtHelper: JwtHelperService,
     private router: Router
   ) { }
@@ -27,7 +29,7 @@ export class AuthService {
     })
     .pipe(
       tap(token => {
-        localStorage.setItem(ACCESS_TOKEN_KEY, `${token.access_token}`); // maybe!!
+        localStorage.setItem(ACCESS_TOKEN_KEY, `${token.access_token}`);
       })
     )
   }

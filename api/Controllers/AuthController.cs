@@ -1,4 +1,4 @@
-﻿using api.Models;
+﻿using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace api.Controllers
+namespace iTechArt.Hotels.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
