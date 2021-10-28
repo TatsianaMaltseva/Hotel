@@ -2,16 +2,10 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api
 {
@@ -28,6 +22,9 @@ namespace iTechArt.Hotels.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<HotelsDatabaseContext>(options => 
+            options.UseSqlServer(Configuration.GetConnectionString("HotelsDb")));
 
             var authOptionsConfiguration = Configuration.GetSection("Auth");
             services.Configure<AuthOptions>(authOptionsConfiguration);
@@ -81,7 +78,7 @@ namespace iTechArt.Hotels.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); // finds all controlles from progect and adds them to be used
+                endpoints.MapControllers();
             });
         }
     }
