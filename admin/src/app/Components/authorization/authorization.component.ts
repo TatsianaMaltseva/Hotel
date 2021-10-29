@@ -11,20 +11,20 @@ import { AuthService } from 'src/app/auth.service';
 })
 export class AuthorizationComponent {
   
-  constructor(private authService: AuthService,
+  public constructor(
+    private readonly authService: AuthService,
     public dialogRef: MatDialogRef<AuthorizationComponent>) {
   }
 
-  onNoClick(): void {
+  public backClicked(): void {
     this.dialogRef.close();
   }
 
-  login (email: string, password: string) {
+  public loginClicked(email: string, password: string): void {
     this.authService.login(email, password)
-    .subscribe (res => {
-    }, error => { 
-      alert('Wrong credentials!')
-    })
+    .subscribe(res => {}, error => { 
+      alert('Wrong credentials!');
+    });
+    //some logic for processing wrong creds
   }
-
 }

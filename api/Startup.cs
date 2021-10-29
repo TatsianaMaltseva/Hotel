@@ -44,7 +44,7 @@ namespace iTechArt.Hotels.Api
 
                         ValidateLifetime = true,
 
-                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(), //HS256
+                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true,
 
                     };

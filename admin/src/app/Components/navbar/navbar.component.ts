@@ -13,21 +13,21 @@ import { AuthorizationComponent } from '../authorization/authorization.component
 export class NavbarComponent {
 
   public get isLoggedIn(): boolean {
-    return this.authService.isAuthenticated()
+    return this.authService.isLoggedIn();
   }
 
-  constructor(
-    private authService: AuthService,
-    public dialog: MatDialog) {
+  public constructor(
+    private readonly authService: AuthService,
+    public authDialog: MatDialog) {
   }
 
-  logout() {
-    this.authService.logout()
+  public logoutClicked(): void {
+    this.authService.logout();
   }
 
-  openDialog(): void {
-    this.dialog.open(AuthorizationComponent, {
-      width: '250px',
+  public loginClicked(): void {
+    this.authDialog.open(AuthorizationComponent, {
+      width: '250px'
     });
   }
 }

@@ -9,6 +9,6 @@
         <mat-label>password</mat-label>
         <input type="password" matInput #password>
     </mat-form-field>
-    <button mat-button (click)="onNoClick()">No thanks</button>
-    <button mat-button [mat-dialog-close]="password.value"  (click)='login(email.value, password.value)'>Login</button>
+    <button mat-button (click)="backClicked()">Back</button>
+    <button mat-button [mat-dialog-close]="password.value" (click)='loginClicked(email.value, password.value)'>Login</button>
 </div>

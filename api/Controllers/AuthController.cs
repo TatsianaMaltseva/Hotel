@@ -31,7 +31,7 @@ namespace iTechArt.Hotels.Api.Controllers
             if (user != null)
             {
                 var token = GenerateJWT(user);
-                return Ok(new {access_token = token});
+                return Ok( token );
             }
             return Unauthorized();
         }

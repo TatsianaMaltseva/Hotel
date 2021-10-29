@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace iTechArt.Hotels.Api
+﻿namespace iTechArt.Hotels.Api
 {
     public partial class Account
     {
