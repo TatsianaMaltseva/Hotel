@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 import { AuthService } from 'src/app/auth.service';
-
+import { AuthorizationDialogComponent } from '../authorizationDialog/authorizationDialog.component';
 
 @Component({
   selector: 'app-authorization',
@@ -10,21 +10,25 @@ import { AuthService } from 'src/app/auth.service';
   styleUrls: ['./authorization.component.css']
 })
 export class AuthorizationComponent {
-  
+  public get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
   public constructor(
     private readonly authService: AuthService,
-    public dialogRef: MatDialogRef<AuthorizationComponent>) {
+    private readonly matDialog: MatDialog) {
   }
 
-  public backClicked(): void {
-    this.dialogRef.close();
+  public logoutClicked(): void {
+    this.authService.logout();
   }
 
-  public loginClicked(email: string, password: string): void {
-    this.authService.login(email, password)
-    .subscribe(res => {}, error => { 
-      alert('Wrong credentials!');
-    });
-    //some logic for processing wrong creds
+  public loginClicked(): void {
+    this.matDialog.open(
+      AuthorizationDialogComponent,
+      {
+        width: '250px'
+      }
+    );
   }
 }

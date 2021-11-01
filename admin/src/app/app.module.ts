@@ -1,38 +1,44 @@
 import { NgModule } from '@angular/core';
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatFormFieldModule } from '@angular/material/form-field';
+
 import { HttpClientModule } from '@angular/common/http';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+
 import { JwtModule } from '@auth0/angular-jwt';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
-import { ACCESS_TOKEN_KEY } from './auth.service';
-import { AuthorizationComponent } from './Components/authorization/authorization.component';
+import { AuthorizationDialogComponent } from './Components/authorizationDialog/authorizationDialog.component';
 import { NavbarComponent } from './Components/navbar/navbar.component';
+import { getToken } from './Core/getToken';
+import { AuthorizationComponent } from './Components/authorization/authorization.component';
 
-
-export function tokenGetter(): string | null {
-  return localStorage.getItem(ACCESS_TOKEN_KEY);
-}
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthorizationComponent,
-    NavbarComponent
+    AuthorizationDialogComponent,
+    NavbarComponent,
+    AuthorizationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
 
     MatCardModule,
     MatInputModule,
@@ -43,16 +49,10 @@ export function tokenGetter(): string | null {
 
     JwtModule.forRoot({
       config: {
-        tokenGetter,
+        tokenGetter: getToken,
         allowedDomains: environment.allowedDomains
       }
     })
-  ],
-  providers: [
-  {
-    provide: MatDialogRef,
-    useValue: {}
-  }
 ],
   bootstrap: [AppComponent]
 })

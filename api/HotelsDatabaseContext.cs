@@ -4,16 +4,12 @@ namespace iTechArt.Hotels.Api
 {
     public partial class HotelsDatabaseContext : DbContext
     {
-        public HotelsDatabaseContext()
-        {
-        }
-
         public HotelsDatabaseContext(DbContextOptions<HotelsDatabaseContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Account> Accounts { get; set; }
+        public  DbSet<Account> Accounts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
