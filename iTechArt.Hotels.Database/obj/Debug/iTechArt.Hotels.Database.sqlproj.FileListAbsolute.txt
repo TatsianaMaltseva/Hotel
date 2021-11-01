@@ -1,6 +1,0 @@
-C:\Users\Tatsiana.Maltsava\Desktop\Hotel\iTechArt.Hotels.Database\bin\Debug\iTechArt.Hotels.Database.dacpac
-C:\Users\Tatsiana.Maltsava\Desktop\Hotel\iTechArt.Hotels.Database\bin\Debug\iTechArt.Hotels.Database.dll
-C:\Users\Tatsiana.Maltsava\Desktop\Hotel\iTechArt.Hotels.Database\bin\Debug\iTechArt.Hotels.Database.pdb
-C:\Users\Tatsiana.Maltsava\Desktop\Hotel\iTechArt.Hotels.Database\obj\Debug\iTechArt.Hotels.Database.sqlproj.AssemblyReference.cache
-C:\Users\Tatsiana.Maltsava\Desktop\Hotel\iTechArt.Hotels.Database\obj\Debug\iTechArt.Hotels.Database.dll
-C:\Users\Tatsiana.Maltsava\Desktop\Hotel\iTechArt.Hotels.Database\obj\Debug\iTechArt.Hotels.Database.pdb
