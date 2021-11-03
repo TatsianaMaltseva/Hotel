@@ -244,6 +244,9 @@
         "@typescript-eslint/func-call-spacing": [
           "error"
         ],
+        "@typescript-eslint/unbound-method": [
+          "warn"
+        ],
         "no-array-constructor": "off",
         "@typescript-eslint/no-array-constructor": [
           "warn"

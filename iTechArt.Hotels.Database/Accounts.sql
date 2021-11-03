@@ -1,6 +1,7 @@
-﻿CREATE TABLE [dbo].[Accounts]
-(
-    [Id] INT NOT NULL PRIMARY KEY IDENTITY, 
-    [Email] VARCHAR(40) NOT NULL, 
-    [Password] VARCHAR(20) NOT NULL
-)
+﻿CREATE TABLE [dbo].[Accounts] (
+    [Id]       INT          IDENTITY (1, 1) NOT NULL,
+    [Email]    VARCHAR (125) NOT NULL,
+    [Password] VARCHAR (20) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+

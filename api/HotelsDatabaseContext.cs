@@ -7,21 +7,22 @@ namespace iTechArt.Hotels.Api
         public HotelsDatabaseContext(DbContextOptions<HotelsDatabaseContext> options)
             : base(options)
         {
+            
         }
 
-        public  DbSet<Account> Accounts { get; set; }
+        public DbSet<Account> Accounts { get; set; } // virtual or not
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS"); //what for
 
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(40)
+                    .HasMaxLength(125)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Password)

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/auth.service';
 
@@ -12,32 +12,44 @@ import { AuthService } from 'src/app/auth.service';
 })
 
 export class AuthorizationDialogComponent {
-  public emailFormControl: FormControl = new FormControl('', [
-    Validators.required,
-    Validators.email
-  ]);
-
-  public passwordFormControl: FormControl = new FormControl('', [
-    Validators.required
-  ]);
-
+  public authForm: FormGroup;
   public showWarning: boolean = false;
 
   public constructor(
     private readonly authService: AuthService,
-    private readonly matDialogRef: MatDialogRef<AuthorizationDialogComponent>) {
+    private readonly matDialogRef: MatDialogRef<AuthorizationDialogComponent>,
+    private readonly formBuilder: FormBuilder) {
+    this.authForm = this.formBuilder.group({
+      email: [
+        '', 
+        [
+          Validators.required,
+          Validators.email
+        ]
+      ],
+      password: ['', [Validators.required]]
+    });
+  } 
+  
+  public get email(): AbstractControl | null {
+    return this.authForm.get('email');
+  }
+
+  public get password(): AbstractControl | null {
+    return this.authForm.get('password');
   }
 
   public closeAuthDialog(): void {
     this.matDialogRef.close();
   }
 
-  public loginClicked(email: string, password: string): void {
+  public login(email: string, password: string): void {
     this.authService.login(email, password)
-    .subscribe(() => {
-      this.closeAuthDialog();
-    }, () => 
-      this.showWarning = true
+    .subscribe(
+      () =>  { 
+        this.closeAuthDialog();
+      }, 
+      () => this.showWarning = true
     );
   }
 }

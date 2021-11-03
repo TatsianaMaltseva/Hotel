@@ -1,7 +1,7 @@
 <button
     *ngIf="isLoggedIn; else loginBlock"
     mat-raised-button
-    (click)="logoutClicked()" 
+    (click)="logout()" 
 >
         Logout
 </button>
@@ -9,7 +9,7 @@
 <ng-template #loginBlock> 
     <button
         mat-raised-button
-        (click)="loginClicked()" 
+        (click)="login()" 
     >
         Log in
     </button>

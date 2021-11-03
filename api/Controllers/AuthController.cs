@@ -14,12 +14,12 @@ namespace iTechArt.Hotels.Api.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly IOptions<AuthOptions> authOptions;
+        private readonly IOptions<AuthOptions> _authOptions;
         private readonly HotelsDatabaseContext _hotelsDb;
 
         public AuthController(IOptions<AuthOptions> authOptions, HotelsDatabaseContext hotelsDb)
         {
-            this.authOptions = authOptions;
+            _authOptions = authOptions;
             _hotelsDb = hotelsDb;
         }
 
@@ -28,12 +28,13 @@ namespace iTechArt.Hotels.Api.Controllers
         public IActionResult Login([FromBody]Login request)
         {
             var user = AuthenticateUser(request.Email, request.Password);
-            if (user != null)
+            if (user == null)
             {
-                var token = GenerateJWT(user);
-                return Ok( token );
+                return Unauthorized();
             }
-            return Unauthorized();
+            var token = GenerateJWT(user);
+            return Ok(token);
+
         }
 
         private Account AuthenticateUser(string email, string password)
@@ -43,7 +44,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private string GenerateJWT(Account user)
         {
-            var authParams = authOptions.Value;
+            var authParams = _authOptions.Value;
 
             var securityKey = authParams.GetSymmetricSecurityKey();
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -57,7 +58,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 authParams.Issuer,
                 authParams.Audience,
                 claims,
-                expires: DateTime.Now.AddSeconds(authParams.TokenLifeTime),
+                expires: DateTime.Now.AddSeconds(authParams.TokenLifeTimeSecs),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

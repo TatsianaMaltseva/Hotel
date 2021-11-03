@@ -19,11 +19,11 @@ export class AuthorizationComponent {
     private readonly matDialog: MatDialog) {
   }
 
-  public logoutClicked(): void {
+  public logout(): void {
     this.authService.logout();
   }
 
-  public loginClicked(): void {
+  public login(): void {
     this.matDialog.open(
       AuthorizationDialogComponent,
       {

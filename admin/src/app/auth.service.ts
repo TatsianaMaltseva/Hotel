@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { tap } from 'rxjs/operators';
@@ -18,8 +17,7 @@ export class AuthService {
   
   public constructor(
     private readonly http: HttpClient,
-    private readonly jwtHelper: JwtHelperService,
-    private readonly router: Router
+    private readonly jwtHelper: JwtHelperService
   ) { 
     this.apiUrl = environment.api;
   }
@@ -48,6 +46,5 @@ export class AuthService {
 
   public logout(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
-    this.router.navigate(['']);  //this path wil be written inside app-routing
   }
 }

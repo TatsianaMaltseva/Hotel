@@ -1,4 +1,4 @@
-.vs/iTechArt.Hotels
-bin/Debug/net5.0
+.vs
+bin
 obj
-iTechArt.Hotels.Api.csproj.user
+.user
