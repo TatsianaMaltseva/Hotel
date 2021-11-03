@@ -2,21 +2,20 @@
 
 namespace iTechArt.Hotels.Api
 {
-    public partial class HotelsDatabaseContext : DbContext
+    public class HotelsDatabaseContext : DbContext
     {
         public HotelsDatabaseContext(DbContextOptions<HotelsDatabaseContext> options)
             : base(options)
         {
-            
         }
 
-        public DbSet<Account> Accounts { get; set; } // virtual or not
+        public virtual DbSet<Account> Accounts { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+            optionsBuilder.UseLazyLoadingProxies();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS"); //what for
 
             modelBuilder.Entity<Account>(entity =>
             {
@@ -30,10 +29,6 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(20)
                     .IsUnicode(false);
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

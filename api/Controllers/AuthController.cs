@@ -27,17 +27,16 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpPost]
         public IActionResult Login([FromBody]Login request)
         {
-            var user = AuthenticateUser(request.Email, request.Password);
+            var user = GetUserAccount(request.Email, request.Password);
             if (user == null)
             {
                 return Unauthorized();
             }
             var token = GenerateJWT(user);
             return Ok(token);
-
         }
 
-        private Account AuthenticateUser(string email, string password)
+        private Account GetUserAccount(string email, string password)
         {
             return _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email && u.Password == password);
         }
