@@ -1,0 +1,16 @@
+<button
+    *ngIf="isLoggedIn; else loginBlock"
+    mat-raised-button
+    (click)="logout()" 
+>
+        Logout
+</button>
+
+<ng-template #loginBlock> 
+    <button
+        mat-raised-button
+        (click)="login()" 
+    >
+        Log in
+    </button>
+</ng-template>
