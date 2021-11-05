@@ -57,7 +57,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 authParams.Issuer,
                 authParams.Audience,
                 claims,
-                expires: DateTime.Now.AddSeconds(authParams.TokenLifeTimeSecs),
+                expires: DateTime.Now.AddSeconds(authParams.ExpireTime),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
