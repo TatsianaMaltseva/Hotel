@@ -4,7 +4,6 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 
 import { AuthService } from 'src/app/auth.service';
 
-
 @Component({
   selector: 'app-authorization-dialog',
   templateUrl: './authorizationDialog.component.html',
@@ -14,6 +13,7 @@ import { AuthService } from 'src/app/auth.service';
 export class AuthorizationDialogComponent {
   public authForm: FormGroup;
   public showWarning: boolean = false;
+  public hidePassword: boolean = true;
 
   public constructor(
     private readonly authService: AuthService,

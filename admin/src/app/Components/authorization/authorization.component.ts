@@ -27,7 +27,7 @@ export class AuthorizationComponent {
     this.matDialog.open(
       AuthorizationDialogComponent,
       {
-        width: '250px'
+        width: '300px'
       }
     );
   }

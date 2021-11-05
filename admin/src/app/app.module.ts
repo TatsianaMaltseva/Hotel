@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -18,14 +19,17 @@ import { AuthorizationDialogComponent } from './Components/authorizationDialog/a
 import { NavbarComponent } from './Components/navbar/navbar.component';
 import { getToken } from './Core/getToken';
 import { AuthorizationComponent } from './Components/authorization/authorization.component';
-
+import { AdminButtonsComponent } from './Components/admin-buttons/admin-buttons.component';
+import { RegistrationComponent } from './Components/registration/registration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthorizationDialogComponent,
     NavbarComponent,
-    AuthorizationComponent
+    AuthorizationComponent,
+    AdminButtonsComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +44,7 @@ import { AuthorizationComponent } from './Components/authorization/authorization
     MatTableModule,
     MatFormFieldModule,
     MatDialogModule,
-      // any request sent using HttpClient will automatically attach token as an Authorization header
+    MatIconModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

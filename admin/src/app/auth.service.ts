@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
-
 export const ACCESS_TOKEN_KEY: string = 'hotels_access_token';
 
 @Injectable({
