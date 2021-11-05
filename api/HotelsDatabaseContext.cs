@@ -9,10 +9,7 @@ namespace iTechArt.Hotels.Api
         {
         }
 
-        public virtual DbSet<Account> Accounts { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-            optionsBuilder.UseLazyLoadingProxies();
+        public DbSet<Account> Accounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
