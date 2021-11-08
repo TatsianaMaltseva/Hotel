@@ -39,7 +39,6 @@ import { AuthorizationComponent } from './Components/authorization/authorization
     MatTableModule,
     MatFormFieldModule,
     MatDialogModule,
-      // any request sent using HttpClient will automatically attach token as an Authorization header
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

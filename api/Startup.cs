@@ -32,7 +32,8 @@ namespace iTechArt.Hotels.Api
             services.Configure<AuthOptions>(authOptionsConfiguration);
             var authOptions = authOptionsConfiguration.Get<AuthOptions>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false; // should true for real server

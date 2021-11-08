@@ -17,7 +17,8 @@ export class AuthorizationDialogComponent {
   public constructor(
     private readonly authService: AuthService,
     private readonly matDialogRef: MatDialogRef<AuthorizationDialogComponent>,
-    private readonly formBuilder: FormBuilder) {
+    private readonly formBuilder: FormBuilder
+  ) {
     this.authForm = this.formBuilder.group({
       email: [
         '', 
@@ -44,11 +45,11 @@ export class AuthorizationDialogComponent {
 
   public login(email: string, password: string): void {
     this.authService.login(email, password)
-    .subscribe(
-      () =>  { 
-        this.closeAuthDialog();
-      }, 
-      () => this.showWarning = true
-    );
+      .subscribe(
+        () =>  { 
+          this.closeAuthDialog();
+        }, 
+        () => this.showWarning = true
+      );
   }
 }

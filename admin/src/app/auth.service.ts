@@ -30,16 +30,17 @@ export class AuthService {
       responseType: 'text'
     };
 
-    return this.http.post<string>(
-      `${this.apiUrl}api/auth/login`, 
-      { email, password },
-      options
-    )
-    .pipe(
-      tap((token: string) => {
-        localStorage.setItem(ACCESS_TOKEN_KEY, token);
-      })
-    );
+    return this.http
+      .post<string>(
+        `${this.apiUrl}api/auth/login`, 
+        { email, password },
+        options
+      )
+      .pipe(
+        tap((token: string) => {
+          localStorage.setItem(ACCESS_TOKEN_KEY, token);
+        })
+      );
   }
 
   public logout(): void {
