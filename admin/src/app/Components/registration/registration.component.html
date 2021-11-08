@@ -27,23 +27,20 @@
             Password is required
         </mat-error>
     </mat-form-field>
-    <p>Confirm <b>new admin</b> password</p>
-    <mat-form-field appearance="fill" style="width: 95%;">
-        <mat-label>password</mat-label>
-        <input 
-            matInput
-            formControlName="confirmPassword"
-            type="password"
-        >
-        <mat-error *ngIf="confirmPassword?.invalid">
-            Password is required
-        </mat-error>
-    </mat-form-field>
+    <button mat-button (click)="closeRegistrationDialog()">Back</button>
     <button
-        [disabled]="!ifPasswordsMatch()"
+        [disabled]="registrationForm.invalid"
         mat-button 
-        (click)="register()"
+        (click)="register(email?.value, password?.value)"
     >
         Register
     </button>
+    <mat-error *ngIf="successWarning" style="color:green">
+        Successfully created!<br>
+        login: {{email?.value}}<br>
+        password: {{password?.value}}
+    </mat-error>
+    <mat-error *ngIf="unsuccessWarning">
+        User with this email already exists
+    </mat-error>
 </form>

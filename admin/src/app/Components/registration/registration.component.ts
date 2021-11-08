@@ -11,7 +11,8 @@ import { AuthService } from 'src/app/auth.service';
 })
 export class RegistrationComponent{
   public registrationForm: FormGroup;
-
+  public unsuccessWarning: boolean = false;
+  public successWarning: boolean = false;
 
   public constructor(
     private readonly authService: AuthService,
@@ -25,8 +26,7 @@ export class RegistrationComponent{
           Validators.email
         ]
       ],
-      password: ['', [Validators.required]],
-      confirmPassword: ['', Validators.required]
+      password: ['', [Validators.required]]
     });
   }
 
@@ -38,15 +38,22 @@ export class RegistrationComponent{
     return this.registrationForm.get('password');
   }
 
-  public get confirmPassword(): AbstractControl | null {
-    return this.registrationForm.get('congirmPassword');
-  }
-
   public closeRegistrationDialog(): void {
     this.matDialogRef.close();
   }
 
-  public register(): void {
+  public register(email: string, password: string): void {
     console.log('as if registration works');
+    this.authService.register(email, password)
+    .subscribe(
+      () => {
+        this.successWarning = true;
+        this.unsuccessWarning = false;
+      },
+      () => {
+        this.unsuccessWarning = true;
+        this.successWarning = false;
+      }
+    );
   }
 }

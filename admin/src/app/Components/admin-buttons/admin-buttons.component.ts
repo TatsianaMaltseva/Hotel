@@ -8,12 +8,10 @@ import { RegistrationComponent } from '../registration/registration.component';
   styleUrls: ['./admin-buttons.component.css']
 })
 export class AdminButtonsComponent {
-
   public constructor(
-    private readonly matDialog: MatDialog
-  ) {
-
+    private readonly matDialog: MatDialog) { 
   }
+
   public openRegistrationDialog(): void {
     this.matDialog.open(
       RegistrationComponent,

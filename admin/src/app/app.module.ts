@@ -10,14 +10,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { environment } from 'src/environments/environment';
 import { AuthorizationDialogComponent } from './Components/authorizationDialog/authorizationDialog.component';
 import { NavbarComponent } from './Components/navbar/navbar.component';
-import { getToken } from './Core/getToken';
 import { AuthorizationComponent } from './Components/authorization/authorization.component';
 import { AdminButtonsComponent } from './Components/admin-buttons/admin-buttons.component';
 import { RegistrationComponent } from './Components/registration/registration.component';
@@ -37,20 +34,13 @@ import { RegistrationComponent } from './Components/registration/registration.co
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
-
     MatCardModule,
     MatInputModule,
     MatButtonModule,
     MatTableModule,
     MatFormFieldModule,
     MatDialogModule,
-    MatIconModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: getToken,
-        allowedDomains: environment.allowedDomains
-      }
-    })
+    MatIconModule
 ],
   bootstrap: [AppComponent]
 })

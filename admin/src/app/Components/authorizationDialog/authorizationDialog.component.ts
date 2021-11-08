@@ -46,7 +46,7 @@ export class AuthorizationDialogComponent {
   public login(email: string, password: string): void {
     this.authService.login(email, password)
     .subscribe(
-      () =>  { 
+      () => { 
         this.closeAuthDialog();
       }, 
       () => this.showWarning = true

@@ -10,13 +10,13 @@ import { AuthorizationDialogComponent } from '../authorizationDialog/authorizati
   styleUrls: ['./authorization.component.css']
 })
 export class AuthorizationComponent {
-  public get isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
-  }
-
   public constructor(
     private readonly authService: AuthService,
     private readonly matDialog: MatDialog) {
+  }
+  
+  public get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 
   public logout(): void {
