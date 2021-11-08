@@ -48,7 +48,6 @@ namespace iTechArt.Hotels.Api
 
                         IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true,
-
                     };
                 });
 

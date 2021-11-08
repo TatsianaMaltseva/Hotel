@@ -19,7 +19,6 @@ import { NavbarComponent } from './Components/navbar/navbar.component';
 import { getToken } from './Core/getToken';
 import { AuthorizationComponent } from './Components/authorization/authorization.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,

@@ -4,7 +4,6 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 
 import { AuthService } from 'src/app/auth.service';
 
-
 @Component({
   selector: 'app-authorization-dialog',
   templateUrl: './authorizationDialog.component.html',
