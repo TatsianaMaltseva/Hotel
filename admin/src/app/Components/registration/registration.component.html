@@ -1,1 +1,49 @@
-<p>registration works!</p>
+<h1>Add new admin</h1>
+<form mat-dialog-content [formGroup]="registrationForm">
+    <p>Enter <b>new admin</b> email</p>
+    <mat-form-field apperance="fill" style="width: 95%">
+        <mat-label>email</mat-label>
+        <input 
+            matInput
+            formControlName="email"
+            type="email"
+            placeholder="new_admin@gmail.com"
+        >
+        <mat-error *ngIf="email?.invalid">
+            Please enter a valid email address
+        </mat-error>
+        <!--TODO: error if email exists in database-->
+        <!--TODO: write some style fpr width=95%-->
+    </mat-form-field>
+    <p>Enter <b>new admin</b> password</p>
+    <mat-form-field appearance="fill" style="width: 95%;">
+        <mat-label>password</mat-label>
+        <input 
+            matInput
+            formControlName="password"
+            type="password"
+        >
+        <mat-error *ngIf="password?.invalid">
+            Password is required
+        </mat-error>
+    </mat-form-field>
+    <p>Confirm <b>new admin</b> password</p>
+    <mat-form-field appearance="fill" style="width: 95%;">
+        <mat-label>password</mat-label>
+        <input 
+            matInput
+            formControlName="confirmPassword"
+            type="password"
+        >
+        <mat-error *ngIf="confirmPassword?.invalid">
+            Password is required
+        </mat-error>
+    </mat-form-field>
+    <button
+        [disabled]="!ifPasswordsMatch()"
+        mat-button 
+        (click)="register()"
+    >
+        Register
+    </button>
+</form>
