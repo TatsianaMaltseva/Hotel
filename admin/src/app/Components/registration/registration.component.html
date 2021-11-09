@@ -12,8 +12,6 @@
         <mat-error *ngIf="email?.invalid">
             Please enter a valid email address
         </mat-error>
-        <!--TODO: error if email exists in database-->
-        <!--TODO: write some style fpr width=95%-->
     </mat-form-field>
     <p>Enter <b>new admin</b> password</p>
     <mat-form-field appearance="fill" style="width: 95%;">
@@ -21,7 +19,7 @@
         <input 
             matInput
             formControlName="password"
-            type="password"
+            type="text"
         >
         <mat-error *ngIf="password?.invalid">
             Password is required
@@ -35,11 +33,6 @@
     >
         Register
     </button>
-    <mat-error *ngIf="successWarning" style="color:green">
-        Successfully created!<br>
-        login: {{email?.value}}<br>
-        password: {{password?.value}}
-    </mat-error>
     <mat-error *ngIf="unsuccessWarning">
         User with this email already exists
     </mat-error>
