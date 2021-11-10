@@ -1,0 +1,38 @@
+<form mat-dialog-content [formGroup]="authForm">
+    <p>Enter your email</p>
+    <mat-form-field appearance="fill">
+        <mat-label>email</mat-label>
+        <input
+            matInput
+            formControlName="email"
+            type="email"
+            placeholder="user@gmail.com"
+        >
+        <mat-error *ngIf="email?.invalid">
+            Please enter a valid email address
+        </mat-error>
+    </mat-form-field>
+    <p>Enter your password</p>
+    <mat-form-field appearance="fill">
+        <mat-label>password</mat-label>
+        <input
+            matInput 
+            formControlName="password"
+            type="password" 
+        >
+        <mat-error *ngIf="password?.invalid">
+            Password is required
+        </mat-error>
+    </mat-form-field>
+    <button mat-button (click)="closeAuthDialog()">Back</button>
+    <button 
+    [disabled]="authForm.invalid"
+        mat-button 
+        (click)="login(email?.value, password?.value)"
+    >
+        Login
+    </button>
+    <mat-error *ngIf="showWarning">
+        Wrong credentials
+    </mat-error>
+</form>

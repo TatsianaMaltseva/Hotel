@@ -1,18 +1,14 @@
-using api.Models;
+using iTechArt.Hotels.Api.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Api
+namespace iTechArt.Hotels.Api
 {
     public class Startup
     {
@@ -28,8 +24,33 @@ namespace Api
         {
             services.AddControllers();
 
+            services.AddDbContext<HotelsDatabaseContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("HotelsDb"))
+            );
+
             var authOptionsConfiguration = Configuration.GetSection("Auth");
             services.Configure<AuthOptions>(authOptionsConfiguration);
+            var authOptions = authOptionsConfiguration.Get<AuthOptions>();
+
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false; // should true for real server
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = authOptions.Issuer,
+
+                        ValidateAudience = true,
+                        ValidAudience = authOptions.Audience,
+
+                        ValidateLifetime = true,
+
+                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
 
             services.AddCors(options =>
             {
@@ -54,9 +75,12 @@ namespace Api
             app.UseRouting();
             app.UseCors();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); // finds all controlles from progect and adds them to be used
+                endpoints.MapControllers();
             });
         }
     }
