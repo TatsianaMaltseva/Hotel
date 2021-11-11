@@ -13,6 +13,6 @@ export class NavbarComponent {
   
   public constructor(
     private readonly authService: AuthService
-    ) {
+  ) {
   }
 }

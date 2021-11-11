@@ -9,7 +9,7 @@ import { RegistrationComponent } from '../registration/registration.component';
 export class AdminButtonsComponent {
   public constructor(
     private readonly matDialog: MatDialog
-    ) { 
+  ) { 
   }
 
   public openRegistrationDialog(): void {

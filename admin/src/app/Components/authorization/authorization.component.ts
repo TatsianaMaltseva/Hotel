@@ -16,7 +16,7 @@ export class AuthorizationComponent {
   public constructor(
     private readonly authService: AuthService,
     private readonly matDialog: MatDialog
-    ) {
+  ) {
   }
 
   public logout(): void {

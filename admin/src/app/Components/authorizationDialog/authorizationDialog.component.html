@@ -25,7 +25,7 @@
             matSuffix
             (click)="hidePassword = !hidePassword">
             <mat-icon>
-                {{hidePassword ? 'visibility_off' : 'visibility'}}
+                {{ hidePassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
         </button>
         <mat-error *ngIf="password?.invalid">
