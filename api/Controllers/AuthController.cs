@@ -50,8 +50,7 @@ namespace iTechArt.Hotels.Api.Controllers
             var user = new Account
             {
                 Email = request.Email,
-                Password = request.Password,
-                Role = "admin"
+                Password = request.Password
             };
             _hotelsDb.Add(user);
             await _hotelsDb.SaveChangesAsync();
