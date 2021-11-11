@@ -15,6 +15,14 @@ export class AuthorizationDialogComponent {
   public showWarning: boolean = false;
   public hidePassword: boolean = true;
 
+  public get email(): AbstractControl | null {
+    return this.authForm.get('email');
+  }
+
+  public get password(): AbstractControl | null {
+    return this.authForm.get('password');
+  }
+
   public constructor(
     private readonly authService: AuthService,
     private readonly matDialogRef: MatDialogRef<AuthorizationDialogComponent>,
@@ -31,14 +39,6 @@ export class AuthorizationDialogComponent {
       password: ['', [Validators.required]]
     });
   } 
-  
-  public get email(): AbstractControl | null {
-    return this.authForm.get('email');
-  }
-
-  public get password(): AbstractControl | null {
-    return this.authForm.get('password');
-  }
 
   public closeAuthDialog(): void {
     this.matDialogRef.close();

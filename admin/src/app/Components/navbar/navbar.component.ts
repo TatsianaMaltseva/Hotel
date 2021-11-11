@@ -7,11 +7,12 @@ import { AuthService } from 'src/app/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  public constructor(
-    private readonly authService: AuthService) {
-  }
-  
   public get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
+  }
+  
+  public constructor(
+    private readonly authService: AuthService
+    ) {
   }
 }

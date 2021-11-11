@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -40,26 +41,27 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("registration")]
         [HttpPost]
         [Authorize]
-        public IActionResult CreateAccount([FromBody] Login request)
+        public async Task<IActionResult> CreateAccount([FromBody] Login request)
         {
+            if (!CheckIfEmailUnique(request.Email))
+            {
+                return BadRequest("User is already registered with this email");
+            }
             var user = new Account
             {
                 Email = request.Email,
-                Password = request.Password
+                Password = request.Password,
+                Role = "admin"
             };
-            if (!IsEmailUnique(user.Email))
-            {
-                return BadRequest("Is already registered with this email");
-            }
             _hotelsDb.Add(user);
-            _hotelsDb.SaveChanges();
+            await _hotelsDb.SaveChangesAsync();
             return NoContent();
         }
 
         private Account GetAccount(string email, string password) =>
             _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email && u.Password == password);
 
-        private bool IsEmailUnique(string email) =>
+        private bool CheckIfEmailUnique(string email) =>
             _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email) == null;
 
         private string GenerateJWT(Account user)

@@ -1,7 +1,7 @@
 <h1>Add new admin</h1>
 <form mat-dialog-content [formGroup]="registrationForm">
     <p>Enter <b>new admin</b> email</p>
-    <mat-form-field apperance="fill" style="width: 95%">
+    <mat-form-field class="input-field" apperance="fill">
         <mat-label>email</mat-label>
         <input 
             matInput
@@ -14,7 +14,7 @@
         </mat-error>
     </mat-form-field>
     <p>Enter <b>new admin</b> password</p>
-    <mat-form-field appearance="fill" style="width: 95%;">
+    <mat-form-field class="input-field" appearance="fill">
         <mat-label>password</mat-label>
         <input 
             matInput
@@ -27,13 +27,13 @@
     </mat-form-field>
     <button mat-button (click)="closeRegistrationDialog()">Back</button>
     <button
-        [disabled]="registrationForm.invalid"
         mat-button 
+        [disabled]="registrationForm.invalid"
         (click)="register(email?.value, password?.value)"
     >
         Register
     </button>
-    <mat-error *ngIf="unsuccessWarning">
-        User with this email already exists
+    <mat-error *ngIf="serverErrorResponse">
+        {{serverErrorResponse}}
     </mat-error>
 </form>

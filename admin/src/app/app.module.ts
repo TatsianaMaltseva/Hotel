@@ -11,6 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +20,8 @@ import { NavbarComponent } from './Components/navbar/navbar.component';
 import { AuthorizationComponent } from './Components/authorization/authorization.component';
 import { AdminButtonsComponent } from './Components/admin-buttons/admin-buttons.component';
 import { RegistrationComponent } from './Components/registration/registration.component';
+import { getToken } from './Core/getToken';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,13 @@ import { RegistrationComponent } from './Components/registration/registration.co
     MatFormFieldModule,
     MatDialogModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: getToken,
+        allowedDomains: environment.allowedDomains
+      }
+    })
 ],
   bootstrap: [AppComponent]
 })

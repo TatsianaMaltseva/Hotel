@@ -5,20 +5,19 @@ import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { authorizationHeader, ACCESS_TOKEN_KEY } from './Core/getToken';
+import { ACCESS_TOKEN_KEY } from './Core/getToken';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly apiUrl: string;
-  private readonly jwtHelper: JwtHelperService;
   
   public constructor(
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly jwtHelper: JwtHelperService
   ) { 
     this.apiUrl = environment.api;
-    this.jwtHelper = new JwtHelperService();
   }
 
   public isLoggedIn(): boolean {
@@ -47,8 +46,7 @@ export class AuthService {
   public register(email: string, password: string): Observable<string> {
     return this.http.post<string>(
       `${this.apiUrl}api/auth/registration`,
-      { email, password },
-      authorizationHeader
+      { email, password }
     );
   }
 

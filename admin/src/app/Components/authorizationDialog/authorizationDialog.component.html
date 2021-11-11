@@ -1,6 +1,6 @@
 <form mat-dialog-content [formGroup]="authForm">
     <p>Enter your email</p>
-    <mat-form-field appearance="fill" style="width: 95%;">
+    <mat-form-field class="input-field" appearance="fill">
         <mat-label>email</mat-label>
         <input
             matInput
@@ -13,7 +13,7 @@
         </mat-error>
     </mat-form-field>
     <p>Enter your password</p>
-    <mat-form-field appearance="fill" style="width: 95%;">
+    <mat-form-field class="input-field" appearance="fill">
         <mat-label>password</mat-label>
         <input
             matInput 
@@ -34,8 +34,8 @@
     </mat-form-field>
     <button mat-button (click)="closeAuthDialog()">Back</button>
     <button 
-        [disabled]="authForm.invalid"
         mat-button 
+        [disabled]="authForm.invalid"
         (click)="login(email?.value, password?.value)"
     >
         Login

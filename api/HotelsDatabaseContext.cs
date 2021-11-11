@@ -13,7 +13,6 @@ namespace iTechArt.Hotels.Api
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.Property(e => e.Email)
