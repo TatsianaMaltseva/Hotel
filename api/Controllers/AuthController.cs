@@ -61,7 +61,7 @@ namespace iTechArt.Hotels.Api.Controllers
             _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email && u.Password == password);
 
         private bool CheckIfEmailUnique(string email) =>
-            _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email) == null;
+            !_hotelsDb.Accounts.Any(u => u.Email == email);
 
         private string GenerateJWT(Account user)
         {
