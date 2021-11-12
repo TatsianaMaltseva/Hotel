@@ -45,7 +45,7 @@ export class AuthService {
 
   public register(email: string, password: string): Observable<string> {
     return this.http.post<string>(
-      `${this.apiUrl}api/auth/registration`,
+      `${this.apiUrl}api/auth/register_admin`,
       { email, password }
     );
   }

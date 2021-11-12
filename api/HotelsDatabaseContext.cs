@@ -24,6 +24,10 @@ namespace iTechArt.Hotels.Api
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Role)
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
             });
         }
     }

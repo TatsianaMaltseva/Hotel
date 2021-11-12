@@ -38,10 +38,10 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(token);
         }
 
-        [Route("registration")]
+        [Route("register_admin")]
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> CreateAccount([FromBody] Login request)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> CreateAdmin([FromBody] Login request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
@@ -50,7 +50,8 @@ namespace iTechArt.Hotels.Api.Controllers
             var user = new Account
             {
                 Email = request.Email,
-                Password = request.Password
+                Password = request.Password,
+                Role = "admin"
             };
             _hotelsDb.Add(user);
             await _hotelsDb.SaveChangesAsync();
@@ -73,6 +74,7 @@ namespace iTechArt.Hotels.Api.Controllers
             var claims = new List<Claim>() {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim("role", user.Role.ToString())
             };
 
             var token = new JwtSecurityToken(
