@@ -7,11 +7,11 @@ import { AuthService } from 'src/app/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+  selector: 'app-create-admin',
+  templateUrl: './create-admin.component.html',
+  styleUrls: ['./create-admin.component.css']
 })
-export class RegistrationComponent{
+export class CreateAdminComponent{
   public registrationForm: FormGroup;
   public serverErrorResponse: string = '';
 
@@ -25,7 +25,7 @@ export class RegistrationComponent{
 
   public constructor(
     private readonly authService: AuthService,
-    private readonly matDialogRef: MatDialogRef<RegistrationComponent>,
+    private readonly matDialogRef: MatDialogRef<CreateAdminComponent>,
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar
     ) {
@@ -54,7 +54,7 @@ export class RegistrationComponent{
 
   public register(email: string, password: string ): void {
     this.authService
-      .register(email, password)
+      .register(email, password, 'admin')
       .subscribe(
         () => {
           this.serverErrorResponse = '';

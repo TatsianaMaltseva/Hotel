@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { AuthService } from 'src/app/auth.service';
-import { AuthorizationDialogComponent } from '../authorizationDialog/authorizationDialog.component';
+import { AuthenticationDialogComponent } from '../authenticationDialog/authenticationDialog.component';
 
 @Component({
   selector: 'app-authorization',
@@ -25,9 +25,9 @@ export class AuthorizationComponent {
 
   public login(): void {
     this.matDialog.open(
-      AuthorizationDialogComponent,
+      AuthenticationDialogComponent,
       {
-        width: '300px'
+        width: '400px'
       }
     );
   }

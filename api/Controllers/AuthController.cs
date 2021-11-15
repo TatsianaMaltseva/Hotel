@@ -38,7 +38,7 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(token);
         }
 
-        [Route("register_admin")]
+        [Route("registration/admin")]
         [HttpPost]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateAdmin([FromBody] Login request)
@@ -52,6 +52,26 @@ namespace iTechArt.Hotels.Api.Controllers
                 Email = request.Email,
                 Password = request.Password,
                 Role = "admin"
+            };
+            _hotelsDb.Add(user);
+            await _hotelsDb.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+        [Route("registration/client")]
+        [HttpPost]
+        public async Task<IActionResult> CreateClient([FromBody] Login request)
+        {
+            if (!CheckIfEmailUnique(request.Email))
+            {
+                return BadRequest("User is already registered with this email");
+            }
+            var user = new Account
+            {
+                Email = request.Email,
+                Password = request.Password,
+                Role = "client"
             };
             _hotelsDb.Add(user);
             await _hotelsDb.SaveChangesAsync();

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { RegistrationComponent } from '../registration/registration.component';
+import { CreateAdminComponent } from '../create-admin/create-admin.component';
 
 @Component({
   selector: 'app-admin-buttons',
@@ -14,9 +14,9 @@ export class AdminButtonsComponent {
 
   public openRegistrationDialog(): void {
     this.matDialog.open(
-      RegistrationComponent,
+      CreateAdminComponent,
       {
-        width: '300px'
+        width: '400px'
       }
     );
   }

@@ -10,6 +10,10 @@ export class NavbarComponent {
   public get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
+
+  public get role(): string | null {
+    return this.authService.role();
+  }
   
   public constructor(
     private readonly authService: AuthService

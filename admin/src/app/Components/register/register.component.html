@@ -32,15 +32,15 @@
             Password is required
         </mat-error>
     </mat-form-field>
-    <button mat-button (click)="closeAuthDialog()">Back</button>
+    <button mat-button (click)="closeAuthDialog()"> Back</button>
     <button 
         mat-button 
         [disabled]="authForm.invalid"
-        (click)="login(email?.value, password?.value)"
+        (click)="registerClient(email?.value, password?.value)"
     >
-        Login
+        Register
     </button>
-    <mat-error *ngIf="showWarning">
-        Wrong credentials
+    <mat-error *ngIf="serverErrorResponse">
+        {{ serverErrorResponse }}
     </mat-error>
 </form>
