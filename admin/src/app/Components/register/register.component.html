@@ -32,6 +32,26 @@
             Password is required
         </mat-error>
     </mat-form-field>
+    <p>Confirm your password</p>
+    <mat-form-field class="input-field" appearance="fill">
+        <mat-label>password</mat-label>
+        <input
+            matInput 
+            formControlName="confirmPassword"
+            [type]="hidePassword ? 'password' : 'text'"
+        >
+        <button 
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword">
+            <mat-icon>
+                {{ hidePassword ? 'visibility_off' : 'visibility' }}
+            </mat-icon>
+        </button>
+        <mat-error *ngIf="confirmPassword?.invalid">
+            Password is required
+        </mat-error>
+    </mat-form-field>
     <button mat-button (click)="closeAuthDialog()"> Back</button>
     <button 
         mat-button 

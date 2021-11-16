@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 
 import { AuthService } from 'src/app/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CustomValidators } from 'src/app/Core/customValidators';
 
 @Component({
   selector: 'app-register',
@@ -25,6 +26,10 @@ export class RegisterComponent {
     return this.authForm.get('password');
   }
 
+  public get confirmPassword(): AbstractControl | null {
+    return this.authForm.get('confirmPassword');
+  }
+
   public constructor(
     private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder
@@ -37,23 +42,25 @@ export class RegisterComponent {
           Validators.email
         ]
       ],
-      password: ['', [Validators.required]]
-    });
+      password: ['', [Validators.required]],
+      confirmPassword: ['', [Validators.required]]
+    },
+    { validators: CustomValidators.match('password', 'confirmPassword') }
+    );
   }
 
   public registerClient(email: string, password: string): void {
     this.authService
-    .register(email, password, 'client')
-    .subscribe(
-      () => {
-        this.serverErrorResponse = '';
-        this.authService.login(email, password).subscribe();
-        this.closeAuthDialog();
-      },
-      (serverError: HttpErrorResponse) => {
-        this.serverErrorResponse = serverError.error as string;
-      }
-    );
+      .register(email, password, 'client')
+      .subscribe(
+        () => {
+          this.serverErrorResponse = '';
+          this.authService.login(email, password).subscribe();
+          this.closeAuthDialog();
+        },
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string;
+        }
+      );
   }
-
 }
