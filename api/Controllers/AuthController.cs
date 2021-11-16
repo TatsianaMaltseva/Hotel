@@ -1,5 +1,4 @@
 ﻿using iTechArt.Hotels.Api.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +7,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -38,30 +36,8 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(token);
         }
 
-        [Route("registration")]
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> CreateAccount([FromBody] Login request)
-        {
-            if (!CheckIfEmailUnique(request.Email))
-            {
-                return BadRequest("User is already registered with this email");
-            }
-            var user = new Account
-            {
-                Email = request.Email,
-                Password = request.Password
-            };
-            _hotelsDb.Add(user);
-            await _hotelsDb.SaveChangesAsync();
-            return NoContent();
-        }
-
         private Account GetAccount(string email, string password) =>
             _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email && u.Password == password);
-
-        private bool CheckIfEmailUnique(string email) =>
-            !_hotelsDb.Accounts.Any(u => u.Email == email);
 
         private string GenerateJWT(Account user)
         {
