@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from 'src/app/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { CustomValidators } from 'src/app/Core/customValidators';
+import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/customValidators';
 
 @Component({
   selector: 'app-register',
@@ -15,6 +15,7 @@ export class RegisterComponent {
   public showWarning: boolean = false;
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
+  public passwordValidator = new ConfirmValidParentMatcher('notSame');
 
   @Input() public closeAuthDialog!: Function;
   
@@ -43,7 +44,7 @@ export class RegisterComponent {
         ]
       ],
       password: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['']
     },
     { validators: CustomValidators.match('password', 'confirmPassword') }
     );

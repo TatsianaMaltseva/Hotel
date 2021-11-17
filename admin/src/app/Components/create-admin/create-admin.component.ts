@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from 'src/app/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/customValidators';
 
 @Component({
   selector: 'app-create-admin',
@@ -13,7 +14,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class CreateAdminComponent{
   public registrationForm: FormGroup;
+  public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
+  public passwordValidator = new ConfirmValidParentMatcher('notSame');
 
   public get email(): AbstractControl | null {
     return this.registrationForm.get('email');
@@ -21,6 +24,10 @@ export class CreateAdminComponent{
 
   public get password(): AbstractControl | null {
     return this.registrationForm.get('password');
+  }
+
+  public get confirmPassword(): AbstractControl | null {
+    return this.registrationForm.get('confirmPassword');
   }
 
   public constructor(
@@ -37,8 +44,11 @@ export class CreateAdminComponent{
             Validators.email
           ]
         ],
-        password: ['', [Validators.required]]
-      });
+        password: ['', [Validators.required]],
+        confirmPassword: ['']
+      },
+      { validators: CustomValidators.match('password', 'confirmPassword') }
+      );
   }
 
   public closeRegistrationDialog(): void {

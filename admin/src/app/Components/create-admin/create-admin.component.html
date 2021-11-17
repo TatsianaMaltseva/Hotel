@@ -9,7 +9,7 @@
             type="email"
             placeholder="new_admin@gmail.com"
         >
-        <mat-error *ngIf="email?.invalid">
+        <mat-error>
             Please enter a valid email address
         </mat-error>
     </mat-form-field>
@@ -19,10 +19,41 @@
         <input 
             matInput
             formControlName="password"
-            type="text"
+            [type]="hidePassword ? 'password' : 'text'"
         >
-        <mat-error *ngIf="password?.invalid">
+        <button 
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword"
+        >
+            <mat-icon>
+                {{ hidePassword ? 'visibility_off' : 'visibility' }}
+            </mat-icon>
+        </button>
+        <mat-error>
             Password is required
+        </mat-error>
+    </mat-form-field>
+    <p>Confirm <b>new admin</b> password</p>
+    <mat-form-field class="input-field" appearance="fill">
+        <mat-label>confirm password</mat-label>
+        <input 
+            matInput
+            formControlName="confirmPassword"
+            [type]="hidePassword ? 'password' : 'text'"
+            [errorStateMatcher]="passwordValidator"
+        >
+        <button 
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword"
+        >
+            <mat-icon>
+                {{ hidePassword ? 'visibility_off' : 'visibility' }}
+            </mat-icon>
+        </button>
+        <mat-error>
+            Passwords are not the same
         </mat-error>
     </mat-form-field>
     <button mat-button (click)="closeRegistrationDialog()">Back</button>

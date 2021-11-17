@@ -1,4 +1,5 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 
 export function matchValidator(key1: string, key2: string): ValidatorFn {
@@ -12,5 +13,19 @@ export function matchValidator(key1: string, key2: string): ValidatorFn {
 export class CustomValidators {
     public static match(key1: string, key2: string): ValidatorFn {
         return matchValidator(key1, key2);
+    }
+}
+
+export class ConfirmValidParentMatcher implements ErrorStateMatcher {
+    
+    public constructor(
+        private readonly errorKey: string
+    ) {
+    }
+
+    public isErrorState(
+        control: FormControl | null, 
+        form: FormGroupDirective | NgForm | null): boolean {
+            return (control?.touched && control.parent?.hasError(this.errorKey)) === true;
     }
 }

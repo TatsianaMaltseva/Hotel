@@ -8,7 +8,7 @@
             type="email"
             placeholder="user@gmail.com"
         >
-        <mat-error *ngIf="email?.invalid">
+        <mat-error>
             Please enter a valid email address
         </mat-error>
     </mat-form-field>
@@ -28,7 +28,7 @@
                 {{ hidePassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
         </button>
-        <mat-error *ngIf="password?.invalid">
+        <mat-error>
             Password is required
         </mat-error>
     </mat-form-field>
