@@ -3,8 +3,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { AuthService } from 'src/app/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { UserService } from 'src/app/user.service';
 
 @Component({
   selector: 'app-registration',
@@ -24,10 +24,10 @@ export class RegistrationComponent{
   }
 
   public constructor(
-    private readonly authService: AuthService,
     private readonly matDialogRef: MatDialogRef<RegistrationComponent>,
     private readonly formBuilder: FormBuilder,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly userService: UserService
     ) {
       this.registrationForm = this.formBuilder.group({
         email: [
@@ -52,9 +52,9 @@ export class RegistrationComponent{
     );
   }
 
-  public register(email: string, password: string ): void {
-    this.authService
-      .register(email, password)
+  public createAdmin(email: string, password: string ): void {
+    this.userService
+      .createUser(email, password)
       .subscribe(
         () => {
           this.serverErrorResponse = '';
