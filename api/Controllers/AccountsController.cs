@@ -1,6 +1,5 @@
 ﻿using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -14,11 +13,9 @@ namespace iTechArt.Hotels.Api.Controllers
     public class AccountsController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
-        private readonly IOptions<AuthOptions> _userOptions;
 
-        public AccountsController(IOptions<AuthOptions> userOptions, HotelsDatabaseContext hotelsDb)
+        public AccountsController(HotelsDatabaseContext hotelsDb)
         {
-            _userOptions = userOptions;
             _hotelsDb = hotelsDb;
         }
 
