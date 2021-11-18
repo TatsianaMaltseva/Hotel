@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class AccountService {
   private readonly apiUrl: string;
   
   public constructor(
@@ -16,7 +16,7 @@ export class UserService {
     this.apiUrl = environment.api;
   }
 
-  public createUser(email: string, password: string): Observable<string> {
+  public createAccount(email: string, password: string): Observable<string> {
     return this.http.post<string>(
       `${this.apiUrl}api/accounts`,
       { email, password }

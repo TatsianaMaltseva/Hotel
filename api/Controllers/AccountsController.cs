@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,17 +33,20 @@ namespace iTechArt.Hotels.Api.Controllers
             };
             _hotelsDb.Add(user);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtRoute(
-                routeName: "GetLink",
-                routeValues: new { id = user.Id },
-                value: user);
+            return CreatedAtAction(nameof(GetAccountEmailAsync), new { id = user.Id }, null);
         }
 
         [Route("{id}")]
-        [HttpGet("{id}", Name = "GetLink")]
+        [HttpGet]
         [Authorize]
-        public async Task<Account> GetAccount([FromRoute] int Id) =>
-            await _hotelsDb.Accounts.SingleOrDefaultAsync(account => account.Id == Id);
+        public async Task<IActionResult> GetAccountEmailAsync([FromRoute]int Id)
+        {
+            string email = await _hotelsDb.Accounts
+                .Where(account => account.Id == Id)
+                .Select(account => account.Email)
+                .SingleAsync();
+            return Ok(email);
+        }
 
         private bool CheckIfEmailUnique(string email) =>
             !_hotelsDb.Accounts.Any(u => u.Email == email);

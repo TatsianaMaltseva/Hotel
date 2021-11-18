@@ -19,7 +19,7 @@ import { AuthorizationDialogComponent } from './Components/authorizationDialog/a
 import { NavbarComponent } from './Components/navbar/navbar.component';
 import { AuthorizationComponent } from './Components/authorization/authorization.component';
 import { AdminButtonsComponent } from './Components/admin-buttons/admin-buttons.component';
-import { RegistrationComponent } from './Components/registration/registration.component';
+import { CreateAdminComponent } from './Components/create-admin/create-admin.component';
 import { getToken } from './Core/getToken';
 import { environment } from 'src/environments/environment';
 
@@ -30,7 +30,7 @@ import { environment } from 'src/environments/environment';
     NavbarComponent,
     AuthorizationComponent,
     AdminButtonsComponent,
-    RegistrationComponent
+    CreateAdminComponent
   ],
   imports: [
     BrowserModule,
