@@ -50,6 +50,5 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private bool CheckIfEmailUnique(string email) =>
             !_hotelsDb.Accounts.Any(u => u.Email == email);
-
     }
 }
