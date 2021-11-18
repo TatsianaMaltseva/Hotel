@@ -33,13 +33,13 @@ namespace iTechArt.Hotels.Api.Controllers
             };
             _hotelsDb.Add(user);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAccountEmailAsync), new { id = user.Id }, null);
+            return CreatedAtAction(nameof(GetAccountEmail), new { id = user.Id }, null);
         }
 
         [Route("{id}")]
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAccountEmailAsync([FromRoute]int Id)
+        public async Task<IActionResult> GetAccountEmail([FromRoute]int Id)
         {
             string email = await _hotelsDb.Accounts
                 .Where(account => account.Id == Id)

@@ -22,7 +22,7 @@ namespace iTechArt.Hotels.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
+            services.AddControllers();
 
             services.AddDbContext<HotelsDatabaseContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("HotelsDb"))
