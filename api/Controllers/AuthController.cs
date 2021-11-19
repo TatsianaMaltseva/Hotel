@@ -1,6 +1,5 @@
 ﻿using iTechArt.Hotels.Api.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -10,7 +9,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -20,12 +18,14 @@ namespace iTechArt.Hotels.Api.Controllers
     public class AuthController : Controller
     {
         private readonly IOptions<AuthOptions> _authOptions;
+        private readonly IHashPasswords _hashPasswordsService;
         private readonly HotelsDatabaseContext _hotelsDb;
 
-        public AuthController(IOptions<AuthOptions> authOptions, HotelsDatabaseContext hotelsDb)
+        public AuthController(IOptions<AuthOptions> authOptions, HotelsDatabaseContext hotelsDb, IHashPasswords hashPasswordsService)
         {
             _authOptions = authOptions;
             _hotelsDb = hotelsDb;
+            _hashPasswordsService = hashPasswordsService;
         }
 
         [Route("login")]
@@ -37,7 +37,7 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return Unauthorized();
             }
-            if (!CheckIfPasswordIsCorrect(account.Password, request.Password, Convert.FromBase64String(account.Salt)))
+            if (!_hashPasswordsService.CheckIfPasswordIsCorrect(account.Password, request.Password, Convert.FromBase64String(account.Salt)))
             {
                 return Unauthorized();
             }
@@ -53,12 +53,12 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("User is already registered with this email");
             }
-            byte[] salt = GenerateSalt();
+            byte[] salt = _hashPasswordsService.GenerateSalt();
             var account = new Account
             {
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
-                Password = HashPassword(request.Password, salt),
+                Password = _hashPasswordsService.HashPassword(request.Password, salt),
                 Role = "client"
             };
             _hotelsDb.Add(account);
@@ -105,29 +105,5 @@ namespace iTechArt.Hotels.Api.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
-        private byte[] GenerateSalt()
-        {
-            byte[] salt = new byte[128 / 8];
-            using (var rngCsp = new RNGCryptoServiceProvider())
-            {
-                rngCsp.GetNonZeroBytes(salt);
-            }
-            return salt;
-        }
-
-        private string HashPassword(string password, byte[] salt)
-        {
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
-            return hashed;
-        }
-
-        private bool CheckIfPasswordIsCorrect(string hashedPassword, string supposedPassword, byte[] salt) =>
-            hashedPassword == HashPassword(supposedPassword, salt);
     }
 }

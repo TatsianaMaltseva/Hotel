@@ -1,11 +1,10 @@
 ﻿using iTechArt.Hotels.Api.Models;
+using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -15,10 +14,12 @@ namespace iTechArt.Hotels.Api.Controllers
     public class AccountsController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
+        private readonly IHashPasswords _hashPasswordsService;
 
-        public AccountsController(HotelsDatabaseContext hotelsDb)
+        public AccountsController(HotelsDatabaseContext hotelsDb, IHashPasswords hashPasswordsService)
         {
             _hotelsDb = hotelsDb;
+            _hashPasswordsService = hashPasswordsService;
         }
 
         [HttpPost]
@@ -29,12 +30,12 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("User is already registered with this email");
             }
-            byte[] salt = GenerateSalt();
+            byte[] salt = _hashPasswordsService.GenerateSalt();
             var user = new Account
             {
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
-                Password = HashPassword(request.Password, salt),
+                Password = _hashPasswordsService.HashPassword(request.Password, salt),
                 Role = "admin"
             };
             _hotelsDb.Add(user);
@@ -56,26 +57,5 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private bool CheckIfEmailUnique(string email) =>
             !_hotelsDb.Accounts.Any(u => u.Email == email);
-
-        private byte[] GenerateSalt()
-        {
-            byte[] salt = new byte[128 / 8];
-            using (var rngCsp = new RNGCryptoServiceProvider())
-            {
-                rngCsp.GetNonZeroBytes(salt);
-            }
-            return salt;
-        }
-
-        private string HashPassword(string password, byte[] salt)
-        {
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
-            return hashed;
-        }
     }
 }

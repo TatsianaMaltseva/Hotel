@@ -1,4 +1,5 @@
 using iTechArt.Hotels.Api.Models;
+using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +54,7 @@ namespace iTechArt.Hotels.Api
                         };
                     }
                 );
+            services.AddSingleton<IHashPasswords, HashPasswordsService>();
 
             services.AddCors(options =>
             {
