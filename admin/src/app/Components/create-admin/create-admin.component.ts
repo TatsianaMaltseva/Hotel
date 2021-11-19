@@ -73,7 +73,10 @@ export class CreateAdminComponent {
   private openSuccessSnackBar(message: string): void {
     this.snackBar.open(
       `${message}`,
-      'Confirm'
+      'Confirm',
+      { 
+        duration: 5000
+      }
     );
   }
 }
