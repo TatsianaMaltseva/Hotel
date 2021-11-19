@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { AuthService } from 'src/app/auth.service';
+import { AccountService } from 'src/app/account.service';
 import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/customValidators';
 
 @Component({
@@ -31,7 +31,7 @@ export class CreateAdminComponent{
   }
 
   public constructor(
-    private readonly authService: AuthService,
+    private readonly accountService: AccountService,
     private readonly matDialogRef: MatDialogRef<CreateAdminComponent>,
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar
@@ -62,9 +62,9 @@ export class CreateAdminComponent{
     );
   }
 
-  public register(email: string, password: string ): void {
-    this.authService
-      .register(email, password, 'admin')
+  public createAdmin(email: string, password: string ): void {
+    this.accountService
+      .createAccount(email, password)
       .subscribe(
         () => {
           this.serverErrorResponse = '';

@@ -1,8 +1,11 @@
 ﻿using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -19,27 +22,30 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateAccount([FromBody] Login request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
                 return BadRequest("User is already registered with this email");
             }
+            byte[] salt = GenerateSalt();
             var user = new Account
             {
                 Email = request.Email,
-                Password = request.Password
+                Salt = Convert.ToBase64String(salt),
+                Password = HashPassword(request.Password, salt),
+                Role = "admin"
             };
             _hotelsDb.Add(user);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAccountEmailAsync), new { id = user.Id }, null);
+            return CreatedAtAction(nameof(GetAccountEmail), new { id = user.Id }, null);
         }
 
         [Route("{id}")]
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAccountEmailAsync([FromRoute] int Id)
+        public async Task<IActionResult> GetAccountEmail([FromRoute] int Id)
         {
             string email = await _hotelsDb.Accounts
                 .Where(account => account.Id == Id)
@@ -50,5 +56,26 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private bool CheckIfEmailUnique(string email) =>
             !_hotelsDb.Accounts.Any(u => u.Email == email);
+
+        private byte[] GenerateSalt()
+        {
+            byte[] salt = new byte[128 / 8];
+            using (var rngCsp = new RNGCryptoServiceProvider())
+            {
+                rngCsp.GetNonZeroBytes(salt);
+            }
+            return salt;
+        }
+
+        private string HashPassword(string password, byte[] salt)
+        {
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+            return hashed;
+        }
     }
 }

@@ -60,9 +60,9 @@ export class AuthService {
       );
   }
 
-  public register(email: string, password: string, role: string): Observable<string> {
+  public register(email: string, password: string): Observable<string> {
     return this.http.post<string>(
-      `${this.apiUrl}api/auth/registration/${role}`,
+      `${this.apiUrl}api/auth/registration`,
       { email, password }
     );
   }

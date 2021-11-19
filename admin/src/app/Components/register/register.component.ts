@@ -50,9 +50,9 @@ export class RegisterComponent {
     );
   }
 
-  public registerClient(email: string, password: string): void {
+  public register(email: string, password: string): void {
     this.authService
-      .register(email, password, 'client')
+      .register(email, password)
       .subscribe(
         () => {
           this.serverErrorResponse = '';

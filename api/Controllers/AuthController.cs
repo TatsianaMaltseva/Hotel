@@ -1,6 +1,8 @@
 ﻿using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -8,6 +10,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -29,62 +32,58 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpPost]
         public IActionResult Login([FromBody]Login request)
         {
-            var user = GetAccount(request.Email, request.Password);
-            if (user == null)
+            Account account = GetAccountByEmail(request.Email);
+            if (account == null)
             {
                 return Unauthorized();
             }
-            var token = GenerateJWT(user);
+            if (!CheckIfPasswordIsCorrect(account.Password, request.Password, Convert.FromBase64String(account.Salt)))
+            {
+                return Unauthorized();
+            }
+            var token = GenerateJWT(account);
             return Ok(token);
         }
 
-        [Route("registration/admin")]
+        [Route("registration")]
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> CreateAdmin([FromBody] Login request)
+        public async Task<IActionResult> Registrate([FromBody] Login request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
                 return BadRequest("User is already registered with this email");
             }
-            var user = new Account
+            byte[] salt = GenerateSalt();
+            var account = new Account
             {
                 Email = request.Email,
-                Password = request.Password,
-                Role = "admin"
-            };
-            _hotelsDb.Add(user);
-            await _hotelsDb.SaveChangesAsync();
-            return NoContent();
-        }
-
-
-        [Route("registration/client")]
-        [HttpPost]
-        public async Task<IActionResult> CreateClient([FromBody] Login request)
-        {
-            if (!CheckIfEmailUnique(request.Email))
-            {
-                return BadRequest("User is already registered with this email");
-            }
-            var user = new Account
-            {
-                Email = request.Email,
-                Password = request.Password,
+                Salt = Convert.ToBase64String(salt),
+                Password = HashPassword(request.Password, salt),
                 Role = "client"
             };
-            _hotelsDb.Add(user);
+            _hotelsDb.Add(account);
             await _hotelsDb.SaveChangesAsync();
-            return NoContent();
+            return CreatedAtAction(nameof(GetAccountEmail), new { id = account.Id }, null);
         }
 
-        private Account GetAccount(string email, string password) =>
-            _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email && u.Password == password);
+        private Account GetAccountByEmail(string email) =>
+            _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email);
 
         private bool CheckIfEmailUnique(string email) =>
             !_hotelsDb.Accounts.Any(u => u.Email == email);
 
-        private string GenerateJWT(Account user)
+        [Route("{id}")]
+        [HttpGet]
+        private async Task<IActionResult> GetAccountEmail([FromRoute] int Id)
+        {
+            string email = await _hotelsDb.Accounts
+                .Where(account => account.Id == Id)
+                .Select(account => account.Email)
+                .SingleAsync();
+            return Ok(email);
+        }
+
+        private string GenerateJWT(Account account)
         {
             var authParams = _authOptions.Value;
 
@@ -92,9 +91,9 @@ namespace iTechArt.Hotels.Api.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>() {
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim("role", user.Role.ToString())
+                new Claim(JwtRegisteredClaimNames.Email, account.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
+                new Claim("role", account.Role.ToString())
             };
 
             var token = new JwtSecurityToken(
@@ -106,5 +105,29 @@ namespace iTechArt.Hotels.Api.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        private byte[] GenerateSalt()
+        {
+            byte[] salt = new byte[128 / 8];
+            using (var rngCsp = new RNGCryptoServiceProvider())
+            {
+                rngCsp.GetNonZeroBytes(salt);
+            }
+            return salt;
+        }
+
+        private string HashPassword(string password, byte[] salt)
+        {
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+            return hashed;
+        }
+
+        private bool CheckIfPasswordIsCorrect(string hashedPassword, string supposedPassword, byte[] salt) =>
+            hashedPassword == HashPassword(supposedPassword, salt);
     }
 }
