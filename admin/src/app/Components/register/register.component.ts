@@ -11,8 +11,7 @@ import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/custom
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  public authForm: FormGroup;
-  public showWarning: boolean = false;
+  public registerForm: FormGroup;
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
   public passwordValidator = new ConfirmValidParentMatcher('notSame');
@@ -20,22 +19,22 @@ export class RegisterComponent {
   @Input() public closeAuthDialog!: Function;
   
   public get email(): AbstractControl | null {
-    return this.authForm.get('email');
+    return this.registerForm.get('email');
   }
 
   public get password(): AbstractControl | null {
-    return this.authForm.get('password');
+    return this.registerForm.get('password');
   }
 
   public get confirmPassword(): AbstractControl | null {
-    return this.authForm.get('confirmPassword');
+    return this.registerForm.get('confirmPassword');
   }
 
   public constructor(
     private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder
   ) {
-    this.authForm = this.formBuilder.group({
+    this.registerForm = this.formBuilder.group({
       email: [
         '', 
         [

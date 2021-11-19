@@ -1,4 +1,4 @@
-<form mat-dialog-content [formGroup]="authForm">
+<form mat-dialog-content [formGroup]="registerForm">
     <p>Enter your email</p>
     <mat-form-field class="input-field" appearance="fill">
         <mat-label>email</mat-label>
@@ -45,7 +45,8 @@
         <button 
             mat-icon-button
             matSuffix
-            (click)="hidePassword = !hidePassword">
+            (click)="hidePassword = !hidePassword"
+        >
             <mat-icon>
                 {{ hidePassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
@@ -57,7 +58,7 @@
     <button mat-button (click)="closeAuthDialog()"> Back</button>
     <button 
         mat-button 
-        [disabled]="authForm.invalid"
+        [disabled]="registerForm.invalid"
         (click)="register(email?.value, password?.value)"
     >
         Register

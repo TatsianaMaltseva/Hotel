@@ -1,5 +1,5 @@
 <h1>Add new admin</h1>
-<form mat-dialog-content [formGroup]="registrationForm">
+<form mat-dialog-content [formGroup]="createAdminForm">
     <p>Enter <b>new admin</b> email</p>
     <mat-form-field class="input-field" apperance="fill">
         <mat-label>email</mat-label>
@@ -36,9 +36,9 @@
     </mat-form-field>
     <p>Confirm <b>new admin</b> password</p>
     <mat-form-field class="input-field" appearance="fill">
-        <mat-label>confirm password</mat-label>
-        <input 
-            matInput
+        <mat-label>password</mat-label>
+        <input
+            matInput 
             formControlName="confirmPassword"
             [type]="hidePassword ? 'password' : 'text'"
             [errorStateMatcher]="passwordValidator"
@@ -56,13 +56,13 @@
             Passwords are not the same
         </mat-error>
     </mat-form-field>
-    <button mat-button (click)="closeRegistrationDialog()">Back</button>
+    <button mat-button (click)="closeCreateAdminDialog()">Back</button>
     <button
         mat-button 
-        [disabled]="registrationForm.invalid"
+        [disabled]="createAdminForm.invalid"
         (click)="createAdmin(email?.value, password?.value)"
     >
-        Register
+        Add new admin
     </button>
     <mat-error *ngIf="serverErrorResponse">
         {{ serverErrorResponse }}

@@ -74,7 +74,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{id}")]
         [HttpGet]
-        private async Task<IActionResult> GetAccountEmail([FromRoute] int Id)
+        public async Task<IActionResult> GetAccountEmail([FromRoute] int Id)
         {
             string email = await _hotelsDb.Accounts
                 .Where(account => account.Id == Id)

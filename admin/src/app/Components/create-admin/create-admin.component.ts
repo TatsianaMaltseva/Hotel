@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { AccountService } from 'src/app/account.service';
@@ -12,22 +12,23 @@ import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/custom
   templateUrl: './create-admin.component.html',
   styleUrls: ['./create-admin.component.css']
 })
-export class CreateAdminComponent{
-  public registrationForm: FormGroup;
+
+export class CreateAdminComponent {
+  public createAdminForm: FormGroup;
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
   public passwordValidator = new ConfirmValidParentMatcher('notSame');
 
   public get email(): AbstractControl | null {
-    return this.registrationForm.get('email');
+    return this.createAdminForm.get('email');
   }
 
   public get password(): AbstractControl | null {
-    return this.registrationForm.get('password');
+    return this.createAdminForm.get('password');
   }
 
   public get confirmPassword(): AbstractControl | null {
-    return this.registrationForm.get('confirmPassword');
+    return this.createAdminForm.get('confirmPassword');
   }
 
   public constructor(
@@ -35,10 +36,10 @@ export class CreateAdminComponent{
     private readonly matDialogRef: MatDialogRef<CreateAdminComponent>,
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar
-    ) {
-      this.registrationForm = this.formBuilder.group({
+  ) {
+      this.createAdminForm = this.formBuilder.group({
         email: [
-          '',
+          '', 
           [
             Validators.required,
             Validators.email
@@ -51,17 +52,10 @@ export class CreateAdminComponent{
       );
   }
 
-  public closeRegistrationDialog(): void {
+  public closeCreateAdminDialog(): void {
     this.matDialogRef.close();
   }
-
-  public openSuccessSnackBar(message: string): void {
-    this.snackBar.open(
-      `${message}`,
-      'Confirm'
-    );
-  }
-
+  
   public createAdmin(email: string, password: string ): void {
     this.accountService
       .createAccount(email, password)
@@ -71,8 +65,15 @@ export class CreateAdminComponent{
           this.openSuccessSnackBar(`Successfully created! Email: ${email}`);
         },
         (serverError: HttpErrorResponse) => {
-          this.serverErrorResponse = serverError.error;
+          this.serverErrorResponse = serverError.error as string;
         }
       );
+  }
+  
+  private openSuccessSnackBar(message: string): void {
+    this.snackBar.open(
+      `${message}`,
+      'Confirm'
+    );
   }
 }
