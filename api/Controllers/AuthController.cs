@@ -27,7 +27,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpPost]
         public IActionResult Login([FromBody]Login request)
         {
-            var user = GetUserAccount(request.Email, request.Password);
+            var user = GetAccount(request.Email, request.Password);
             if (user == null)
             {
                 return Unauthorized();
@@ -36,10 +36,8 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(token);
         }
 
-        private Account GetUserAccount(string email, string password)
-        {
-            return _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email && u.Password == password);
-        }
+        private Account GetAccount(string email, string password) =>
+            _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email && u.Password == password);
 
         private string GenerateJWT(Account user)
         {

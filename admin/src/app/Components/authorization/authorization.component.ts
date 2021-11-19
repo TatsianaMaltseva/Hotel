@@ -6,17 +6,17 @@ import { AuthorizationDialogComponent } from '../authorizationDialog/authorizati
 
 @Component({
   selector: 'app-authorization',
-  templateUrl: './authorization.component.html',
-  styleUrls: ['./authorization.component.css']
+  templateUrl: './authorization.component.html'
 })
 export class AuthorizationComponent {
   public get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
-
+  
   public constructor(
     private readonly authService: AuthService,
-    private readonly matDialog: MatDialog) {
+    private readonly matDialog: MatDialog
+  ) {
   }
 
   public logout(): void {
@@ -27,7 +27,7 @@ export class AuthorizationComponent {
     this.matDialog.open(
       AuthorizationDialogComponent,
       {
-        width: '250px'
+        width: '300px'
       }
     );
   }

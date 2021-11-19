@@ -34,23 +34,25 @@ namespace iTechArt.Hotels.Api
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false; // should true for real server
-                    options.TokenValidationParameters = new TokenValidationParameters
+                .AddJwtBearer(
+                    options =>
                     {
-                        ValidateIssuer = true,
-                        ValidIssuer = authOptions.Issuer,
+                        options.RequireHttpsMetadata = false; // should true for real server
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidIssuer = authOptions.Issuer,
 
-                        ValidateAudience = true,
-                        ValidAudience = authOptions.Audience,
+                            ValidateAudience = true,
+                            ValidAudience = authOptions.Audience,
 
-                        ValidateLifetime = true,
+                            ValidateLifetime = true,
 
-                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuerSigningKey = true,
-                    };
-                });
+                            IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
+                            ValidateIssuerSigningKey = true,
+                        };
+                    }
+                );
 
             services.AddCors(options =>
             {

@@ -67,7 +67,28 @@
           "warn"
         ],
         "@typescript-eslint/member-ordering": [
-          "warn"
+          "error",
+          {
+              "default": [
+                "public-field",
+                "protected-field",
+                "private-field",
+
+                "public-get",
+                "protected-get",
+                "private-get",
+              
+                "public-set",
+                "protected-set",
+                "private-set",
+
+                "constructor",
+
+                "public-method",
+                "protected-method",
+                "private-method"
+              ]
+          }
         ],
         "@typescript-eslint/no-confusing-non-null-assertion": [
           "warn"

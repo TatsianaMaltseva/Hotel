@@ -13,6 +13,15 @@ import { AuthService } from 'src/app/auth.service';
 export class AuthorizationDialogComponent {
   public authForm: FormGroup;
   public showWarning: boolean = false;
+  public hidePassword: boolean = true;
+
+  public get email(): AbstractControl | null {
+    return this.authForm.get('email');
+  }
+
+  public get password(): AbstractControl | null {
+    return this.authForm.get('password');
+  }
 
   public constructor(
     private readonly authService: AuthService,
@@ -30,14 +39,6 @@ export class AuthorizationDialogComponent {
       password: ['', [Validators.required]]
     });
   } 
-  
-  public get email(): AbstractControl | null {
-    return this.authForm.get('email');
-  }
-
-  public get password(): AbstractControl | null {
-    return this.authForm.get('password');
-  }
 
   public closeAuthDialog(): void {
     this.matDialogRef.close();
