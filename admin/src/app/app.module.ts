@@ -25,7 +25,8 @@ import { getToken } from './Core/getToken';
 import { environment } from 'src/environments/environment';
 import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
-
+import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.component';
+import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +36,9 @@ import { RegisterComponent } from './Components/register/register.component';
     AdminButtonsComponent,
     CreateAdminComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    HotelCardsComponent,
+    HotelsFilterComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ import { RegisterComponent } from './Components/register/register.component';
     MatIconModule,
     MatSnackBarModule,
     MatTabsModule,
+    MatCardModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

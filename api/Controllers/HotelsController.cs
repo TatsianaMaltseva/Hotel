@@ -18,7 +18,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public IActionResult CreateHotel([FromBody] Hotel request )
+        public async Task<IActionResult> CreateHotel([FromBody] Hotel request )
         {
             if (request == null)
             {
@@ -32,6 +32,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 Sity = request.Sity,
                 Address = request.Address
             };
+            _hotelsDb.Add(hotel);
+            await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(GetHotel), new { id = hotel.HotelId }, null);
         }
 
