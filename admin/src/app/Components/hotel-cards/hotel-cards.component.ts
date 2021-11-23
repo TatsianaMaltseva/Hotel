@@ -21,7 +21,7 @@ export class HotelCardsComponent implements OnInit{
 
   private getHotels(): void {
     this.hotelService
-    .getHotels()
-    .subscribe(hotels => this.hotels = hotels);
+      .getHotels()
+      .subscribe(hotels => this.hotels = hotels);
   }
 }

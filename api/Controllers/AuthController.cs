@@ -30,7 +30,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("login")]
         [HttpPost]
-        public IActionResult Login([FromBody]Login request)
+        public IActionResult Login([FromBody] Login request)
         {
             Account account = GetAccountByEmail(request.Email);
             if (account == null)
