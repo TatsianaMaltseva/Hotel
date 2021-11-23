@@ -39,13 +39,13 @@ export class CreateAdminComponent {
   ) {
       this.createAdminForm = this.formBuilder.group({
         email: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.email
           ]
         ],
-        password: ['', [Validators.required]],
+        password: ['', Validators.required],
         confirmPassword: ['']
       },
       { validators: CustomValidators.match('password', 'confirmPassword') }
@@ -55,7 +55,7 @@ export class CreateAdminComponent {
   public closeCreateAdminDialog(): void {
     this.matDialogRef.close();
   }
-  
+
   public createAdmin(email: string, password: string ): void {
     this.accountService
       .createAccount(email, password)
@@ -69,7 +69,7 @@ export class CreateAdminComponent {
         }
       );
   }
-  
+
   private openSuccessSnackBar(message: string): void {
     this.snackBar.open(
       `${message}`,

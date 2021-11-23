@@ -1,12 +1,11 @@
 import { AbstractControl, FormControl, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
-
 export function matchValidator(key1: string, key2: string): ValidatorFn {
-  return (group: AbstractControl): ValidationErrors | null => {
-    const value1 = group.get(key1)?.value as string;  
-    const value2 = group.get(key2)?.value as string;
-    return value1 === value2 ? null : { notSame: true };
+    return (group: AbstractControl): ValidationErrors | null => {
+        const value1 = group.get(key1)?.value as string;  
+        const value2 = group.get(key2)?.value as string;
+        return value1 === value2 ? null : { notSame: true };
     };
 }
 
@@ -17,7 +16,6 @@ export class CustomValidators {
 }
 
 export class ConfirmValidParentMatcher implements ErrorStateMatcher {
-    
     public constructor(
         private readonly errorKey: string
     ) {

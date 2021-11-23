@@ -43,9 +43,9 @@ export class LoginComponent {
     this.authService
       .login(email, password)
       .subscribe(
-        () =>  { 
+        () => { 
           this.closeAuthDialog();
-         },
+        },
         () => this.showWarning = true
       );
   }
