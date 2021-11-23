@@ -4,6 +4,11 @@
   margin-left: 38%;
 }
 
+img {
+  min-height: 200px;
+  min-width: 200px;
+}
+
 .cards {
   margin-top: 5%;
 }

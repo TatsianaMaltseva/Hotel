@@ -28,6 +28,7 @@ import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.component';
 import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.component';
+
 @NgModule({
   declarations: [
     AppComponent,

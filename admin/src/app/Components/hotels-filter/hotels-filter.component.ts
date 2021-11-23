@@ -11,5 +11,4 @@ export class HotelsFilterComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }
