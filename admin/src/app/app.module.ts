@@ -12,6 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -56,6 +57,7 @@ import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.
     MatSnackBarModule,
     MatTabsModule,
     MatCardModule,
+    MatGridListModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

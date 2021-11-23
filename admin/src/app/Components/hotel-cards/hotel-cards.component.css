@@ -1,14 +1,16 @@
 .example-card {
   max-width: 40%;
-  margin: 5%;
+  margin: 3%;
   margin-left: 38%;
 }
 
 .cards {
-  margin-top: 3%;
+  margin-top: 5%;
 }
 
-img {
-  padding-top: 10%;
-  width: 45%;
+button {
+  background-color: #B814D8;
+  color: white;
+  margin-left: 40%;
+  margin-right: 40%;
 }

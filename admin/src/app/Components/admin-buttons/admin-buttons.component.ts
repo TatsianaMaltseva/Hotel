@@ -5,7 +5,8 @@ import { CreateAdminComponent } from '../create-admin/create-admin.component';
 
 @Component({
   selector: 'app-admin-buttons',
-  templateUrl: './admin-buttons.component.html'
+  templateUrl: './admin-buttons.component.html',
+  styleUrls: ['./admin-buttons.component.css']
 })
 export class AdminButtonsComponent {
   public constructor(

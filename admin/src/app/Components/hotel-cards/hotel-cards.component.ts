@@ -6,8 +6,8 @@ import { Hotel, HotelService } from 'src/app/hotel.service';
   templateUrl: './hotel-cards.component.html',
   styleUrls: ['./hotel-cards.component.css']
 })
-export class HotelCardsComponent implements OnInit{
 
+export class HotelCardsComponent implements OnInit{
   public hotels: Hotel[] = [];
 
   public constructor(
