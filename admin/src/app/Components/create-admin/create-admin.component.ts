@@ -37,18 +37,21 @@ export class CreateAdminComponent {
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar
   ) {
-      this.createAdminForm = this.formBuilder.group({
-        email: [
-          '',
-          [
-            Validators.required,
-            Validators.email
-          ]
-        ],
-        password: ['', Validators.required],
-        confirmPassword: ['']
-      },
-      { validators: CustomValidators.match('password', 'confirmPassword') }
+      this.createAdminForm = this.formBuilder.group(
+        {
+          email: [
+            '',
+            [
+              Validators.required,
+              Validators.email
+            ]
+          ],
+          password: ['', Validators.required],
+          confirmPassword: ['']
+        },
+        { 
+          validators: CustomValidators.match('password', 'confirmPassword') 
+        }
       );
   }
 

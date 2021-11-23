@@ -14,9 +14,9 @@ namespace iTechArt.Hotels.Api.Controllers
     public class AccountsController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
-        private readonly IHashPasswords _hashPasswordsService;
+        private readonly HashPasswordsService _hashPasswordsService;
 
-        public AccountsController(HotelsDatabaseContext hotelsDb, IHashPasswords hashPasswordsService)
+        public AccountsController(HotelsDatabaseContext hotelsDb, HashPasswordsService hashPasswordsService)
         {
             _hotelsDb = hotelsDb;
             _hashPasswordsService = hashPasswordsService;

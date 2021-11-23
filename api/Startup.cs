@@ -54,7 +54,7 @@ namespace iTechArt.Hotels.Api
                         };
                     }
                 );
-            services.AddSingleton<IHashPasswords, HashPasswordsService>();
+            services.AddSingleton<HashPasswordsService>();
 
             services.AddCors(options =>
             {

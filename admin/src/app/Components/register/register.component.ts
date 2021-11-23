@@ -34,18 +34,21 @@ export class RegisterComponent {
     private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder
   ) {
-      this.registerForm = this.formBuilder.group({
-        email: [
-          '', 
-          [
-            Validators.required,
-            Validators.email
-          ]
-        ],
-        password: ['', Validators.required],
-        confirmPassword: ['']
-      },
-      { validators: CustomValidators.match('password', 'confirmPassword') }
+      this.registerForm = this.formBuilder.group(
+        {
+          email: [
+            '', 
+            [
+              Validators.required,
+              Validators.email
+            ]
+          ],
+          password: ['', Validators.required],
+          confirmPassword: ['']
+        },
+        { 
+          validators: CustomValidators.match('password', 'confirmPassword') 
+        }
       );
   }
 

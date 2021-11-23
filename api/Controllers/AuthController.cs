@@ -18,10 +18,14 @@ namespace iTechArt.Hotels.Api.Controllers
     public class AuthController : Controller
     {
         private readonly IOptions<AuthOptions> _authOptions;
-        private readonly IHashPasswords _hashPasswordsService;
+        private readonly HashPasswordsService _hashPasswordsService;
         private readonly HotelsDatabaseContext _hotelsDb;
 
-        public AuthController(IOptions<AuthOptions> authOptions, HotelsDatabaseContext hotelsDb, IHashPasswords hashPasswordsService)
+        public AuthController(
+            IOptions<AuthOptions> authOptions, 
+            HotelsDatabaseContext hotelsDb, 
+            HashPasswordsService hashPasswordsService
+        )
         {
             _authOptions = authOptions;
             _hotelsDb = hotelsDb;
@@ -37,7 +41,8 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return Unauthorized();
             }
-            if (!_hashPasswordsService.CheckIfPasswordIsCorrect(account.Password, request.Password, Convert.FromBase64String(account.Salt)))
+            if (!_hashPasswordsService
+                .CheckIfPasswordIsCorrect(account.Password, request.Password, Convert.FromBase64String(account.Salt)))
             {
                 return Unauthorized();
             }
@@ -47,7 +52,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("registration")]
         [HttpPost]
-        public async Task<IActionResult> Registrate([FromBody] Login request)
+        public async Task<IActionResult> Register([FromBody] Login request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {

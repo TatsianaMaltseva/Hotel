@@ -26,15 +26,15 @@ namespace iTechArt.Hotels.Api
                     .IsUnicode(false)
                     .IsFixedLength(true);
 
+                entity.Property(e => e.Role)
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Salt)
                     .IsRequired()
                     .HasMaxLength(24)
                     .IsUnicode(false)
                     .IsFixedLength(true);
-
-                entity.Property(e => e.Role)
-                    .HasMaxLength(25)
-                    .IsUnicode(false);
             });
         }
     }
