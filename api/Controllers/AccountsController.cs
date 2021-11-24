@@ -24,7 +24,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> CreateAccount([FromBody] RegisrtationAccountData request)
+        public async Task<IActionResult> CreateAccount([FromBody] RegistrationAccountData request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {

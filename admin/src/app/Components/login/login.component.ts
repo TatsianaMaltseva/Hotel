@@ -13,7 +13,7 @@ export class LoginComponent {
   public showWarning: boolean = false;
   public hidePassword: boolean = true;
 
-  @Output() public closeDialogEvent = new EventEmitter();
+  @Output() public returnBackEvent = new EventEmitter<void>();
 
   public get email(): AbstractControl | null {
     return this.authForm.get('email');
@@ -39,8 +39,8 @@ export class LoginComponent {
     });
   }
 
-  public closeAuthDialog(): void {
-    this.closeDialogEvent.emit();
+  public returnBack(): void {
+    this.returnBackEvent.emit();
   }
 
   public login(email: string, password: string): void {
@@ -48,7 +48,7 @@ export class LoginComponent {
       .login(email, password)
       .subscribe(
         () => { 
-          this.closeAuthDialog();
+          this.returnBack();
         },
         () => this.showWarning = true
       );

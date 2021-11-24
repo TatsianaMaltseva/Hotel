@@ -16,7 +16,7 @@ export class RegisterComponent {
   public serverErrorResponse: string = '';
   public passwordsStateMatcher = new ConfirmValidParentMatcher('notSame');
   
-  @Output() public closeDialogEvent = new EventEmitter();
+  @Output() public returnBackEvent = new EventEmitter<void>();
 
   public get email(): AbstractControl | null {
     return this.registerForm.get('email');
@@ -52,8 +52,8 @@ export class RegisterComponent {
       );
   }
 
-  public closeAuthDialog(): void {
-    this.closeDialogEvent.emit();
+  public returnBack(): void {
+    this.returnBackEvent.emit();
   }
 
   public register(email: string, password: string): void {
@@ -62,7 +62,7 @@ export class RegisterComponent {
       .subscribe(
         () => {
           this.serverErrorResponse = '';
-          this.closeAuthDialog();
+          this.returnBack();
         },
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;

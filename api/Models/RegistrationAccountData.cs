@@ -2,7 +2,7 @@
 
 namespace iTechArt.Hotels.Api.Models
 {
-    public class RegisrtationAccountData
+    public class RegistrationAccountData
     {
         [Required]
         [EmailAddress]
