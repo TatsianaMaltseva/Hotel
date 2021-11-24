@@ -61,10 +61,21 @@ export class AuthService {
   }
   
   public register(email: string, password: string): Observable<string> {
-    return this.http.post<string>(
-      `${this.apiUrl}api/auth/registration`,
-      { email, password }
-    );
+    const options: Object = {
+      responseType: 'text'
+    };
+    
+    return this.http
+      .post<string>(
+        `${this.apiUrl}api/auth/registration`,
+        { email, password },
+        options
+      )
+      .pipe(
+        tap((token: string) => {
+          localStorage.setItem(ACCESS_TOKEN_KEY, token);
+        })
+      );
   }
 
   public logout(): void {

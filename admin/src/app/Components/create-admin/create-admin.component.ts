@@ -17,7 +17,7 @@ export class CreateAdminComponent {
   public createAdminForm: FormGroup;
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
-  public passwordValidator = new ConfirmValidParentMatcher('notSame');
+  public passwordsStateMatcher = new ConfirmValidParentMatcher('notSame');
 
   public get email(): AbstractControl | null {
     return this.createAdminForm.get('email');

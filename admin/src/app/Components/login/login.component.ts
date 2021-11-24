@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/auth.service';
@@ -13,7 +13,7 @@ export class LoginComponent {
   public showWarning: boolean = false;
   public hidePassword: boolean = true;
 
-  @Input() public closeAuthDialog!: Function;
+  @Output() public closeDialogEvent = new EventEmitter();
 
   public get email(): AbstractControl | null {
     return this.authForm.get('email');
@@ -37,6 +37,10 @@ export class LoginComponent {
       ],
       password: ['', [Validators.required]]
     });
+  }
+
+  public closeAuthDialog(): void {
+    this.closeDialogEvent.emit();
   }
 
   public login(email: string, password: string): void {

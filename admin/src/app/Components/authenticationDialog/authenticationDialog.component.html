@@ -1,12 +1,12 @@
 <mat-tab-group dynamicHeight>
     <mat-tab label="Login">
         <div>
-            <app-login [closeAuthDialog]="closeAuthDialogGet"></app-login>
+            <app-login (closeDialogEvent)="closeAuthDialog()"></app-login>
         </div>
     </mat-tab>
     <mat-tab label="Register">
         <div>
-            <app-register [closeAuthDialog]="closeAuthDialogGet"></app-register>
+            <app-register (closeDialogEvent)="closeAuthDialog()"></app-register>
         </div>
     </mat-tab>
 </mat-tab-group>

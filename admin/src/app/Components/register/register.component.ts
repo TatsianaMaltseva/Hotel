@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -14,10 +14,10 @@ export class RegisterComponent {
   public registerForm: FormGroup;
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
-  public passwordValidator = new ConfirmValidParentMatcher('notSame');
-
-  @Input() public closeAuthDialog!: Function;
+  public passwordsStateMatcher = new ConfirmValidParentMatcher('notSame');
   
+  @Output() public closeDialogEvent = new EventEmitter();
+
   public get email(): AbstractControl | null {
     return this.registerForm.get('email');
   }
@@ -52,13 +52,16 @@ export class RegisterComponent {
       );
   }
 
+  public closeAuthDialog(): void {
+    this.closeDialogEvent.emit();
+  }
+
   public register(email: string, password: string): void {
     this.authService
       .register(email, password)
       .subscribe(
         () => {
           this.serverErrorResponse = '';
-          this.authService.login(email, password).subscribe();
           this.closeAuthDialog();
         },
         (serverError: HttpErrorResponse) => {

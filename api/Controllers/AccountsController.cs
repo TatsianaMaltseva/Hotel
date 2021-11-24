@@ -23,8 +23,8 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> CreateAccount([FromBody] Login request)
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> CreateAccount([FromBody] RegisrtationAccountData request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
@@ -36,7 +36,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
                 Password = _hashPasswordsService.HashPassword(request.Password, salt),
-                Role = "admin"
+                Role = Role.Admin
             };
             _hotelsDb.Add(user);
             await _hotelsDb.SaveChangesAsync();

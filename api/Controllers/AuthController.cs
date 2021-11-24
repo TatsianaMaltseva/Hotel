@@ -52,7 +52,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("registration")]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] Login request)
+        public async Task<IActionResult> Register([FromBody] RegisrtationAccountData request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
@@ -64,11 +64,12 @@ namespace iTechArt.Hotels.Api.Controllers
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
                 Password = _hashPasswordsService.HashPassword(request.Password, salt),
-                Role = "client"
+                Role = Role.Client
             };
             _hotelsDb.Add(account);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAccountEmail), new { id = account.Id }, null);
+            var token = GenerateJWT(account);
+            return Ok(token);
         }
 
         private Account GetAccountByEmail(string email) =>
