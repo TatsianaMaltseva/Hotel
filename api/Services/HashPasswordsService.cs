@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace iTechArt.Hotels.Api.Services
 {
-    public class HashPasswordsService : IHashPasswords
+    public class HashPasswordsService
     {
         public byte[] GenerateSalt()
         {

@@ -14,6 +14,10 @@ export class NavbarComponent {
   public get role(): string | null {
     return this.authService.role();
   }
+
+  public get isAdmin(): boolean {
+    return this.isLoggedIn && this.role === 'admin';
+  }
   
   public constructor(
     private readonly authService: AuthService

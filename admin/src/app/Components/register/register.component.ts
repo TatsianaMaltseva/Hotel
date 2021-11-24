@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -14,10 +14,10 @@ export class RegisterComponent {
   public registerForm: FormGroup;
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
-  public passwordValidator = new ConfirmValidParentMatcher('notSame');
-
-  @Input() public closeAuthDialog!: Function;
+  public passwordsStateMatcher = new ConfirmValidParentMatcher('notSame');
   
+  @Output() public returnBackEvent = new EventEmitter<void>();
+
   public get email(): AbstractControl | null {
     return this.registerForm.get('email');
   }
@@ -34,19 +34,26 @@ export class RegisterComponent {
     private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder
   ) {
-    this.registerForm = this.formBuilder.group({
-      email: [
-        '', 
-        [
-          Validators.required,
-          Validators.email
-        ]
-      ],
-      password: ['', [Validators.required]],
-      confirmPassword: ['']
-    },
-    { validators: CustomValidators.match('password', 'confirmPassword') }
-    );
+      this.registerForm = this.formBuilder.group(
+        {
+          email: [
+            '', 
+            [
+              Validators.required,
+              Validators.email
+            ]
+          ],
+          password: ['', Validators.required],
+          confirmPassword: ['']
+        },
+        { 
+          validators: CustomValidators.match('password', 'confirmPassword') 
+        }
+      );
+  }
+
+  public returnBack(): void {
+    this.returnBackEvent.emit();
   }
 
   public register(email: string, password: string): void {
@@ -55,8 +62,7 @@ export class RegisterComponent {
       .subscribe(
         () => {
           this.serverErrorResponse = '';
-          this.authService.login(email, password).subscribe();
-          this.closeAuthDialog();
+          this.returnBack();
         },
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;

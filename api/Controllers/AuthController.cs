@@ -18,10 +18,14 @@ namespace iTechArt.Hotels.Api.Controllers
     public class AuthController : Controller
     {
         private readonly IOptions<AuthOptions> _authOptions;
-        private readonly IHashPasswords _hashPasswordsService;
+        private readonly HashPasswordsService _hashPasswordsService;
         private readonly HotelsDatabaseContext _hotelsDb;
 
-        public AuthController(IOptions<AuthOptions> authOptions, HotelsDatabaseContext hotelsDb, IHashPasswords hashPasswordsService)
+        public AuthController(
+            IOptions<AuthOptions> authOptions, 
+            HotelsDatabaseContext hotelsDb, 
+            HashPasswordsService hashPasswordsService
+        )
         {
             _authOptions = authOptions;
             _hotelsDb = hotelsDb;
@@ -37,7 +41,8 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return Unauthorized();
             }
-            if (!_hashPasswordsService.CheckIfPasswordIsCorrect(account.Password, request.Password, Convert.FromBase64String(account.Salt)))
+            if (!_hashPasswordsService
+                .CheckIfPasswordIsCorrect(account.Password, request.Password, Convert.FromBase64String(account.Salt)))
             {
                 return Unauthorized();
             }
@@ -47,7 +52,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("registration")]
         [HttpPost]
-        public async Task<IActionResult> Registrate([FromBody] Login request)
+        public async Task<IActionResult> Register([FromBody] RegistrationAccountData request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
@@ -59,11 +64,12 @@ namespace iTechArt.Hotels.Api.Controllers
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
                 Password = _hashPasswordsService.HashPassword(request.Password, salt),
-                Role = "client"
+                Role = Role.Client
             };
             _hotelsDb.Add(account);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAccountEmail), new { id = account.Id }, null);
+            var token = GenerateJWT(account);
+            return Ok(token);
         }
 
         private Account GetAccountByEmail(string email) =>

@@ -1,4 +1,4 @@
 <nav>
     <app-authorization></app-authorization>
-    <app-admin-buttons *ngIf="isLoggedIn && (role === 'admin')"></app-admin-buttons>
+    <app-admin-buttons *ngIf="isAdmin"></app-admin-buttons>
 </nav>

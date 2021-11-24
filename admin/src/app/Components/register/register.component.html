@@ -40,7 +40,7 @@
             matInput 
             formControlName="confirmPassword"
             [type]="hidePassword ? 'password' : 'text'"
-            [errorStateMatcher]="passwordValidator"
+            [errorStateMatcher]="passwordsStateMatcher"
         >
         <button 
             mat-icon-button
@@ -55,7 +55,7 @@
             Passwords are not the same
         </mat-error>
     </mat-form-field>
-    <button mat-button (click)="closeAuthDialog()"> Back</button>
+    <button mat-button (click)="returnBack()">Back</button>
     <button 
         mat-button 
         [disabled]="registerForm.invalid"

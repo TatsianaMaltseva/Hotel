@@ -14,17 +14,17 @@ namespace iTechArt.Hotels.Api.Controllers
     public class AccountsController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
-        private readonly IHashPasswords _hashPasswordsService;
+        private readonly HashPasswordsService _hashPasswordsService;
 
-        public AccountsController(HotelsDatabaseContext hotelsDb, IHashPasswords hashPasswordsService)
+        public AccountsController(HotelsDatabaseContext hotelsDb, HashPasswordsService hashPasswordsService)
         {
             _hotelsDb = hotelsDb;
             _hashPasswordsService = hashPasswordsService;
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> CreateAccount([FromBody] Login request)
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> CreateAccount([FromBody] RegistrationAccountData request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
@@ -36,7 +36,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
                 Password = _hashPasswordsService.HashPassword(request.Password, salt),
-                Role = "admin"
+                Role = Role.Admin
             };
             _hotelsDb.Add(account);
             await _hotelsDb.SaveChangesAsync();

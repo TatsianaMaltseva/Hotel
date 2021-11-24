@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/auth.service';
@@ -13,7 +13,7 @@ export class LoginComponent {
   public showWarning: boolean = false;
   public hidePassword: boolean = true;
 
-  @Input() public closeAuthDialog!: Function;
+  @Output() public returnBackEvent = new EventEmitter<void>();
 
   public get email(): AbstractControl | null {
     return this.authForm.get('email');
@@ -39,13 +39,17 @@ export class LoginComponent {
     });
   }
 
+  public returnBack(): void {
+    this.returnBackEvent.emit();
+  }
+
   public login(email: string, password: string): void {
     this.authService
       .login(email, password)
       .subscribe(
-        () =>  { 
-          this.closeAuthDialog();
-         },
+        () => { 
+          this.returnBack();
+        },
         () => this.showWarning = true
       );
   }
