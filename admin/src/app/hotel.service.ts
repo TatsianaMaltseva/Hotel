@@ -24,7 +24,14 @@ export class HotelService {
     this.apiUrl = environment.api;
   }
 
-  public getHotels(): Observable<Hotel[]>{
-    return this.http.get<Hotel[]>(`${this.apiUrl}api/hotels`);
+  public getHotels(pageIndex: number, pageSize: number): Observable<Hotel[]>{
+    let params = new URLSearchParams();
+    params.set('pageIndex', `${pageIndex}`);
+    params.set('pageSize', `${pageSize}`);
+    return this.http.get<Hotel[]>(`${this.apiUrl}api/hotels?${params.toString()}`);
+  }
+
+  public getHotelsCount(): Observable<number>{
+    return this.http.get<number>(`${this.apiUrl}api/hotels/count`);
   }
 }

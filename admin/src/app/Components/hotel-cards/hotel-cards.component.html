@@ -19,3 +19,12 @@
             </mat-card-actions>
     </mat-card>
 </div>
+
+<mat-paginator
+    [length]="hotelCount"
+    [pageSizeOptions]="[1, 2, 5]"
+    [pageSize]="startPageSize"
+    [pageIndex]="startPageIndex"
+    (page)="onPaginateChange($event)"
+>
+</mat-paginator>

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using iTechArt.Hotels.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -46,10 +48,18 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHotels()
+        public async Task<IActionResult> GetHotels([FromQuery] PageParameters pageParamaters)
         {
-            Hotel[] hotels = await _hotelsDb.Hotels.ToArrayAsync();
+            Hotel[] hotels = await _hotelsDb.Hotels
+                .Skip((pageParamaters.PageIndex - 1) * pageParamaters.PageSize)
+                .Take(pageParamaters.PageSize)
+                .ToArrayAsync();
             return Ok(hotels);
         }
+
+        [Route("count")]
+        [HttpGet]
+        public async Task<IActionResult> GetHotelsCount() =>
+            Ok(await _hotelsDb.Hotels.CountAsync());
     }
 }
