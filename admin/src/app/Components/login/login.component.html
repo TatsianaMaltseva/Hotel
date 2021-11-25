@@ -8,7 +8,7 @@
             type="email"
             placeholder="user@gmail.com"
         >
-        <mat-error *ngIf="email?.invalid">
+        <mat-error>
             Please enter a valid email address
         </mat-error>
     </mat-form-field>
@@ -28,17 +28,17 @@
                 {{ hidePassword ? 'visibility_off' : 'visibility' }}
             </mat-icon>
         </button>
-        <mat-error *ngIf="password?.invalid">
+        <mat-error>
             Password is required
         </mat-error>
     </mat-form-field>
-    <button mat-button (click)="closeAuthDialog()">Back</button>
+    <button mat-button (click)="returnBack()">Back</button>
     <button 
         mat-button 
         [disabled]="authForm.invalid"
         (click)="login(email?.value, password?.value)"
     >
-        Login
+        Log in
     </button>
     <mat-error *ngIf="showWarning">
         Wrong credentials

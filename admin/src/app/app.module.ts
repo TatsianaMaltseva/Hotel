@@ -11,26 +11,31 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthorizationDialogComponent } from './Components/authorizationDialog/authorizationDialog.component';
+import { AuthenticationDialogComponent } from './Components/authenticationDialog/authenticationDialog.component';
 import { NavbarComponent } from './Components/navbar/navbar.component';
 import { AuthorizationComponent } from './Components/authorization/authorization.component';
 import { AdminButtonsComponent } from './Components/admin-buttons/admin-buttons.component';
 import { CreateAdminComponent } from './Components/create-admin/create-admin.component';
 import { getToken } from './Core/getToken';
 import { environment } from 'src/environments/environment';
+import { LoginComponent } from './Components/login/login.component';
+import { RegisterComponent } from './Components/register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthorizationDialogComponent,
+    AuthenticationDialogComponent,
     NavbarComponent,
     AuthorizationComponent,
     AdminButtonsComponent,
-    CreateAdminComponent
+    CreateAdminComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +51,7 @@ import { environment } from 'src/environments/environment';
     MatDialogModule,
     MatIconModule,
     MatSnackBarModule,
+    MatTabsModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

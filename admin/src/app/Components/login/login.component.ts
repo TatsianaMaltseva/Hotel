@@ -1,19 +1,19 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/auth.service';
 
 @Component({
-  selector: 'app-authorization-dialog',
-  templateUrl: './authorizationDialog.component.html',
-  styleUrls: ['./authorizationDialog.component.css']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-
-export class AuthorizationDialogComponent {
+export class LoginComponent {
   public authForm: FormGroup;
   public showWarning: boolean = false;
   public hidePassword: boolean = true;
+
+  @Output() public returnBackEvent = new EventEmitter<void>();
 
   public get email(): AbstractControl | null {
     return this.authForm.get('email');
@@ -25,7 +25,6 @@ export class AuthorizationDialogComponent {
 
   public constructor(
     private readonly authService: AuthService,
-    private readonly matDialogRef: MatDialogRef<AuthorizationDialogComponent>,
     private readonly formBuilder: FormBuilder
   ) {
     this.authForm = this.formBuilder.group({
@@ -38,18 +37,19 @@ export class AuthorizationDialogComponent {
       ],
       password: ['', [Validators.required]]
     });
-  } 
+  }
 
-  public closeAuthDialog(): void {
-    this.matDialogRef.close();
+  public returnBack(): void {
+    this.returnBackEvent.emit();
   }
 
   public login(email: string, password: string): void {
-    this.authService.login(email, password)
+    this.authService
+      .login(email, password)
       .subscribe(
-        () =>  { 
-          this.closeAuthDialog();
-        }, 
+        () => { 
+          this.returnBack();
+        },
         () => this.showWarning = true
       );
   }

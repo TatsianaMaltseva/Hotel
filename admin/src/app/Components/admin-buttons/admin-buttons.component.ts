@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+
 import { CreateAdminComponent } from '../create-admin/create-admin.component';
 
 @Component({
@@ -16,7 +17,7 @@ export class AdminButtonsComponent {
     this.matDialog.open(
       CreateAdminComponent,
       {
-        width: '300px'
+        width: '400px'
       }
     );
   }
