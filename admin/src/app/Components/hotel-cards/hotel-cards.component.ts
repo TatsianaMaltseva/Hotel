@@ -8,7 +8,7 @@ import { Hotel, HotelService } from 'src/app/hotel.service';
   styleUrls: ['./hotel-cards.component.css']
 })
 
-export class HotelCardsComponent implements OnInit{
+export class HotelCardsComponent implements OnInit {
   public hotels: Hotel[] = [];
   public hotelCount: number = 0;
   public readonly startPageSize: number = 2;
@@ -21,17 +21,17 @@ export class HotelCardsComponent implements OnInit{
 
   public ngOnInit(): void {
     this.getHotels(this.startPageIndex, this.startPageSize);
-    this.getHotelCount();
+    this.getHotelsCount();
   }
 
-  public getHotelCount(): void {
+  public onPaginateChange(event?: PageEvent): void {
+    this.getHotels(event!.pageIndex + 1, event!.pageSize);
+  }
+
+  private getHotelsCount(): void {
     this.hotelService
       .getHotelsCount()
       .subscribe(number => this.hotelCount = number);
-  }
-
-  public onPaginateChange(event?: PageEvent): void{
-    this.getHotels(event!.pageIndex + 1, event!.pageSize);
   }
 
   private getHotels(pageIndex: number, pageSize: number): void {

@@ -31,7 +31,7 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 Name = request.Name,
                 Country = request.Country,
-                Sity = request.Sity,
+                City = request.City,
                 Address = request.Address
             };
             _hotelsDb.Add(hotel);

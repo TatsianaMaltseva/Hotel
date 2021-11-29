@@ -55,7 +55,7 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(60)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Sity)
+                entity.Property(e => e.City)
                     .IsRequired()
                     .HasMaxLength(60)
                     .IsUnicode(false);

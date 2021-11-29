@@ -1,16 +1,26 @@
-.example-card {
-  max-width: 40%;
-  margin: 3%;
-  margin-left: 38%;
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 16.8%;
+  padding-right: 16.8%;
+}
+
+app-hotels-filter {
+  width: 26%;
+  margin-right: 5px;
+}
+
+.card {
+  margin: 2%;
 }
 
 img {
-  min-height: 200px;
-  min-width: 200px;
+  min-height: 250px;
+  min-width: 250px;
 }
 
 .cards {
-  margin-top: 5%;
+  width: 70%;
 }
 
 button {
@@ -21,5 +31,6 @@ button {
 }
 
 mat-paginator {
+  margin-top: 2%;
   margin-right: 35%;
 }
