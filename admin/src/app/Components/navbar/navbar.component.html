@@ -1,4 +1,5 @@
 <nav>
     <app-authorization></app-authorization>
+    <app-account-menu *ngIf="isLoggedIn"></app-account-menu>
     <app-admin-buttons *ngIf="isAdmin"></app-admin-buttons>
 </nav>

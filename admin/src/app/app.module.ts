@@ -14,6 +14,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -29,6 +30,8 @@ import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.component';
 import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.component';
+import { AccountMenuComponent } from './Components/account-menu/account-menu.component';
+import { ChangePasswordComponent } from './Components/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,9 @@ import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.
     LoginComponent,
     RegisterComponent,
     HotelCardsComponent,
-    HotelsFilterComponent
+    HotelsFilterComponent,
+    AccountMenuComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +66,7 @@ import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.
     MatCardModule,
     MatGridListModule,
     MatPaginatorModule,
+    MatMenuModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

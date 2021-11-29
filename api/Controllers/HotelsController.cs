@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -61,5 +62,27 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelsCount() =>
             Ok(await _hotelsDb.Hotels.CountAsync());
+
+        [Route("countries")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllCounties()
+        {
+            List<string> countries = await _hotelsDb.Hotels
+                .Select(hotel => hotel.Country)
+                .Distinct()
+                .ToListAsync();
+            return Ok(countries);
+        }
+
+        [Route("cities")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllCities()
+        {
+            List<string> cities = await _hotelsDb.Hotels
+                .Select(hotel => hotel.Sity)
+                .Distinct()
+                .ToListAsync();
+            return Ok(cities);
+        }
     }
 }

@@ -1,0 +1,13 @@
+button {
+    background-color: #B814D8;
+    color: white;
+}
+
+button.mat-menu-item{
+    background-color: white;
+    color: black;
+}
+
+a {
+    text-decoration: none;
+}

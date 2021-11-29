@@ -42,6 +42,15 @@ export class AuthService {
     return null;
   }
 
+  public id(): number | null {
+    if (this.isLoggedIn()) {
+      const decodedToken: Token = this.jwtHelper.decodeToken(getToken()!);
+      return decodedToken.sub;
+    }
+
+    return null;
+  }
+
   public login(email: string, password: string): Observable<string> {
     const options: Object = {
       responseType: 'text'
