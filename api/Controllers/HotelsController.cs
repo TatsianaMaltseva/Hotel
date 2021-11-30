@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,22 +19,22 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> CreateHotel([FromBody] Hotel request )
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> CreateHotel([FromBody] Hotel request)
         {
             if (request == null)
             {
-                return BadRequest("Wrong response");
+                return BadRequest("Not enough information to create hotel");
             }
 
             Hotel hotel = new Hotel
             {
                 Name = request.Name,
                 Country = request.Country,
-                Sity = request.Sity,
+                City = request.City,
                 Address = request.Address
             };
-            _hotelsDb.Add(hotel);
+            await _hotelsDb.AddAsync(hotel);
             await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(GetHotel), new { id = hotel.HotelId }, null);
         }
@@ -62,27 +61,5 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelsCount() =>
             Ok(await _hotelsDb.Hotels.CountAsync());
-
-        [Route("countries")]
-        [HttpGet]
-        public async Task<IActionResult> GetAllCounties()
-        {
-            List<string> countries = await _hotelsDb.Hotels
-                .Select(hotel => hotel.Country)
-                .Distinct()
-                .ToListAsync();
-            return Ok(countries);
-        }
-
-        [Route("cities")]
-        [HttpGet]
-        public async Task<IActionResult> GetAllCities()
-        {
-            List<string> cities = await _hotelsDb.Hotels
-                .Select(hotel => hotel.Sity)
-                .Distinct()
-                .ToListAsync();
-            return Ok(cities);
-        }
     }
 }

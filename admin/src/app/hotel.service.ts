@@ -7,7 +7,7 @@ export interface Hotel {
   hotelId: number;
   name: string;
   country: string;
-  sity: string;
+  city: string;
   address: string;
 }
 

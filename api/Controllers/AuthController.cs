@@ -2,8 +2,13 @@
 using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -12,17 +17,17 @@ namespace iTechArt.Hotels.Api.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly JwtService _jwtService;
+        private readonly IOptions<AuthOptions> _authOptions;
         private readonly HashPasswordsService _hashPasswordsService;
         private readonly HotelsDatabaseContext _hotelsDb;
 
         public AuthController(
-            JwtService jwtService,
+            IOptions<AuthOptions> authOptions, 
             HotelsDatabaseContext hotelsDb, 
             HashPasswordsService hashPasswordsService
         )
         {
-            _jwtService = jwtService;
+            _authOptions = authOptions;
             _hotelsDb = hotelsDb;
             _hashPasswordsService = hashPasswordsService;
         }
@@ -41,7 +46,7 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return Unauthorized();
             }
-            string token = GenerateJWT(account);
+            var token = GenerateJWT(account);
             return Ok(token);
         }
 
@@ -61,9 +66,9 @@ namespace iTechArt.Hotels.Api.Controllers
                 Password = _hashPasswordsService.HashPassword(request.Password, salt),
                 Role = Role.Client
             };
-            _hotelsDb.Add(account);
+            await _hotelsDb.AddAsync(account);
             await _hotelsDb.SaveChangesAsync();
-            string token = GenerateJWT(account);
+            var token = GenerateJWT(account);
             return Ok(token);
         }
 
@@ -84,7 +89,27 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(email);
         }
 
-        private string GenerateJWT(Account account) =>
-            _jwtService.GenerateJWT(account);
+        private string GenerateJWT(Account account)
+        {
+            var authParams = _authOptions.Value;
+
+            var securityKey = authParams.GetSymmetricSecurityKey();
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>() {
+                new Claim(JwtRegisteredClaimNames.Email, account.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
+                new Claim("role", account.Role.ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                authParams.Issuer,
+                authParams.Audience,
+                claims,
+                expires: DateTime.Now.Add(authParams.ExpireTime),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }

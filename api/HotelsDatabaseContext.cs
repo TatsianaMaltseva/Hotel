@@ -2,7 +2,7 @@
 
 namespace iTechArt.Hotels.Api
 {
-    public class HotelsDatabaseContext : DbContext
+    public partial class HotelsDatabaseContext : DbContext
     {
         public HotelsDatabaseContext(DbContextOptions<HotelsDatabaseContext> options)
             : base(options)
@@ -11,6 +11,7 @@ namespace iTechArt.Hotels.Api
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Hotel> Hotels { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +46,11 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(155)
                     .IsUnicode(false);
 
+                entity.Property(e => e.City)
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Country)
                     .IsRequired()
                     .HasMaxLength(60)
@@ -54,11 +60,20 @@ namespace iTechArt.Hotels.Api
                     .IsRequired()
                     .HasMaxLength(60)
                     .IsUnicode(false);
+            });
 
-                entity.Property(e => e.Sity)
-                    .IsRequired()
-                    .HasMaxLength(60)
-                    .IsUnicode(false);
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.ImageData).HasColumnName("Image");
+
+                entity.Property(e => e.ImageId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("name");
             });
         }
     }
