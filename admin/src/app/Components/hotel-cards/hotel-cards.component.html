@@ -17,7 +17,7 @@
                 </mat-grid-tile>
             </mat-grid-list>
                 <mat-card-actions>
-                    <button mat-flat-button>Look closer</button>
+                    <button mat-flat-button>Look</button>
                 </mat-card-actions>
         </mat-card>
     </div>
@@ -26,8 +26,8 @@
 <mat-paginator
     [length]="hotelCount"
     [pageSizeOptions]="[1, 2, 5]"
-    [pageSize]="startPageSize"
-    [pageIndex]="startPageIndex"
+    [pageSize]="pageParameters.pageSize"
+    [pageIndex]="pageParameters.pageIndex"
     (page)="onPaginateChange($event)"
 >
 </mat-paginator>

@@ -51,7 +51,7 @@ namespace iTechArt.Hotels.Api.Controllers
         public async Task<IActionResult> GetHotels([FromQuery] PageParameters pageParamaters)
         {
             Hotel[] hotels = await _hotelsDb.Hotels
-                .Skip((pageParamaters.PageIndex - 1) * pageParamaters.PageSize)
+                .Skip(pageParamaters.PageIndex * pageParamaters.PageSize)
                 .Take(pageParamaters.PageSize)
                 .ToArrayAsync();
             return Ok(hotels);

@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { PageParameters } from 'src/app/Core/pageParameters';
 
 export interface Hotel {
   hotelId: number;
@@ -23,11 +24,9 @@ export class HotelService {
     this.apiUrl = environment.api;
   }
 
-  public getHotels(pageIndex: number, pageSize: number): Observable<Hotel[]>{
-    let params = new URLSearchParams();
-    params.set('pageIndex', `${pageIndex}`);
-    params.set('pageSize', `${pageSize}`);
-    return this.http.get<Hotel[]>(`${this.apiUrl}api/hotels?${params.toString()}`);
+  public getHotels(pageParameters: PageParameters): Observable<Hotel[]>{
+    let httpParams = pageParameters.getHttpParams();
+    return this.http.get<Hotel[]>(`${this.apiUrl}api/hotels`, { params: httpParams });
   }
 
   public getHotelsCount(): Observable<number>{
