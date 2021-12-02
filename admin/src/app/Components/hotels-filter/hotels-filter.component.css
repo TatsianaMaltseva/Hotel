@@ -1,12 +1,3 @@
-aside {
-    width: 20%;
-    float: left;
-    margin-left: 15%;
-    margin-top: 5%;
-    background-color:skyblue
+div {
+  background-color: skyblue;
 }
-
-.file-input {
-  display: none;
-}
-
