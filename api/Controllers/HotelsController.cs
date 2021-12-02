@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,37 +25,37 @@ namespace iTechArt.Hotels.Api.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Wrong response");
+                return BadRequest("Request is empty");
             }
-
-            Hotel hotel = new Hotel
-            {
-                Name = request.Name,
-                Country = request.Country,
-                City = request.City,
-                Address = request.Address
-            };
+            Hotel hotel = request; 
             _hotelsDb.Add(hotel);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetHotel), new { id = hotel.HotelId }, null);
+            return CreatedAtAction(nameof(GetHotel), new { id = hotel.Id }, null);
         }
 
         [Route("{id}")]
         [HttpGet]
         public async Task<IActionResult> GetHotel([FromRoute] int id)
         {
-            Hotel hotel = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.HotelId == id);
+            Hotel hotel = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
             return Ok(hotel);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHotels([FromQuery] PageParameters pageParamaters)
+        public async Task<IActionResult> GetHotelsDto([FromQuery] PageParameters pageParamaters)
         {
             Hotel[] hotels = await _hotelsDb.Hotels
                 .Skip(pageParamaters.PageIndex * pageParamaters.PageSize)
                 .Take(pageParamaters.PageSize)
                 .ToArrayAsync();
-            return Ok(hotels);
+            IEnumerable<HotelDto> hotelsDto = hotels.Select(h => new HotelDto
+            {
+                Id = h.Id,
+                City = h.City,
+                Country = h.Country,
+                Name = h.Name
+            });
+            return Ok(hotelsDto);
         }
 
         [Route("count")]

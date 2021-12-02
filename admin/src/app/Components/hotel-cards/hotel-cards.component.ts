@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { PageParameters } from 'src/app/Core/pageParameters';
-import { Hotel, HotelService } from 'src/app/hotel.service';
+import { HotelDto, HotelService } from 'src/app/hotel.service';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -10,7 +10,7 @@ import { Hotel, HotelService } from 'src/app/hotel.service';
 })
 
 export class HotelCardsComponent implements OnInit {
-  public hotels: Hotel[] = [];
+  public hotels: HotelDto[] = [];
   public hotelCount: number = 0;
   public pageParameters = new PageParameters(2);
 
@@ -20,23 +20,23 @@ export class HotelCardsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.getHotels();
-    this.getHotelsCount();
+    this.fetchHotelsDto();
+    this.fetchHotelsCount();
   }
 
   public onPaginateChange(event?: PageEvent): void {
     this.pageParameters.pageIndex = event!.pageIndex;
     this.pageParameters.pageSize = event!.pageSize;
-    this.getHotels();
+    this.fetchHotelsDto();
   }
 
-  private getHotelsCount(): void {
+  private fetchHotelsCount(): void {
     this.hotelService
       .getHotelsCount()
       .subscribe(number => this.hotelCount = number);
   }
 
-  private getHotels(): void {
+  private fetchHotelsDto(): void {
     this.hotelService
       .getHotels(this.pageParameters)
       .subscribe(hotels => this.hotels = hotels);

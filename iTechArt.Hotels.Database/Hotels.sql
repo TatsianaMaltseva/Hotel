@@ -1,8 +1,9 @@
 ﻿CREATE TABLE [dbo].[Hotels] (
-    [HotelId] INT IDENTITY (1, 1) NOT NULL,
-    [Name] VARCHAR(60) NOT NULL,
-    [Country] VARCHAR(60) NOT NULL,
-    [City] VARCHAR(60) NOT NULL,
-    [Address] VARCHAR(155) NOT NULL,
-    PRIMARY KEY CLUSTERED ([HotelId] ASC)
+    [Id] INT IDENTITY (1, 1) NOT NULL,
+    [Name] NVARCHAR(60) NOT NULL,
+    [Country] NVARCHAR(56) NOT NULL,
+    [City] NVARCHAR(85) NOT NULL,
+    [Address] NVARCHAR(155) NOT NULL,
+    [Description] NVARCHAR(3000) NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
 );

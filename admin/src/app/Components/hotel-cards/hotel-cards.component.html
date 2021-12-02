@@ -7,13 +7,13 @@
                     <mat-card-title>{{ hotel.name }}</mat-card-title>
                 </mat-grid-tile>
                 <mat-grid-tile colspan=2 rowspan=3>
-                    <img mat-card-xl-image src=null >
+                    <img mat-card-xl-image>
                 </mat-grid-tile>
                 <mat-grid-tile colspan=3 rowspan=1>
-                    <mat-card-subtitle>{{ hotel.country }} - {{ hotel.city }}</mat-card-subtitle>
+                    <mat-card-subtitle>{{ hotel.country }}</mat-card-subtitle>
                 </mat-grid-tile>
                 <mat-grid-tile colspan=3 rowspan=1>
-                    <mat-card-content>{{ hotel.address }}</mat-card-content>
+                    <mat-card-subtitle>{{ hotel.city }}</mat-card-subtitle>
                 </mat-grid-tile>
             </mat-grid-list>
                 <mat-card-actions>

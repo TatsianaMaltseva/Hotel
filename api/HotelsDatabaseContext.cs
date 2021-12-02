@@ -19,7 +19,7 @@ namespace iTechArt.Hotels.Api
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(125)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.Password)
                     .IsRequired()
@@ -29,7 +29,7 @@ namespace iTechArt.Hotels.Api
 
                 entity.Property(e => e.Role)
                     .HasMaxLength(25)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.Salt)
                     .IsRequired()
@@ -43,22 +43,26 @@ namespace iTechArt.Hotels.Api
                 entity.Property(e => e.Address)
                     .IsRequired()
                     .HasMaxLength(155)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.Country)
                     .IsRequired()
-                    .HasMaxLength(60)
-                    .IsUnicode(false);
+                    .HasMaxLength(56)
+                    .IsUnicode(true);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(60)
-                    .IsUnicode(false);
+                    .IsUnicode(true);
 
                 entity.Property(e => e.City)
                     .IsRequired()
-                    .HasMaxLength(60)
-                    .IsUnicode(false);
+                    .HasMaxLength(85)
+                    .IsUnicode(true);
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(3000)
+                    .IsUnicode(true);
             });
         }
     }
