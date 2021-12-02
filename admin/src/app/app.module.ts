@@ -32,6 +32,8 @@ import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.compon
 import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.component';
 import { AccountMenuComponent } from './Components/account-menu/account-menu.component';
 import { ChangePasswordComponent } from './Components/change-password/change-password.component';
+import { HotelComponent } from './Components/hotel/hotel.component';
+import { ImagesComponent } from './Components/images/images.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { ChangePasswordComponent } from './Components/change-password/change-pas
     HotelCardsComponent,
     HotelsFilterComponent,
     AccountMenuComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    HotelComponent,
+    ImagesComponent
   ],
   imports: [
     BrowserModule,

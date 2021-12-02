@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 namespace iTechArt.Hotels.Api
 {
-    public partial class HotelsDatabaseContext : DbContext
+    public  class HotelsDatabaseContext : DbContext
     {
         public HotelsDatabaseContext(DbContextOptions<HotelsDatabaseContext> options)
             : base(options)
@@ -45,35 +45,36 @@ namespace iTechArt.Hotels.Api
                     .IsRequired()
                     .HasMaxLength(155)
                     .IsUnicode(true);
-                entity.Property(e => e.Country)
-                    .IsRequired()
-                    .HasMaxLength(56)
-                    .IsUnicode(true);
+
                 entity.Property(e => e.City)
-                    .IsRequired()
                     .HasMaxLength(85)
                     .IsUnicode(true);
-                entity.Property(e => e.Name)
-                   .IsRequired()
-                   .HasMaxLength(60)
-                   .IsUnicode(true);
+
+                entity.Property(e => e.Country)
+                    .HasMaxLength(56)
+                    .IsUnicode(true);
+
                 entity.Property(e => e.Description)
                     .HasMaxLength(3000)
+                    .IsUnicode(true);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(60)
                     .IsUnicode(true);
             });
 
             modelBuilder.Entity<Image>(entity =>
             {
-                entity.HasNoKey();
+                entity.Property(e => e.Path)
+                    .IsRequired()
+                    .HasMaxLength(265);
 
-                entity.Property(e => e.ImageData).HasColumnName("Image");
-
-                entity.Property(e => e.ImageId).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("name");
+                entity.HasOne(d => d.Hotel)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(d => d.HotelId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Images__HotelId__2EDAF651");
             });
         }
     }

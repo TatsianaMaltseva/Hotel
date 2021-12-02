@@ -10,15 +10,19 @@
                     <img mat-card-xl-image>
                 </mat-grid-tile>
                 <mat-grid-tile colspan=3 rowspan=1>
-                    <mat-card-subtitle>{{ hotel.country }}</mat-card-subtitle>
+                    <mat-card-subtitle>{{ hotel.country }} - {{ hotel.city }}</mat-card-subtitle>
                 </mat-grid-tile>
                 <mat-grid-tile colspan=3 rowspan=1>
-                    <mat-card-subtitle>{{ hotel.city }}</mat-card-subtitle>
+                    <mat-card-actions>
+                        <button 
+                        mat-flat-button
+                        routerLink="/hotels/{{hotel.id}}"
+                    >
+                        Look
+                    </button>
+                    </mat-card-actions>
                 </mat-grid-tile>
             </mat-grid-list>
-                <mat-card-actions>
-                    <button mat-flat-button>Look</button>
-                </mat-card-actions>
         </mat-card>
     </div>
 </div>
