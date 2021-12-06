@@ -1,1 +1,46 @@
-<p>images works!</p>
+<div class="wrapper" *ngFor="let image of images">
+    <mat-grid-list cols="6" rowHeight="50px">
+        <mat-grid-tile colspan=6 rowspan=4>
+            <img src="{{createImgPath(image)}}"/>
+        </mat-grid-tile>
+        <mat-grid-tile colspan=3 rowspan=1>
+            <button
+                mat-button
+                type="button"
+            >
+                Remove
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan=3 rowspan=1>
+            <button 
+                mat-button
+                type="button"
+            >
+                Make main
+            </button>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>
+
+<input 
+    type="file" 
+    #file 
+    placeholder="Choose file" 
+    (change)="uploadFile(file.files)"
+    style="display: none"
+>
+<p></p>
+<button 
+    mat-button
+    type="button"
+    class="btn btn-success"
+    (click)="file.click()"
+>
+    Upload file
+</button>
+<div *ngIf="progress > 0">
+    {{progress}}%
+</div>
+<div *ngIf="message">
+    {{message}}
+</div>

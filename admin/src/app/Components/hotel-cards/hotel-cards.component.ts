@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
+
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelDto, HotelService } from 'src/app/hotel.service';
 

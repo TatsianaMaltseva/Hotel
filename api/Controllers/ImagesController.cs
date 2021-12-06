@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using iTechArt.Hotels.Api.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -17,8 +20,10 @@ namespace iTechArt.Hotels.Api.Controllers
             _hotelsDb = hotelsDb;
         }
 
-        [HttpPost, DisableRequestSizeLimit]
-        public IActionResult AddImage() // make async
+        [Route("{hotelId}")]//do not like such url
+        [HttpPost, DisableRequestSizeLimit] //second argument maybe should not be here
+        //[Authorize(Roles = Role.Admin)]
+        public IActionResult AddImage([FromRoute] int hotelId) // make async
         {
             try
             {
@@ -35,18 +40,38 @@ namespace iTechArt.Hotels.Api.Controllers
                     {
                         file.CopyTo(stream);
                     }
+                    Image image = new Image
+                    {
+                        Path = dbPath,
+                        HotelId = hotelId
+                    };
+                    _hotelsDb.Images.Add(image);
+                    _hotelsDb.SaveChanges();
                     return Ok(new { dbPath });
                 }
                 else
                 {
-                    return BadRequest("Something went wrong");
+                    return BadRequest("Something went wrong"); // hyevi bad request message
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex);
+                return StatusCode(500, ex); //500 code is ban
             }
-            //add folder to db
+        }
+
+        [Route("{hotelId}")]
+        [HttpGet]
+        public IActionResult GetImagesPathsHotel([FromRoute] int hotelId)
+        {
+            IEnumerable<ImageDto> images = _hotelsDb.Images
+                .Where(image => image.HotelId == hotelId)
+                .Select(image => new ImageDto
+                {
+                    Id = image.Id,
+                    Path = image.Path
+                });
+            return Ok(images);
         }
     }
 }

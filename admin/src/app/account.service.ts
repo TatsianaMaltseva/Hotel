@@ -21,11 +21,11 @@ export class AccountService {
   }
     
   public isAdmin(): boolean {
-    return this.authService.isLoggedIn() && this.authService.role() === 'admin';
+    return this.authService.role() === 'admin';
   }
 
   public isClient(): boolean {
-    return this.authService.isLoggedIn() && this.authService.role() === 'client';
+    return this.authService.role() === 'client';
   }
 
   public id(): number | null {

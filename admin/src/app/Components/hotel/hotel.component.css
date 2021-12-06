@@ -3,11 +3,3 @@ mat-card {
     margin-right: 17%;
     padding: 2%;
 }
-mat-card-content {
-    display: flex;
-    flex-direction: column;
-}
-
-div {
-    margin-bottom: 2%;
-}

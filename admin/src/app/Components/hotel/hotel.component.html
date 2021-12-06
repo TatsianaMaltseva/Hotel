@@ -2,15 +2,18 @@
     <mat-card>
         <mat-card-content>
             <div>
-                <mat-card-title style="background-color: aqua;">{{hotel.name}}</mat-card-title>
+                <mat-card-title>{{hotel.name}}</mat-card-title>
             </div>
             <div>
-                <mat-card-subtitle style="background-color: aqua;">
+                <mat-card-subtitle>
                     {{hotel.country}} {{hotel.city}} {{hotel.address}}
                 </mat-card-subtitle>
             </div>
             <div>
                 <app-images></app-images>
+            </div>
+            <div>
+                {{hotel.description}}
             </div>
         </mat-card-content>
         <button mat-button routerLink="">Back</button>
