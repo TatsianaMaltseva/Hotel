@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/pageParameters';
 
 export interface HotelDto {
-  hotelId: number;
+  id: number;
   name: string;
   country: string;
   city: string;
@@ -24,7 +24,7 @@ export class HotelService {
   }
 
   public getHotels(pageParameters: PageParameters): Observable<HotelDto[]>{
-    let httpParams = pageParameters.getHttpParams();
+    const httpParams = pageParameters.getHttpParams();
     return this.http.get<HotelDto[]>(`${this.apiUrl}api/hotels`, { params: httpParams });
   }
 

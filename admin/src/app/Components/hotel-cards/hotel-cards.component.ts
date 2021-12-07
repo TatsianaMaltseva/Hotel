@@ -20,14 +20,13 @@ export class HotelCardsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.fetchHotelsDto();
+    this.fetchHotels();
     this.fetchHotelsCount();
   }
 
   public onPaginateChange(event?: PageEvent): void {
-    this.pageParameters.pageIndex = event!.pageIndex;
-    this.pageParameters.pageSize = event!.pageSize;
-    this.fetchHotelsDto();
+    this.pageParameters.updateParameters(event);
+    this.fetchHotels();
   }
 
   private fetchHotelsCount(): void {
@@ -36,7 +35,7 @@ export class HotelCardsComponent implements OnInit {
       .subscribe(number => this.hotelCount = number);
   }
 
-  private fetchHotelsDto(): void {
+  private fetchHotels(): void {
     this.hotelService
       .getHotels(this.pageParameters)
       .subscribe(hotels => this.hotels = hotels);
