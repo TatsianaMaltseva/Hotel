@@ -25,9 +25,9 @@ namespace iTechArt.Hotels.Api.Controllers
         {
             if (request == null)
             {
-                return BadRequest("Not enough information to create hotel");
+                return BadRequest("Request is empty");
             }
-            Hotel hotel = request;
+            Hotel hotel = request; 
             await _hotelsDb.AddAsync(hotel);
             await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(GetHotel), new { id = hotel.Id }, null);
@@ -42,20 +42,24 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHotelsDto([FromQuery] PageParameters pageParamaters)
+        public async Task<IActionResult> GetHotelsDto([FromQuery] PageParameters pageParameters)
         {
-            Hotel[] hotels = await _hotelsDb.Hotels
-                .Skip(pageParamaters.PageIndex * pageParamaters.PageSize)
-                .Take(pageParamaters.PageSize)
-                .ToArrayAsync();
-            IEnumerable<HotelDto> hotelsDto = hotels.Select(h => new HotelDto
+            if (pageParameters == null)
             {
-                Id = h.Id,
-                City = h.City,
-                Country = h.Country,
-                Name = h.Name
-            });
-            return Ok(hotelsDto);
+                return BadRequest("No page parameters");
+            }
+            IEnumerable<HotelDto> hotels = await _hotelsDb.Hotels
+                .Skip(pageParameters.PageIndex * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
+                .Select(h => new HotelDto
+                    {
+                        Id = h.Id,
+                        City = h.City,
+                        Country = h.Country,
+                        Name = h.Name
+                    })
+                .ToArrayAsync();
+            return Ok(hotels);
         }
 
         [Route("count")]
