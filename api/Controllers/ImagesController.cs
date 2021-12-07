@@ -1,11 +1,10 @@
-﻿using iTechArt.Hotels.Api.Models;
+﻿using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -15,10 +14,15 @@ namespace iTechArt.Hotels.Api.Controllers
     public class ImagesController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
+        private readonly ImageService _imageService;
 
-        public ImagesController(HotelsDatabaseContext hotelsDb)
+        public ImagesController(
+            HotelsDatabaseContext hotelsDb,
+            ImageService imageService
+        )
         {
             _hotelsDb = hotelsDb;
+            _imageService = imageService;
         }
 
         [Route("{hotelId}")]//do not like such url
@@ -29,31 +33,19 @@ namespace iTechArt.Hotels.Api.Controllers
             try
             {
                 var file = Request.Form.Files[0];
-                var folderName = Path.Combine("Resources", "Images");
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-
-                if (file.Length > 0)
+                if (file.Length <= 0)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-                    Image image = new Image
-                    {
-                        Path = dbPath,
-                        HotelId = hotelId
-                    };
-                    _hotelsDb.Images.Add(image);
-                    _hotelsDb.SaveChanges();
-                    return Ok(new { dbPath });
+                    return BadRequest("Something is wrong with file, probably it is empty");
                 }
-                else
+                string dbPath = _imageService.AddImageToPath(file);
+                Image image = new Image
                 {
-                    return BadRequest("Something went wrong"); // hyevi bad request message
-                }
+                    Path = dbPath,
+                    HotelId = hotelId
+                };
+                _hotelsDb.Images.Add(image);
+                _hotelsDb.SaveChanges();
+                return Ok(new { dbPath });
             }
             catch (Exception ex)
             {
@@ -65,11 +57,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public IActionResult GetImagesPathsHotel([FromRoute] int hotelId)
         {
-            IEnumerable<ImageDto> images = _hotelsDb.Images
+            IEnumerable<Image> images = _hotelsDb.Images
                 .Where(image => image.HotelId == hotelId)
-                .Select(image => new ImageDto
+                .Select(image => new Image
                 {
-                    Id = image.Id,
                     Path = image.Path
                 });
             return Ok(images);

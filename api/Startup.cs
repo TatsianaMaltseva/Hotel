@@ -59,6 +59,7 @@ namespace iTechArt.Hotels.Api
                 );
             services.AddSingleton<HashPasswordsService>();
             services.AddSingleton<JwtService>();
+            services.AddSingleton<ImageService>();
 
             services.AddCors(options =>
             {

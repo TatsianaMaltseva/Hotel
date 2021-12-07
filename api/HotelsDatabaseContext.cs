@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+
 namespace iTechArt.Hotels.Api
 {
     public  class HotelsDatabaseContext : DbContext
@@ -66,15 +66,12 @@ namespace iTechArt.Hotels.Api
 
             modelBuilder.Entity<Image>(entity =>
             {
-                entity.Property(e => e.Path)
-                    .IsRequired()
-                    .HasMaxLength(265);
+                entity.HasKey(e => e.Path)
+                    .HasName("PK__Images__A15FA6CA573BB57D");
 
-                entity.HasOne(d => d.Hotel)
-                    .WithMany(p => p.Images)
-                    .HasForeignKey(d => d.HotelId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Images__HotelId__2EDAF651");
+                entity.Property(e => e.Path)
+                    .HasMaxLength(58)
+                    .IsUnicode(false);
             });
         }
     }
