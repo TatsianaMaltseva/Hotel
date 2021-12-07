@@ -1,4 +1,5 @@
 ﻿using iTechArt.Hotels.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}")]//do not like such url
         [HttpPost, DisableRequestSizeLimit] //second argument maybe should not be here
-        //[Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult AddImage([FromRoute] int hotelId) // make async
         {
             try

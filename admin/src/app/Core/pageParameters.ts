@@ -13,4 +13,12 @@ export class PageParameters {
       .set('pageSize', this.pageSize);
     return params;
   }
+
+  public getHttpParamsObj(): object{
+    let params = {
+      'pageIndex': this.pageIndex,
+      'pageSize': this.pageSize
+    };
+    return params;
+  }
 }

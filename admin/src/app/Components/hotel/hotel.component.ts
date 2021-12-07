@@ -20,6 +20,14 @@ export class HotelComponent implements OnInit{
     mainImage: null,
     images:  null
   };
+  
+  public get isAdmin(): boolean {
+    return this.accountService.isAdmin();
+  }
+
+  public get isClient(): boolean {
+    return this.accountService.isClient();
+  }
 
   public constructor(
     private readonly hotelService: HotelService,
@@ -32,14 +40,6 @@ export class HotelComponent implements OnInit{
 
   public ngOnInit(): void {
     this.fetchHotel();
-  }
-
-  public isAdmin(): boolean {
-    return this.accountService.isAdmin();
-  }
-
-  public isClient(): boolean {
-    return this.accountService.isClient();
   }
 
   private fetchHotel(): void {

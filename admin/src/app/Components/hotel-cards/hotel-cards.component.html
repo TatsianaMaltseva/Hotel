@@ -14,9 +14,7 @@
                 </mat-grid-tile>
                 <mat-grid-tile colspan=3 rowspan=1>
                     <mat-card-actions>
-                        <a href="/hotels/{{hotel.id}}" target="_blank">
-                            <button mat-flat-button> Look </button>
-                        </a>
+                        <button (click)="openHotel(hotel)" mat-flat-button> Look </button>
                     </mat-card-actions>
                 </mat-grid-tile>
             </mat-grid-list>

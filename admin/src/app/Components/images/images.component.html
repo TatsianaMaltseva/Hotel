@@ -1,46 +1,47 @@
-<div class="wrapper" *ngFor="let image of images">
-    <mat-grid-list cols="6" rowHeight="50px">
-        <mat-grid-tile colspan=6 rowspan=4>
-            <img src="{{createImgPath(image)}}"/>
-        </mat-grid-tile>
-        <mat-grid-tile colspan=3 rowspan=1>
-            <button
-                mat-button
-                type="button"
-            >
-                Remove
-            </button>
-        </mat-grid-tile>
-        <mat-grid-tile colspan=3 rowspan=1>
-            <button 
-                mat-button
-                type="button"
-            >
-                Make main
-            </button>
-        </mat-grid-tile>
-    </mat-grid-list>
+<div class="wrapper">
+    <div class="image-card" *ngFor="let image of images">
+        <mat-grid-list cols="6" rowHeight="40px">
+            <mat-grid-tile colspan=6 rowspan=4>
+                <img src="{{createImgPath(image)}}"/>
+            </mat-grid-tile>
+            <mat-grid-tile *ngIf="isAdmin" colspan=3 rowspan=1>
+                <button
+                    mat-button
+                    type="button"
+                >
+                    Remove
+                </button>
+            </mat-grid-tile>
+            <mat-grid-tile *ngIf="isAdmin" colspan=3 rowspan=1>
+                <button 
+                    mat-button
+                    type="button"
+                >
+                    Make main
+                </button>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
 </div>
 
-<input 
-    type="file" 
-    #file 
-    placeholder="Choose file" 
-    (change)="uploadFile(file.files)"
-    style="display: none"
->
-<p></p>
-<button 
-    mat-button
-    type="button"
-    class="btn btn-success"
-    (click)="file.click()"
->
-    Upload file
-</button>
-<div *ngIf="progress > 0">
-    {{progress}}%
-</div>
-<div *ngIf="message">
-    {{message}}
+<div *ngIf="isAdmin" class="upload-button">
+    <input 
+        type="file" 
+        #file 
+        placeholder="Choose file" 
+        (change)="uploadFile(file.files)"
+        style="display: none"
+    >
+
+    <button 
+        mat-button
+        type="button"
+        class="btn btn-success"
+        (click)="file.click()"
+    >
+        Upload file
+    </button>
+    <div *ngIf="progress > 0">
+        Uploaded {{progress}}%
+    </div>
 </div>

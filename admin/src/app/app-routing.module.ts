@@ -5,7 +5,8 @@ import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.compon
 import { HotelComponent } from './Components/hotel/hotel.component';
 
 const routes: Routes = [
-  { path: '', component: HotelCardsComponent },
+  { path: 'hotels', component: HotelCardsComponent },
+  { path: '', redirectTo: '/hotels', pathMatch: 'full'},
   { path: 'change-password', component: ChangePasswordComponent },
   { path: 'hotels/:id', component: HotelComponent }
 ];
