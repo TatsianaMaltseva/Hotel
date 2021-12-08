@@ -26,13 +26,13 @@ export class ImageService {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     return this.http.post(
-      `${this.apiUrl}api/images/${hotelId}`, 
+      `${this.apiUrl}api/hotels/${hotelId}/images`, 
       formData,
       { reportProgress: true, observe: 'events' }
     );
   }
 
   public getImages(hotelId: number): Observable<Image[]>{
-    return this.http.get<Image[]>(`${this.apiUrl}api/images/${hotelId}`);
+    return this.http.get<Image[]>(`${this.apiUrl}api/hotels/${hotelId}/images`);
   }
 }

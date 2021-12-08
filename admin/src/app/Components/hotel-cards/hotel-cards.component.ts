@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Location } from '@angular/common'; 
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelDto, HotelService } from 'src/app/hotel.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -19,36 +18,36 @@ export class HotelCardsComponent implements OnInit {
 
   public constructor(
     private readonly hotelService: HotelService,
-    private readonly location: Location,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
   ) {
   }
 
-  //change page params 
   public ngOnInit(): void {
-    this.updateQuery();
+    this.setPageParams();
+    this.navigate();
     this.fetchHotels();
     this.fetchHotelsCount();
   }
 
-  public openHotel(hotel: HotelDto): void {
+  public navigate(): void {
     this.router.navigate(
-      ['/hotels', hotel.id],
+      [],
       { queryParams: this.pageParameters.getHttpParamsObj() }
     );
   }
 
-  public onPaginateChange(event?: PageEvent): void {
-    this.pageParameters.pageIndex = event!.pageIndex;
-    this.pageParameters.pageSize = event!.pageSize;
-    this.updateQuery();
+  public onPaginateChange(event: PageEvent): void {
+    this.pageParameters.updateParameters(event);
+    this.navigate();
     this.fetchHotels();
   }
 
-  public updateQuery(): void {
-    this.location.replaceState(
-      '/hotels',
-      this.pageParameters.getHttpParams().toString()
+  private setPageParams(): void {
+    this.route.queryParams
+      .subscribe(params => {
+        this.pageParameters.updateParameters(params);
+      }
     );
   }
 

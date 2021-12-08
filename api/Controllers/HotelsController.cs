@@ -1,7 +1,9 @@
 ﻿using iTechArt.Hotels.Api.Models;
+using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +15,16 @@ namespace iTechArt.Hotels.Api.Controllers
     public class HotelsController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
+        private readonly ImageService _imageService;
 
-        public HotelsController(HotelsDatabaseContext hotelsDb)
+        public HotelsController
+        (
+            HotelsDatabaseContext hotelsDb,
+            ImageService imageService
+        )
         {
             _hotelsDb = hotelsDb;
+            _imageService = imageService;
         }
 
         [HttpPost]
@@ -66,5 +74,46 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelsCount() =>
             Ok(await _hotelsDb.Hotels.CountAsync());
+
+        [Route("{hotelId}/images")]
+        [HttpPost, DisableRequestSizeLimit] //second argument maybe should not be here
+        [Authorize(Roles = Role.Admin)]
+        public IActionResult AddImage([FromRoute] int hotelId) // make async
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                if (file.Length <= 0)
+                {
+                    return BadRequest("Something is wrong with file, probably it is empty");
+                }
+                string dbPath = _imageService.AddImageToPath(file);
+                Image image = new Image
+                {
+                    Path = dbPath,
+                    HotelId = hotelId
+                };
+                _hotelsDb.Images.Add(image);
+                _hotelsDb.SaveChanges();
+                return Ok(new { dbPath });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex); //500 code is ban
+            }
+        }
+
+        [Route("{hotelId}/images")]
+        [HttpGet]
+        public IActionResult GetImagesPathsHotel([FromRoute] int hotelId)
+        {
+            IEnumerable<Image> images = _hotelsDb.Images
+                .Where(image => image.HotelId == hotelId)
+                .Select(image => new Image
+                {
+                    Path = image.Path
+                });
+            return Ok(images);
+        }
     }
 }

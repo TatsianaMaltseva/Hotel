@@ -1,4 +1,7 @@
 <nav>
+    <button mat-raised-button routerLink="/hotels">
+        <mat-icon>home</mat-icon>
+    </button>
     <app-authorization></app-authorization>
     <app-account-menu *ngIf="isLoggedIn"></app-account-menu>
     <app-admin-buttons *ngIf="isAdmin"></app-admin-buttons>

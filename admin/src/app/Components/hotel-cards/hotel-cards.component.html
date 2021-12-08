@@ -14,7 +14,7 @@
                 </mat-grid-tile>
                 <mat-grid-tile colspan=3 rowspan=1>
                     <mat-card-actions>
-                        <button (click)="openHotel(hotel)" mat-flat-button> Look </button>
+                        <button [routerLink]="['/hotels', hotel.id]" mat-flat-button> Look </button>
                     </mat-card-actions>
                 </mat-grid-tile>
             </mat-grid-list>
