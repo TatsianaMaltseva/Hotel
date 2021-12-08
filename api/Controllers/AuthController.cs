@@ -1,4 +1,5 @@
-﻿using iTechArt.Hotels.Api.Models;
+﻿using iTechArt.Hotels.Api.Entities;
+using iTechArt.Hotels.Api.Models;
 using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] Login request)
         {
-            Account account = GetAccountByEmail(request.Email);
+            AccountEntity account = GetAccountByEmail(request.Email);
             if (account == null)
             {
                 return Unauthorized();
@@ -59,7 +60,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("User is already registered with this email");
             }
             byte[] salt = _hashPasswordsService.GenerateSalt();
-            var account = new Account
+            var account = new AccountEntity
             {
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
@@ -72,7 +73,7 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(token);
         }
 
-        private Account GetAccountByEmail(string email) =>
+        private AccountEntity GetAccountByEmail(string email) =>
             _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email);
 
         private bool CheckIfEmailUnique(string email) =>
@@ -89,7 +90,7 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(email);
         }
 
-        private string GenerateJWT(Account account)
+        private string GenerateJWT(AccountEntity account)
         {
             var authParams = _authOptions.Value;
 

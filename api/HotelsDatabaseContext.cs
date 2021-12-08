@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using iTechArt.Hotels.Api.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace iTechArt.Hotels.Api
 {
@@ -9,17 +10,16 @@ namespace iTechArt.Hotels.Api
         {
         }
 
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Hotel> Hotels { get; set; }
+        public DbSet<AccountEntity> Accounts { get; set; }
+        public DbSet<HotelEntity> Hotels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Account>(entity =>
+            modelBuilder.Entity<AccountEntity>(entity =>
             {
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(125)
-                    .IsUnicode(true);
+                    .HasMaxLength(125);
 
                 entity.Property(e => e.Password)
                     .IsRequired()
@@ -28,8 +28,7 @@ namespace iTechArt.Hotels.Api
                     .IsFixedLength(true);
 
                 entity.Property(e => e.Role)
-                    .HasMaxLength(25)
-                    .IsUnicode(true);
+                    .HasMaxLength(25);
 
                 entity.Property(e => e.Salt)
                     .IsRequired()
@@ -38,31 +37,26 @@ namespace iTechArt.Hotels.Api
                     .IsFixedLength(true);
             });
 
-            modelBuilder.Entity<Hotel>(entity =>
+            modelBuilder.Entity<HotelEntity>(entity =>
             {
                 entity.Property(e => e.Address)
                     .IsRequired()
-                    .HasMaxLength(155)
-                    .IsUnicode(true);
+                    .HasMaxLength(155);
 
                 entity.Property(e => e.Country)
                     .IsRequired()
-                    .HasMaxLength(56)
-                    .IsUnicode(true);
+                    .HasMaxLength(56);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(60)
-                    .IsUnicode(true);
+                    .HasMaxLength(60);
 
                 entity.Property(e => e.City)
                     .IsRequired()
-                    .HasMaxLength(85)
-                    .IsUnicode(true);
+                    .HasMaxLength(85);
 
                 entity.Property(e => e.Description)
-                    .HasMaxLength(3000)
-                    .IsUnicode(true);
+                    .HasMaxLength(3000);
             });
         }
     }

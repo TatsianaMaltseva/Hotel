@@ -3,16 +3,16 @@
     <div class="cards">
         <mat-card class="card" *ngFor="let hotel of hotels">
             <mat-grid-list cols="5" rowHeight="60px">
-                <mat-grid-tile [colspan]=3 [rowspan]=1>
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
                     <mat-card-title>{{ hotel.name }}</mat-card-title>
                 </mat-grid-tile>
-                <mat-grid-tile [colspan]=2 [rowspan]=3>
+                <mat-grid-tile [colspan]="2" [rowspan]="3">
                     <img mat-card-xl-image>
                 </mat-grid-tile>
-                <mat-grid-tile [colspan]=3 [rowspan]=1>
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
                     <mat-card-subtitle>{{ hotel.country }}</mat-card-subtitle>
                 </mat-grid-tile>
-                <mat-grid-tile [colspan]=3 [rowspan]=1>
+                <mat-grid-tile [colspan]="3" [rowspan]="1">
                     <mat-card-subtitle>{{ hotel.city }}</mat-card-subtitle>
                 </mat-grid-tile>
             </mat-grid-list>

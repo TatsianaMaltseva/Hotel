@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { PageParameters } from 'src/app/Core/pageParameters';
-import { HotelDto, HotelService } from 'src/app/hotel.service';
+import { HotelService } from 'src/app/hotel.service';
+import { HotelCard } from 'src/app/HotelDtos/hotelCard';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -10,9 +11,9 @@ import { HotelDto, HotelService } from 'src/app/hotel.service';
 })
 
 export class HotelCardsComponent implements OnInit {
-  public hotels: HotelDto[] = [];
+  public hotels: HotelCard[] = [];
   public hotelCount: number = 0;
-  public pageParameters = new PageParameters(2);
+  public readonly pageParameters = new PageParameters(2);
 
   public constructor(
     private readonly hotelService: HotelService
