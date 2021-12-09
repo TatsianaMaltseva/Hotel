@@ -1,4 +1,5 @@
-﻿using iTechArt.Hotels.Api.Models;
+﻿using iTechArt.Hotels.Api.Entities;
+using iTechArt.Hotels.Api.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,7 +18,7 @@ namespace iTechArt.Hotels.Api.Services
             _authOptions = authOptions;
         }
 
-        public string GenerateJWT(Account account)
+        public string GenerateJWT(AccountEntity account)
         {
             var authParams = _authOptions.Value;
 

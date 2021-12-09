@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using iTechArt.Hotels.Api.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace iTechArt.Hotels.Api
 {
@@ -8,14 +9,13 @@ namespace iTechArt.Hotels.Api
             : base(options)
         {
         }
-
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<Hotel> Hotels { get; set; }
-        public DbSet<Image> Images { get; set; }
+        public DbSet<AccountEntity> Accounts { get; set; }
+        public DbSet<HotelEntity> Hotels { get; set; }
+        public DbSet<ImageEntity> Images { get; set; } //move to entity
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Account>(entity =>
+            modelBuilder.Entity<AccountEntity>(entity =>
             {
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -37,27 +37,27 @@ namespace iTechArt.Hotels.Api
                     .IsFixedLength(true);
             });
 
-            modelBuilder.Entity<Hotel>(entity =>
+            modelBuilder.Entity<HotelEntity>(entity =>
             {
                 entity.Property(e => e.Address)
                     .IsRequired()
                     .HasMaxLength(155);
 
-                entity.Property(e => e.City)
-                    .HasMaxLength(85);
-
                 entity.Property(e => e.Country)
                     .HasMaxLength(56);
-
-                entity.Property(e => e.Description)
-                    .HasMaxLength(3000);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(60);
+
+                entity.Property(e => e.City)
+                    .HasMaxLength(85);
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(3000);
             });
 
-            modelBuilder.Entity<Image>(entity =>
+            modelBuilder.Entity<ImageEntity>(entity =>
             {
                 entity.HasKey(e => e.Path);
 

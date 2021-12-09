@@ -1,6 +1,6 @@
-﻿namespace iTechArt.Hotels.Api
+﻿namespace iTechArt.Hotels.Api.Entities
 {
-    public class Account
+    public class AccountEntity
     {
         public int Id { get; set; }
         public string Email { get; set; }

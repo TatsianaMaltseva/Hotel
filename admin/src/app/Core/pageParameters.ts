@@ -9,7 +9,7 @@ export class PageParameters {
   ) {
   }
 
-  public getHttpParams(): HttpParams{
+  public getHttpParams(): HttpParams {
     const params = new HttpParams()
       .set('pageIndex', this.pageIndex)
       .set('pageSize', this.pageSize);
@@ -25,9 +25,15 @@ export class PageParameters {
   }
 
   public updateParameters(data: PageEvent | Params): void {
-    if (data.pageIndex && data.pageSize) {
+    //if (data.pageIndex) 
+   // {
+     console.log(data.pageIndex);
+     console.log(data.pageSize);
       this.pageIndex = data.pageIndex;
+    //}
+    //if (data.pageSize) 
+    //{
       this.pageSize = data.pageSize;
-    }
+    //}
   }
 }

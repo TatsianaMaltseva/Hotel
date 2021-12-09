@@ -1,6 +1,6 @@
-﻿namespace iTechArt.Hotels.Api
+﻿namespace iTechArt.Hotels.Api.Entities
 {
-    public class Image
+    public class ImageEntity
     {
         public int? HotelId { get; set; }
         public string Path { get; set; }

@@ -23,7 +23,8 @@ export class ConfirmValidParentMatcher implements ErrorStateMatcher {
 
   public isErrorState(
     control: FormControl | null, 
-    form: FormGroupDirective | NgForm | null): boolean {
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
       return (control?.touched && control.parent?.hasError(this.errorKey)) === true;
     }
 }

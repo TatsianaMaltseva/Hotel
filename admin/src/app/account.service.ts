@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { tap } from 'rxjs/operators';
 import { ACCESS_TOKEN_KEY } from './Core/getToken';
 
 @Injectable({

@@ -1,5 +1,7 @@
-﻿using iTechArt.Hotels.Api.Models;
 using iTechArt.Hotels.Api.Services;
+﻿using AutoMapper;
+using iTechArt.Hotels.Api.Entities;
+using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,58 +18,59 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly ImageService _imageService;
+        private readonly IMapper _mapper;
 
         public HotelsController
         (
             HotelsDatabaseContext hotelsDb,
-            ImageService imageService
+            ImageService imageService,
+            IMapper mapper
         )
         {
             _hotelsDb = hotelsDb;
             _imageService = imageService;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> CreateHotel([FromBody] Hotel request)
+
+        public async Task<IActionResult> CreateHotel([FromBody] AddHotelRepresentation request)
         {
             if (request == null)
             {
-                return BadRequest("Request is empty");
+                return BadRequest("There is not enough data to create hotel");
             }
-            Hotel hotel = request; 
-            await _hotelsDb.AddAsync(hotel);
+
+            HotelEntity hotelEntity = _mapper.Map<HotelEntity>(request); 
+            await _hotelsDb.AddAsync(hotelEntity);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetHotel), new { id = hotel.Id }, null);
+            return CreatedAtAction(nameof(GetHotel), new { id = hotelEntity.Id }, null);
         }
 
         [Route("{id}")]
         [HttpGet]
         public async Task<IActionResult> GetHotel([FromRoute] int id)
         {
-            Hotel hotel = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
+            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
+            HotelRepresentation hotel = _mapper.Map<HotelRepresentation>(hotelEntity);
             return Ok(hotel);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHotelsDto([FromQuery] PageParameters pageParameters)
+        public async Task<IActionResult> GetHotelCards([FromQuery] PageParameters pageParameters)
         {
             if (pageParameters == null)
             {
                 return BadRequest("No page parameters");
             }
-            IEnumerable<HotelDto> hotels = await _hotelsDb.Hotels
+
+            IEnumerable<HotelEntity> hotelEntities = await _hotelsDb.Hotels
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
-                .Select(h => new HotelDto
-                    {
-                        Id = h.Id,
-                        City = h.City,
-                        Country = h.Country,
-                        Name = h.Name
-                    })
                 .ToArrayAsync();
-            return Ok(hotels);
+            var hotelCards = _mapper.Map<IEnumerable<HotelCard>>(hotelEntities);
+            return Ok(hotelCards);
         }
 
         [Route("count")]
@@ -88,7 +91,7 @@ namespace iTechArt.Hotels.Api.Controllers
                     return BadRequest("Something is wrong with file, probably it is empty");
                 }
                 string dbPath = _imageService.AddImageToPath(file);
-                Image image = new Image
+                ImageEntity image = new ImageEntity
                 {
                     Path = dbPath,
                     HotelId = hotelId
@@ -107,9 +110,9 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public IActionResult GetImagesPathsHotel([FromRoute] int hotelId)
         {
-            IEnumerable<Image> images = _hotelsDb.Images
+            IEnumerable<ImageEntity> images = _hotelsDb.Images
                 .Where(image => image.HotelId == hotelId)
-                .Select(image => new Image
+                .Select(image => new ImageEntity
                 {
                     Path = image.Path
                 });
