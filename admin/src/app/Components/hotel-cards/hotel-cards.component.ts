@@ -15,7 +15,7 @@ import { HotelCard } from 'src/app/HotelDtos/hotelCard';
 export class HotelCardsComponent implements OnInit {
   public hotels: HotelCard[] = [];
   public hotelCount: number = 0;
-  public readonly pageParameters = new PageParameters(2, 0);
+  public readonly pageParameters = new PageParameters(2);
 
   public constructor(
     private readonly hotelService: HotelService,
@@ -27,8 +27,8 @@ export class HotelCardsComponent implements OnInit {
   public ngOnInit(): void {
     this.setPageParams();
     this.navigate();
-    this.fetchHotels();
     this.fetchHotelsCount();
+    this.fetchHotels();
   }
 
   public navigate(): void {
@@ -47,7 +47,9 @@ export class HotelCardsComponent implements OnInit {
   private setPageParams(): void {
     this.route.queryParams
       .subscribe(params => {
-        this.pageParameters.updateParameters(params);
+        if (params.pageIndex !== undefined) {
+          this.pageParameters.updateParameters(params);
+        }
       }
     );
   }

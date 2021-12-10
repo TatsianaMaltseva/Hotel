@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -34,7 +35,6 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-
         public async Task<IActionResult> CreateHotel([FromBody] AddHotelRepresentation request)
         {
             if (request == null)
@@ -49,12 +49,30 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [Route("{id}")]
+        [HttpPut]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> EditHotel([FromRoute] int id, [FromBody] EditHotelRepresentation request)
+        {
+            HotelEntity hotelEntity = await GetHotelService(id);
+            _mapper.Map(request, hotelEntity);
+            await _hotelsDb.SaveChangesAsync();
+            return NoContent();
+            //if mistake return 409
+        }
+
+        [Route("{id}")]
         [HttpGet]
         public async Task<IActionResult> GetHotel([FromRoute] int id)
         {
             HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
             HotelRepresentation hotel = _mapper.Map<HotelRepresentation>(hotelEntity);
             return Ok(hotel);
+        }
+
+        private async Task<HotelEntity> GetHotelService(int id) // put into hotel service + async in naming
+        {
+            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
+            return hotelEntity;
         }
 
         [HttpGet]

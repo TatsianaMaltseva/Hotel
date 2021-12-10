@@ -25,15 +25,7 @@ export class PageParameters {
   }
 
   public updateParameters(data: PageEvent | Params): void {
-    //if (data.pageIndex) 
-   // {
-     console.log(data.pageIndex);
-     console.log(data.pageSize);
       this.pageIndex = data.pageIndex;
-    //}
-    //if (data.pageSize) 
-    //{
       this.pageSize = data.pageSize;
-    //}
   }
 }

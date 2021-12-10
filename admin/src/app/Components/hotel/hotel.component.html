@@ -1,8 +1,13 @@
-<form mat-dialog-content>
+<div *ngIf="!isAdmin;then simpleHotel"></div>
+<div *ngIf="isAdmin;then changeHotel"></div>
+
+<ng-template #simpleHotel>
     <mat-card>
         <mat-card-content>
             <div>
-                <mat-card-title>{{hotel.name}}</mat-card-title>
+                <mat-card-title>
+                    {{hotel.name}}
+                </mat-card-title>
             </div>
             <div>
                 <mat-card-subtitle>
@@ -17,4 +22,44 @@
             </div>
         </mat-card-content>
     </mat-card>
-</form>
+</ng-template>
+
+<ng-template #changeHotel>
+    <form [formGroup]="changeHotelForm">
+        <mat-card>
+            <mat-card-content>
+                <mat-form-field class="input-field">
+                    <input
+                        matInput
+                        formControlName="newName"
+                        placeholder="{{hotel.name}}"
+                    >
+                    <mat-error>
+                        Hotel name is too long
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="input-field">
+                    <input
+                        matInput
+                        formControlName="newCountry"
+                        placeholder="{{hotel.country}}"
+                    >
+                    <mat-error>
+                        Hotel name is too long
+                    </mat-error>
+                </mat-form-field>
+                <app-images></app-images>
+                <mat-card-actions>
+                    <button
+                        mat-button
+                        [disabled]="changeHotelForm.invalid"
+                        (click)="editHotel()"
+                    >
+                        Save changes
+                        
+                    </button>
+                </mat-card-actions>
+            </mat-card-content>
+        </mat-card>
+    </form>
+</ng-template>

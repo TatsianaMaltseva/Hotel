@@ -39,8 +39,8 @@ export class ChangePasswordComponent{
       this.changePasswordForm = this.formBuilder.group(
         {
           oldPassword: ['', Validators.required],
-        newPassword: ['', Validators.required],
-        confirmNewPassword: ['']
+          newPassword: ['', Validators.required],
+          confirmNewPassword: ['']
         },
         {
           validators: CustomValidators.match('newPassword', 'confirmNewPassword')

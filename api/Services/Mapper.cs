@@ -11,11 +11,15 @@ namespace iTechArt.Hotels.Api.Services
             CreateMap<HotelCard, HotelEntity>();
             CreateMap<HotelEntity, HotelCard>();
 
+            CreateMap<HotelRepresentation, HotelEntity>();
+            CreateMap<HotelEntity, HotelRepresentation>();
+
             CreateMap<AddHotelRepresentation, HotelEntity>();
             CreateMap<HotelEntity, AddHotelRepresentation>();
 
-            CreateMap<HotelRepresentation, HotelEntity>();
-            CreateMap<HotelEntity, HotelRepresentation>();
+            CreateMap<EditHotelRepresentation, HotelEntity>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<HotelEntity, EditHotelRepresentation>();
         }
     }
 }
