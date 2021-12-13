@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -35,6 +36,7 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("There is not enough data to create hotel");
             }
+
             HotelEntity hotelEntity = _mapper.Map<HotelEntity>(request); 
             await _hotelsDb.AddAsync(hotelEntity);
             await _hotelsDb.SaveChangesAsync();
@@ -45,8 +47,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotel([FromRoute] int id)
         {
-            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
-            HotelRepresentation hotel = _mapper.Map<HotelRepresentation>(hotelEntity);
+            HotelRepresentation hotel = await _hotelsDb.Hotels
+                .Where(h => h.Id == id)
+                .ProjectTo<HotelRepresentation>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
             return Ok(hotel);
         }
 
@@ -57,11 +61,12 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("No page parameters");
             }
-            IEnumerable<HotelEntity> hotelEntities = await _hotelsDb.Hotels
+
+            HotelCard[] hotelCards = await _hotelsDb.Hotels
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
+                .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            var hotelCards = _mapper.Map<IEnumerable<HotelCard>>(hotelEntities);
             return Ok(hotelCards);
         }
 
