@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.component';
 
 const routes: Routes = [
-  //this part is not used now but definiely will be
+  { path: '', component: HotelCardsComponent }
 ];
 
 @NgModule({

@@ -1,3 +1,4 @@
+using AutoMapper;
 using iTechArt.Hotels.Api.Models;
 using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,6 +56,14 @@ namespace iTechArt.Hotels.Api
                     }
                 );
             services.AddSingleton<HashPasswordsService>();
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new Services.Mapper());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddCors(options =>
             {

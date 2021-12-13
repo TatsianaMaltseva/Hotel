@@ -5,7 +5,6 @@ import { MatDialogRef } from '@angular/material/dialog';
   selector: 'app-authentication-dialog',
   templateUrl: './authenticationDialog.component.html'
 })
-
 export class AuthenticationDialogComponent {
   public get closeAuthDialogGet(): Function {
     return this.closeAuthDialog.bind(this);

@@ -6,7 +6,8 @@ import { AuthenticationDialogComponent } from '../authenticationDialog/authentic
 
 @Component({
   selector: 'app-authorization',
-  templateUrl: './authorization.component.html'
+  templateUrl: './authorization.component.html',
+  styleUrls: ['./authorization.component.css']
 })
 export class AuthorizationComponent {
   public get isLoggedIn(): boolean {

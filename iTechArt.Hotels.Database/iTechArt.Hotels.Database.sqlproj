@@ -59,5 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts.sql" />
+    <Build Include="Hotels.sql" />
   </ItemGroup>
 </Project>

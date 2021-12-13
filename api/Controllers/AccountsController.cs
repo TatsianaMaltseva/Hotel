@@ -1,4 +1,5 @@
-﻿using iTechArt.Hotels.Api.Models;
+﻿using iTechArt.Hotels.Api.Entities;
+using iTechArt.Hotels.Api.Models;
 using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,16 +32,16 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("User is already registered with this email");
             }
             byte[] salt = _hashPasswordsService.GenerateSalt();
-            var user = new Account
+            AccountEntity account = new AccountEntity
             {
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
                 Password = _hashPasswordsService.HashPassword(request.Password, salt),
                 Role = Role.Admin
             };
-            _hotelsDb.Add(user);
+            _hotelsDb.Add(account);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAccountEmail), new { id = user.Id }, null);
+            return CreatedAtAction(nameof(GetAccountEmail), new { id = account.Id }, null);
         }
 
         [Route("{id}")]
