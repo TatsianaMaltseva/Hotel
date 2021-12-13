@@ -27,8 +27,11 @@
 <ng-template #changeHotel>
     <form [formGroup]="changeHotelForm">
         <mat-card>
+            <mat-card-title>Change hotel information</mat-card-title>
+            <mat-card-subtitle>Change needed data and click "save changes" button at the bottom of the page</mat-card-subtitle>
             <mat-card-content>
                 <mat-form-field class="input-field">
+                    <span matPrefix>Name | </span>
                     <input
                         matInput
                         formControlName="newName"
@@ -39,24 +42,59 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="input-field">
+                    <span matPrefix>Country | </span>
                     <input
                         matInput
                         formControlName="newCountry"
                         placeholder="{{hotel.country}}"
                     >
                     <mat-error>
-                        Hotel name is too long
+                        Contry value is too long
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="input-field">
+                    <span matPrefix>City | </span>
+                    <input
+                        matInput
+                        formControlName="newCity"
+                        placeholder="{{hotel.city}}"
+                    >
+                    <mat-error>
+                        City value is too long
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="input-field">
+                    <span matPrefix>Address | </span>
+                    <input
+                        matInput
+                        formControlName="newAddress"
+                        placeholder="{{hotel.address}}"
+                    >
+                    <mat-error>
+                        Address value is too long
                     </mat-error>
                 </mat-form-field>
                 <app-images></app-images>
+                <mat-form-field class="input-field">
+                    <textarea 
+                        matInput
+                        formControlName="newDescription"
+                        value="{{hotel.description}}"
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="2"
+                        cdkAutosizeMaxRows="35"
+                    ></textarea>
+                    <mat-error *ngIf="newDescription?.invalid">
+                        Description is very long
+                    </mat-error>
+                  </mat-form-field>
                 <mat-card-actions>
                     <button
                         mat-button
                         [disabled]="changeHotelForm.invalid"
                         (click)="editHotel()"
                     >
-                        Save changes
-                        
+                        Save changes  
                     </button>
                 </mat-card-actions>
             </mat-card-content>

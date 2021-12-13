@@ -76,8 +76,11 @@ export class HotelComponent implements OnInit{
   }
 
   public editHotel(): void {
-    if (this.newName?.touched) this.hotel.name = this.newName?.value;
-    if (this.newCountry?.touched) this.hotel.country = this.newCountry?.value;
+    if (this.newName?.value) this.hotel.name = this.newName?.value;
+    if (this.newCountry?.value) this.hotel.country = this.newCountry?.value;
+    if (this.newCity?.value) this.hotel.city = this.newCity?.value;
+    if (this.newAddress?.value) this.hotel.address = this.newAddress?.value;
+    if (this.newDescription?.value) this.hotel.description = this.newDescription?.value;
     this.hotelService
       .editHotel(this.hotelId, this.hotel)
       .subscribe();
