@@ -58,7 +58,7 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             try
             {
-                HotelEntity hotelEntity = await GetHotelService(id);
+                HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
                 _mapper.Map(request, hotelEntity);
                 await _hotelsDb.SaveChangesAsync();
                 return NoContent();
@@ -73,8 +73,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotel([FromRoute] int id)
         {
-            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
-            Hotel hotel = _mapper.Map<Hotel>(hotelEntity);
+            Hotel hotel = await _hotelsDb.Hotels
+                .Where(h => h.Id == id)
+                .ProjectTo<Hotel>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
             return Ok(hotel);
         }
 
@@ -136,12 +138,6 @@ namespace iTechArt.Hotels.Api.Controllers
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
             return Ok(images);
-        }
-
-        private async Task<HotelEntity> GetHotelService(int id) // put into hotel service + async in naming
-        {
-            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
-            return hotelEntity;
         }
 
         private async Task<ImageEntity> GetImageByPath(string dbPath) =>
