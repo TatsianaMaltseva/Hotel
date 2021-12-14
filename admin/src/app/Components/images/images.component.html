@@ -4,7 +4,7 @@
             <mat-grid-tile colspan=6 rowspan=4>
                 <img src="{{createImgPath(image)}}"/>
             </mat-grid-tile>
-            <mat-grid-tile *ngIf="isAdmin" colspan=3 rowspan=1>
+            <mat-grid-tile *ngIf="isAdmin" colspan="3" rowspan="1">
                 <button
                     mat-button
                     type="button"
@@ -12,7 +12,7 @@
                     Remove
                 </button>
             </mat-grid-tile>
-            <mat-grid-tile *ngIf="isAdmin" colspan=3 rowspan=1>
+            <mat-grid-tile *ngIf="isAdmin" colspan="3" rowspan="1">
                 <button 
                     mat-button
                     type="button"
@@ -26,17 +26,13 @@
 
 <div *ngIf="isAdmin" class="upload-button">
     <input 
-        type="file" 
-        #file 
-        placeholder="Choose file" 
+        #file
+        type="file"
         (change)="uploadFile(file.files)"
         style="display: none"
     >
-
     <button 
         mat-button
-        type="button"
-        class="btn btn-success"
         (click)="file.click()"
     >
         Upload file

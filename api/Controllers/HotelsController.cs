@@ -1,15 +1,14 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using iTechArt.Hotels.Api.Services;
-﻿using AutoMapper;
 using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Reflection;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -35,7 +34,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> CreateHotel([FromBody] AddHotelRepresentation request)
+        public async Task<IActionResult> CreateHotel([FromBody] AddHotel request)
         {
             if (request == null)
             {
@@ -51,13 +50,23 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{id}")]
         [HttpPut]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> EditHotel([FromRoute] int id, [FromBody] EditHotelRepresentation request)
+        public async Task<IActionResult> EditHotel([FromRoute] int id, [FromBody] EditHotel request)
         {
-            HotelEntity hotelEntity = await GetHotelService(id);
-            _mapper.Map(request, hotelEntity);
-            await _hotelsDb.SaveChangesAsync();
-            return NoContent();
-            //if mistake return 409
+            if (request == null)
+            {
+                return BadRequest("No data to change hotel");
+            }
+            try
+            {
+                HotelEntity hotelEntity = await GetHotelService(id);
+                _mapper.Map(request, hotelEntity);
+                await _hotelsDb.SaveChangesAsync();
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return Conflict("Data is not valid." + ex);
+            }
         }
 
         [Route("{id}")]
@@ -65,14 +74,8 @@ namespace iTechArt.Hotels.Api.Controllers
         public async Task<IActionResult> GetHotel([FromRoute] int id)
         {
             HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
-            HotelRepresentation hotel = _mapper.Map<HotelRepresentation>(hotelEntity);
+            Hotel hotel = _mapper.Map<Hotel>(hotelEntity);
             return Ok(hotel);
-        }
-
-        private async Task<HotelEntity> GetHotelService(int id) // put into hotel service + async in naming
-        {
-            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
-            return hotelEntity;
         }
 
         [HttpGet]
@@ -83,11 +86,11 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("No page parameters");
             }
 
-            IEnumerable<HotelEntity> hotelEntities = await _hotelsDb.Hotels
+            HotelCard[] hotelCards = await _hotelsDb.Hotels
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
+                .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            var hotelCards = _mapper.Map<IEnumerable<HotelCard>>(hotelEntities);
             return Ok(hotelCards);
         }
 
@@ -97,9 +100,9 @@ namespace iTechArt.Hotels.Api.Controllers
             Ok(await _hotelsDb.Hotels.CountAsync());
 
         [Route("{hotelId}/images")]
-        [HttpPost, DisableRequestSizeLimit] //second argument maybe should not be here
+        [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public IActionResult AddImage([FromRoute] int hotelId) // make async
+        public async Task<IActionResult> AddImage([FromRoute] int hotelId)
         {
             try
             {
@@ -108,33 +111,42 @@ namespace iTechArt.Hotels.Api.Controllers
                 {
                     return BadRequest("Something is wrong with file, probably it is empty");
                 }
-                string dbPath = _imageService.AddImageToPath(file);
+                string dbPath = await _imageService.AddImageToPath(file);
                 ImageEntity image = new ImageEntity
                 {
                     Path = dbPath,
                     HotelId = hotelId
                 };
-                _hotelsDb.Images.Add(image);
-                _hotelsDb.SaveChanges();
-                return Ok(new { dbPath });
+                await _hotelsDb.Images.AddAsync(image);
+                await _hotelsDb.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetImageByPath), new { dbPath }, null);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex); //500 code is ban
+                return BadRequest(ex);
             }
         }
 
         [Route("{hotelId}/images")]
         [HttpGet]
-        public IActionResult GetImagesPathsHotel([FromRoute] int hotelId)
+        public async Task<IActionResult> GetImagePathsHotel([FromRoute] int hotelId)
         {
-            IEnumerable<ImageEntity> images = _hotelsDb.Images
+            Image[] images = await _hotelsDb.Images
                 .Where(image => image.HotelId == hotelId)
-                .Select(image => new ImageEntity
-                {
-                    Path = image.Path
-                });
+                .ProjectTo<Image>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
             return Ok(images);
         }
+
+        private async Task<HotelEntity> GetHotelService(int id) // put into hotel service + async in naming
+        {
+            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
+            return hotelEntity;
+        }
+
+        private async Task<ImageEntity> GetImageByPath(string dbPath) =>
+            await _hotelsDb.Images
+                .Where(image => image.Path == dbPath)
+                .SingleAsync();
     }
 }

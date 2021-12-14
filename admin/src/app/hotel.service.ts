@@ -5,18 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelCard } from './HotelDtos/hotelCard';
-import { Image } from './image.service';
-
-export interface Hotel {
-  id: number;
-  name: string;
-  country: string;
-  city: string;
-  address: string;
-  description: string | null;
-  mainImage: Image | null;
-  images: Image[] | null;
-}
+import { Hotel } from './HotelDtos/hotel';
 
 @Injectable({
   providedIn: 'root'

@@ -11,7 +11,7 @@ namespace iTechArt.Hotels.Api
         }
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<HotelEntity> Hotels { get; set; }
-        public DbSet<ImageEntity> Images { get; set; } //move to entity
+        public DbSet<ImageEntity> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,15 +55,6 @@ namespace iTechArt.Hotels.Api
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(3000);
-            });
-
-            modelBuilder.Entity<ImageEntity>(entity =>
-            {
-                entity.HasKey(e => e.Path);
-
-                entity.Property(e => e.Path)
-                    .HasMaxLength(58)
-                    .IsUnicode(false);
             });
         }
     }

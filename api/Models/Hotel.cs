@@ -1,6 +1,6 @@
 ﻿namespace iTechArt.Hotels.Api.Models
 {
-    public class HotelRepresentation
+    public class Hotel
     {
         public int Id { get; set; }
         public string Name { get; set; }

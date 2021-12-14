@@ -7,16 +7,24 @@ namespace iTechArt.Hotels.Api.Services
 {
     public class ImageService
     {
-        public string AddImageToPath(IFormFile file)
+        private string FolderName 
         {
-            var folderName = Path.Combine("Resources", "Images");
-            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-            var fullPath = Path.Combine(pathToSave, fileName);
-            var dbPath = Path.Combine(folderName, fileName);
+            get { return Path.Combine("Resources", "Images"); }
+        }
+
+        private string PathToSave
+        {
+            get { return Path.Combine(Directory.GetCurrentDirectory(), FolderName); }
+        }
+
+        public async Task<string> AddImageToPath(IFormFile file)
+        {
+            string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            string fullPath = Path.Combine(PathToSave, fileName);
+            string dbPath = Path.Combine(FolderName, fileName);
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
-                file.CopyTo(stream);
+                await file.CopyToAsync(stream);
             }
             return dbPath;
         }

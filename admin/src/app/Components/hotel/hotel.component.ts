@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { AccountService } from 'src/app/account.service';
 import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
-import { Hotel, HotelService } from 'src/app/hotel.service';
+import { HotelService } from 'src/app/hotel.service';
+import { Hotel } from 'src/app/HotelDtos/hotel';
 
 @Component({
   selector: 'app-hotel',
@@ -20,7 +21,6 @@ export class HotelComponent implements OnInit{
     city: '',
     address: '',
     description: null,
-    mainImage: null,
     images:  null
   };
   public changeHotelForm: FormGroup;

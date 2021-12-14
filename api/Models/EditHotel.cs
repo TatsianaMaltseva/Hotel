@@ -1,6 +1,6 @@
 ﻿namespace iTechArt.Hotels.Api.Models
 {
-    public class AddHotelRepresentation
+    public class EditHotel
     {
         public string Name { get; set; }
         public string Country { get; set; }
