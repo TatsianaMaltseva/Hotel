@@ -33,7 +33,7 @@ export class ImagesComponent{
   }
 
   public createImgPath = (image: Image): string => {
-    return `${this.apiUrl}${image.path}`;
+    return `${this.apiUrl}hotels/${this.hotelId}/images/${image.path}`;
   };
 
   public uploadFile = (files: FileList | null): void => {

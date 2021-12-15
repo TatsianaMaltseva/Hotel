@@ -21,12 +21,12 @@ namespace iTechArt.Hotels.Api.Services
         {
             string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
             string fullPath = Path.Combine(PathToSave, fileName);
-            string dbPath = Path.Combine(FolderName, fileName);
+           // string dbPath = Path.Combine(FolderName, fileName);
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
-            return dbPath;
+            return fileName;
         }
     }
 }

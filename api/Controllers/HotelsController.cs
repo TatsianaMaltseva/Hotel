@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -138,6 +139,14 @@ namespace iTechArt.Hotels.Api.Controllers
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
             return Ok(images);
+        }
+
+        [Route("{hotelId}/images/{imagePath}")]
+        [HttpGet]
+        public FileResult GetImage([FromRoute] string imagePath)
+        {
+            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Images", imagePath);
+            return base.File(fullPath, $"image/{Path.GetExtension(imagePath)}");
         }
 
         private async Task<ImageEntity> GetImageByPath(string dbPath) =>
