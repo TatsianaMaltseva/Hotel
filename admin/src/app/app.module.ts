@@ -15,6 +15,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -71,6 +72,7 @@ import { ImagesComponent } from './Components/images/images.component';
     MatGridListModule,
     MatPaginatorModule,
     MatMenuModule,
+    MatAutocompleteModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

@@ -144,5 +144,16 @@ namespace iTechArt.Hotels.Api.Controllers
             await _hotelsDb.Images
                 .Where(image => image.Path == dbPath)
                 .SingleAsync();
+
+        [Route("countries")]
+        [HttpGet]
+        public async Task<IActionResult> GetHotelNames()
+        {
+            string[] names =  await _hotelsDb.Hotels
+                                .Select(h => h.Name)
+                                .Distinct()
+                                .ToArrayAsync();
+            return Ok(names);
+        }
     }
 }

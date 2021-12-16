@@ -1,2 +1,18 @@
 <aside>
+    <mat-form-field>
+        <mat-label>Enter hotel name</mat-label>
+        <input
+            type="text"
+            matInput
+            [matAutocomplete]="name"
+        >
+        <mat-autocomplete #name ="matAutocomplete">
+            <mat-option 
+                *ngFor="let hotelName of hotelNames" 
+                [value]="hotelName"
+            >
+                {{hotelName}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
 </aside>
