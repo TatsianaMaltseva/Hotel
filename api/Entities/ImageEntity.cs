@@ -6,7 +6,10 @@ namespace iTechArt.Hotels.Api.Entities
     {
         public int HotelId { get; set; }
         [Key]
-        [MaxLength(58)]
-        public string Path { get; set; }
+        [MaxLength(36)]
+        public string Id { get; set; }
+
+        [MaxLength(5)]
+        public string Extension { get; set; }
     }
 }

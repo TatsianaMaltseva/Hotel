@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using System.Web;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -112,17 +113,26 @@ namespace iTechArt.Hotels.Api.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Length <= 0)
                 {
-                    return BadRequest("Something is wrong with file, probably it is empty");
+                    return BadRequest("Something is wrong with file, probably file is empty");
                 }
-                string dbPath = await _imageService.AddImageToPath(file);
+                string fileGuid = Guid.NewGuid().ToString();
+                var fileExtension = Path.GetExtension(file.FileName)[1..];
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Images");
+                string fileName = $"{fileGuid}.{fileExtension}";
+                string fullPath = Path.Combine(pathToSave, fileName);
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
                 ImageEntity image = new ImageEntity
                 {
-                    Path = dbPath,
-                    HotelId = hotelId
+                    HotelId = hotelId,
+                    Id = fileGuid,
+                    Extension = fileExtension
                 };
                 await _hotelsDb.Images.AddAsync(image);
                 await _hotelsDb.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetImageByPath), new { dbPath }, null);
+                return Ok();//CreatedAtAction(nameof(GetImageByPath), new { dbPath }, null);
             }
             catch (Exception ex)
             {
@@ -141,17 +151,19 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(images);
         }
 
-        [Route("{hotelId}/images/{imagePath}")]
+        [Route("{hotelId}/images/{imageData}")]
         [HttpGet]
-        public FileResult GetImage([FromRoute] string imagePath)
+        public IActionResult GetImage([FromRoute] string imageData)
         {
-            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Images", imagePath);
-            return base.File(fullPath, $"image/{Path.GetExtension(imagePath)}");
+            return Ok();
+            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Images", $"{imageData}");
+            string extension = imageData.Split(".")[1];
+            return File(fullPath, $"image/{extension}");
         }
 
-        private async Task<ImageEntity> GetImageByPath(string dbPath) =>
-            await _hotelsDb.Images
-                .Where(image => image.Path == dbPath)
-                .SingleAsync();
+        //private async Task<ImageEntity> GetImageByPath(string imageId, ) =>
+        //    await _hotelsDb.Images
+        //        .Where(image => image.Path == dbPath)
+        //        .SingleAsync();
     }
 }
