@@ -1,4 +1,4 @@
-import { Image } from '../image.service';
+import { Image } from './image';
 
 export interface Hotel {
     id: number;

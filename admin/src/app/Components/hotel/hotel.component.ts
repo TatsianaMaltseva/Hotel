@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AccountService } from 'src/app/account.service';
 import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
 import { HotelService } from 'src/app/hotel.service';
-import { Hotel } from 'src/app/HotelDtos/hotel';
+import { Hotel } from 'src/app/Dtos/hotel';
 
 @Component({
   selector: 'app-hotel',

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
-import { HotelCard } from 'src/app/HotelDtos/hotelCard';
+import { HotelCard } from 'src/app/Dtos/hotelCard';
 
 @Component({
   selector: 'app-hotel-cards',

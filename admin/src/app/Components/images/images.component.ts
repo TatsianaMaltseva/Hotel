@@ -3,8 +3,9 @@ import { HttpEventType } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
-import { ImageService, Image } from 'src/app/image.service';
+import { ImageService } from 'src/app/image.service';
 import { AccountService } from 'src/app/account.service';
+import { Image } from 'src/app/Dtos/image';
 
 @Component({
   selector: 'app-images',
@@ -29,28 +30,30 @@ export class ImagesComponent{
     this.apiUrl = environment.api;
     this.route.params
       .subscribe(params => this.hotelId = params.id);
-      this.fetchImages();
+    this.fetchImages();
   }
 
   public createImgPath = (image: Image): string => {
-    return `${this.apiUrl}resources/images/${image.id}.${image.extension}`; 
-    //return `${this.apiUrl}hotels/${this.hotelId}/images/${image.id}.${image.extension}`;
+    return `${this.apiUrl}api/hotels/${this.hotelId}/images/${image.id}`;
   };
 
   public uploadFile = (files: FileList | null): void => {
-    if (files?.length === 0) return;
+    if (files?.length === 0) {
+      return;
+    }
     this.imageService.postImage(files, this.hotelId)
-    .subscribe(event => {
-      this.fetchImages();
-      if (event.type === HttpEventType.UploadProgress){
-        this.progress = Math.round(100 * event.loaded / event.total ); 
+      .subscribe(event => {
+        this.fetchImages();
+        if (event.type === HttpEventType.UploadProgress){
+          this.progress = Math.round(100 * event.loaded / event.total ); 
+        }
       }
-    });
+    );
   };
 
   public fetchImages(): void {
     this.imageService
-    .getImages(this.hotelId)
-    .subscribe(images => this.images = images);
+      .getImages(this.hotelId)
+      .subscribe(images => this.images = images);
   }
 }

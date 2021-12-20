@@ -1,5 +1,8 @@
 ﻿CREATE TABLE [dbo].[Images] (
-    [HotelId] INT NULL,
-    [Id] NCHAR (36) NOT NULL PRIMARY KEY,
-	[Extension] NVARCHAR(5) NOT NULL
+	[Id] INT IDENTITY (1,1) NOT NULL,
+    [Hotel] INT NOT NULL,
+	[Path] VARCHAR(2000) NOT NULL, 
+	[IsOuterLink] BIT NOT NULL,
+	PRIMARY KEY CLUSTERED ([Id] ASC),
+	FOREIGN KEY ([Hotel]) REFERENCES [Hotels]([Id])
 );

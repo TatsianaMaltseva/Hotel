@@ -23,7 +23,6 @@
     "@angular/platform-browser-dynamic": "~13.0.0",
     "@angular/router": "~13.0.0",
     "@auth0/angular-jwt": "^5.0.2",
-    "@material/image-list": "^13.0.0",
     "@material/snackbar": "^13.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",

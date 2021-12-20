@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -18,7 +20,8 @@ namespace iTechArt.Hotels.Api.Controllers
         private readonly HashPasswordsService _hashPasswordsService;
         private readonly JwtService _jwtService;
 
-        public AccountsController(
+        public AccountsController
+        (
             HotelsDatabaseContext hotelsDb, 
             HashPasswordsService hashPasswordsService,
             JwtService jwtService    
@@ -94,8 +97,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
             account.Password = newPasswordHashed;
             await _hotelsDb.SaveChangesAsync();
-            string token = GenerateJWT(account);
-            return Ok(token);
+            return Ok();
         }
 
         private async Task<AccountEntity> GetAccountById(int id) =>

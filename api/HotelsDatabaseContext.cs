@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace iTechArt.Hotels.Api
 {
-    public  class HotelsDatabaseContext : DbContext
+    public class HotelsDatabaseContext : DbContext
     {
         public HotelsDatabaseContext(DbContextOptions<HotelsDatabaseContext> options)
             : base(options)
         {
         }
+
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<HotelEntity> Hotels { get; set; }
         public DbSet<ImageEntity> Images { get; set; }

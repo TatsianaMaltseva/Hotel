@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/pageParameters';
-import { HotelCard } from './HotelDtos/hotelCard';
-import { Hotel } from './HotelDtos/hotel';
+import { HotelCard } from './Dtos/hotelCard';
+import { Hotel } from './Dtos/hotel';
 
 @Injectable({
   providedIn: 'root'

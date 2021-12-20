@@ -37,7 +37,6 @@ namespace iTechArt.Hotels.Api.Services
                 claims,
                 expires: DateTime.Now.Add(authParams.ExpireTime),
                 signingCredentials: credentials);
-
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

@@ -16,7 +16,7 @@ export class PageParameters {
     return params;
   }
 
-  public getHttpParamsObj(): object{
+  public getHttpParamsObj(): object {
     const params = {
       'pageIndex': this.pageIndex,
       'pageSize': this.pageSize
