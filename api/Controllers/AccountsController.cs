@@ -85,7 +85,7 @@ namespace iTechArt.Hotels.Api.Controllers
             if (!_hashPasswordsService
                 .CheckIfPasswordIsCorrect(account.Password, request.OldPassword, Convert.FromBase64String(account.Salt)))
             {
-                return BadRequest("You entered wrong old password");
+                return BadRequest("Wrong old password");
             }
 
             string newPasswordHashed = _hashPasswordsService.HashPassword(request.NewPassword, Convert.FromBase64String(account.Salt));

@@ -38,15 +38,10 @@ export class AccountService {
   }
 
   public changePassword(oldPassword: string, newPassword: string): Observable<string> {
-    const options: Object = {
-      responseType: 'text'
-    };
-
     return this.http
       .put<string>(
         `${this.apiUrl}api/accounts/${this.id()}`,
-        { oldPassword, newPassword },
-        options
+        { oldPassword, newPassword }
       );
   }
 }
