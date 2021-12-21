@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using System.Web;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -17,18 +19,15 @@ namespace iTechArt.Hotels.Api.Controllers
     public class HotelsController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
-        private readonly ImageService _imageService;
         private readonly IMapper _mapper;
 
         public HotelsController
         (
             HotelsDatabaseContext hotelsDb,
-            ImageService imageService,
             IMapper mapper
         )
         {
             _hotelsDb = hotelsDb;
-            _imageService = imageService;
             _mapper = mapper;
         }
 
@@ -111,17 +110,29 @@ namespace iTechArt.Hotels.Api.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Length <= 0)
                 {
-                    return BadRequest("Something is wrong with file, probably it is empty");
+                    return BadRequest("Something is wrong with file, probably file is empty");
                 }
-                string dbPath = await _imageService.AddImageToPath(file);
+                string fileGuid = Guid.NewGuid().ToString();
+                var fileExtension = Path.GetExtension(file.FileName)[1..];
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Images");
+                string fileName = $"{fileGuid}.{fileExtension}";
+                string fullPath = Path.Combine(pathToSave, fileName);
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
                 ImageEntity image = new ImageEntity
                 {
-                    Path = dbPath,
-                    HotelId = hotelId
+                    Path = fileName,
+                    HotelId = hotelId,
+                    Hotel = await _hotelsDb.Hotels
+                        .Where(h => h.Id == hotelId)
+                        .SingleOrDefaultAsync(),
+                    IsOuterLink = false
                 };
                 await _hotelsDb.Images.AddAsync(image);
                 await _hotelsDb.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetImageByPath), new { dbPath }, null);
+                return CreatedAtAction(nameof(GetImage), new { hotelId = image.Hotel.Id, imageId = image.Id }, null);
             }
             catch (Exception ex)
             {
@@ -131,7 +142,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/images")]
         [HttpGet]
-        public async Task<IActionResult> GetImagePathsHotel([FromRoute] int hotelId)
+        public async Task<IActionResult> GetImagePaths([FromRoute] int hotelId)
         {
             Image[] images = await _hotelsDb.Images
                 .Where(image => image.HotelId == hotelId)
@@ -154,6 +165,15 @@ namespace iTechArt.Hotels.Api.Controllers
                                 .Distinct()
                                 .ToArrayAsync();
             return Ok(names);
+        }
+
+        [Route("{hotelId}/images/{imageData}")]
+        [HttpGet]
+        public IActionResult GetImage([FromRoute] string imageData)
+        {
+            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Images", $"{imageData}");
+            string extension = imageData.Split(".")[1];
+            return File(fullPath, $"image/{extension}");
         }
     }
 }

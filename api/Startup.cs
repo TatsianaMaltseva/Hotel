@@ -90,7 +90,7 @@ namespace iTechArt.Hotels.Api
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
-                RequestPath = new Microsoft.AspNetCore.Http.PathString("/Resources")
+                RequestPath = "/api/hotels/{hotelId}/images"
             });
 
             app.UseRouting();
