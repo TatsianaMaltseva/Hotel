@@ -1,12 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
-export interface Image {
-  id: number;
-}
+import { environment } from 'src/environments/environment';
+import { Image } from './Dtos/image';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +18,7 @@ export class ImageService {
   }
 
   public postImage(files: FileList | null, hotelId: number): Observable<any> {
-    let fileToUpload = <File>files?.[0];
+    const fileToUpload = <File>files?.[0];
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     return this.http.post(

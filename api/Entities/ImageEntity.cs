@@ -4,6 +4,7 @@ namespace iTechArt.Hotels.Api.Entities
 {
     public class ImageEntity
     {
+        [Key]
         public int Id { get; set; }
         [Required]
         [MaxLength(2000)]
