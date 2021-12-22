@@ -6,7 +6,6 @@ import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
 import { AccountService } from 'src/app/account.service';
-import { Hotel } from 'src/app/Dtos/hotel';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -29,18 +28,18 @@ export class HotelCardsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.setPageParams();
-    this.navigate();
+    this.updateUrl();
     this.fetchHotelsCount();
     this.fetchHotels();
   }
 
   public setRouterLink(hotel: HotelCard): string {
     if (this.accountService.isAdmin()){
-      return `/admin-hotels/${hotel.id}`;
+      return `/hotels/${hotel.id}/edit`;
     }
     return `/hotels/${hotel.id}`;
   }
-  public navigate(): void {
+  public updateUrl(): void {
     void this.router.navigate(
       [],
       { queryParams: this.pageParameters.getQueryParams() }
@@ -49,7 +48,7 @@ export class HotelCardsComponent implements OnInit {
 
   public onPaginateChange(event: PageEvent): void {
     this.pageParameters.updateParameters(event);
-    this.navigate();
+    this.updateUrl();
     this.fetchHotels();
   }
 

@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -68,12 +66,15 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{id}")]
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> ChangeAccountPassword([FromRoute] int id, [FromBody] ChangePassword request)
+        public async Task<IActionResult> ChangeAccountPassword([FromBody] ChangePassword request)
         {
             if (request.NewPassword == null)
             {
                 return BadRequest("No new password");
             }
+
+            string authorizationHeaderValue = Request.Headers["Authorization"].ToString();
+            int id = _jwtService.GetAccountId(authorizationHeaderValue);
 
             AccountEntity account = await GetAccountById(id);
 

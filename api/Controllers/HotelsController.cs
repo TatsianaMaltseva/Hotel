@@ -19,7 +19,7 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
-        private string fileFolder;
+        private readonly string fileFolder;
 
         public HotelsController(
             HotelsDatabaseContext hotelsDb,
