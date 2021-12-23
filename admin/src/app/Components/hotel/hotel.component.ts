@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { HotelService } from 'src/app/hotel.service';
 import { Hotel } from 'src/app/Dtos/hotel';
+import { LoadingService } from 'src/app/loading.service';
 
 @Component({
   selector: 'app-hotel',
@@ -12,16 +13,18 @@ import { Hotel } from 'src/app/Dtos/hotel';
 export class HotelComponent implements OnInit{
   public hotelId: number = 0;
   public hotel!: Hotel;
-  public isHotelLoaded: Promise<boolean> = Promise.resolve(false);
+  public loading = this.loader.loading;
 
   public constructor(
     private readonly hotelService: HotelService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly loader: LoadingService
   ) { 
     this.setHotelId();
   }
 
   public ngOnInit(): void {
+    this.loader.show();
     this.fetchHotel();
   }
 
@@ -34,7 +37,7 @@ export class HotelComponent implements OnInit{
       .getHotel(this.hotelId)
       .subscribe(hotel => {
         this.hotel = hotel;
-        this.isHotelLoaded = Promise.resolve(true);
+        this.loader.hide();
       }
     );
   }

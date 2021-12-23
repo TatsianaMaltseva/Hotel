@@ -1,4 +1,5 @@
-<mat-card *ngIf="isHotelLoaded | async">
+<mat-progress-spinner *ngIf="loading | async" [mode]="'indeterminate'"></mat-progress-spinner>
+<mat-card *ngIf="(loading | async) === false">
     <mat-card-content>
         <div>
             <mat-card-title>

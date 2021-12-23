@@ -15,6 +15,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -73,6 +75,8 @@ import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-a
     MatGridListModule,
     MatPaginatorModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
+    MatToolbarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,
