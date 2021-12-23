@@ -28,9 +28,9 @@ export class HotelService {
     return this.http.get<HotelCard[]>(`${this.apiUrl}api/hotels`, { params: httpParams });
   }
 
-  public editHotel(id: number, editedHotel: Hotel): Observable<any> {
+  public editHotel(hotelId: number, editedHotel: Hotel): Observable<any> {
     return this.http.put(
-      `${this.apiUrl}api/hotels/${id}`,
+      `${this.apiUrl}api/hotels/${hotelId}`,
       { ...editedHotel }
     );
   }

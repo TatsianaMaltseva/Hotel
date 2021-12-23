@@ -48,9 +48,9 @@ export class ChangePasswordComponent{
       );
   }
 
-  public changePassword(oldPassword: string, newPassword: string): void {
+  public changePassword(): void {
     this.accountService
-      .changePassword(oldPassword, newPassword)
+      .changePassword(this.oldPassword?.value as string, this.newPassword?.value as string)
       .subscribe(
         () => {
           this.serverErrorResponse = '';

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
+import { AccountService } from 'src/app/account.service';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -20,27 +21,34 @@ export class HotelCardsComponent implements OnInit {
   public constructor(
     private readonly hotelService: HotelService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly accountService: AccountService
   ) {
   }
 
   public ngOnInit(): void {
     this.setPageParams();
-    this.navigate();
+    this.updateUrl();
     this.fetchHotelsCount();
     this.fetchHotels();
   }
 
-  public navigate(): void {
-    this.router.navigate(
+  public setRouterLink(hotel: HotelCard): string {
+    if (this.accountService.isAdmin()){
+      return `/hotels/${hotel.id}/edit`;
+    }
+    return `/hotels/${hotel.id}`;
+  }
+  public updateUrl(): void {
+    void this.router.navigate(
       [],
-      { queryParams: this.pageParameters.getHttpParamsObj() }
+      { queryParams: this.pageParameters.getQueryParams() }
     );
   }
 
   public onPaginateChange(event: PageEvent): void {
     this.pageParameters.updateParameters(event);
-    this.navigate();
+    this.updateUrl();
     this.fetchHotels();
   }
 

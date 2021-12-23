@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 
 namespace iTechArt.Hotels.Api.Services
@@ -38,6 +39,15 @@ namespace iTechArt.Hotels.Api.Services
                 expires: DateTime.Now.Add(authParams.ExpireTime),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public int GetAccountId(string authorizationHeaderValue)
+        {
+            string tokenString = authorizationHeaderValue.Replace("Bearer ", "");
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.ReadJwtToken(tokenString);
+            var id = Convert.ToInt32(token.Claims.First(claim => claim.Type == "sub").Value);
+            return id;
         }
     }
 }

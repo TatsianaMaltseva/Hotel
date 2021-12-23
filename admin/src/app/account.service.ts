@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
+import { roles } from './Core/roles';
 
 @Injectable({
   providedIn: 'root'
@@ -19,11 +20,11 @@ export class AccountService {
   }
     
   public isAdmin(): boolean {
-    return this.authService.role() === 'admin';
+    return this.authService.role() === roles.admin;
   }
 
   public isClient(): boolean {
-    return this.authService.role() === 'client';
+    return this.authService.role() === roles.client;
   }
 
   public id(): number | null {
@@ -38,15 +39,10 @@ export class AccountService {
   }
 
   public changePassword(oldPassword: string, newPassword: string): Observable<string> {
-    const options: Object = {
-      responseType: 'text'
-    };
-
     return this.http
       .put<string>(
         `${this.apiUrl}api/accounts/${this.id()}`,
-        { oldPassword, newPassword },
-        options
+        { oldPassword, newPassword }
       );
   }
 }

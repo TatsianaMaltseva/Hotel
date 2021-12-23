@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -18,15 +19,17 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
+        private readonly string fileFolder;
 
-        public HotelsController
-        (
+        public HotelsController(
             HotelsDatabaseContext hotelsDb,
-            IMapper mapper
+            IMapper mapper,
+            IConfiguration configuration
         )
         {
             _hotelsDb = hotelsDb;
             _mapper = mapper;
+            fileFolder = configuration["AppSettings:ImageFolder"];
         }
 
         [HttpPost]
@@ -53,17 +56,14 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("No data to change hotel");
             }
-            try
+            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
+            if (hotelEntity == null)
             {
-                HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
-                _mapper.Map(request, hotelEntity);
-                await _hotelsDb.SaveChangesAsync();
-                return NoContent();
+                return BadRequest("Such hotel does not exist");
             }
-            catch(Exception ex)
-            {
-                return Conflict("Data is not valid." + ex);
-            }
+            _mapper.Map(request, hotelEntity);
+            await _hotelsDb.SaveChangesAsync();
+            return NoContent();
         }
 
         [Route("{id}")]
@@ -111,8 +111,7 @@ namespace iTechArt.Hotels.Api.Controllers
                     return BadRequest("Something is wrong with file, probably file is empty");
                 }
                 string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Images");
-                string fullPath = Path.Combine(pathToSave, fileName);
+                string fullPath = Path.Combine(fileFolder, fileName);
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
@@ -138,8 +137,12 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/images")]
         [HttpGet]
-        public async Task<IActionResult> GetImagePaths([FromRoute] int hotelId)
+        public async Task<IActionResult> GetImagesId([FromRoute] int hotelId)
         {
+            if (await _hotelsDb.Hotels.SingleOrDefaultAsync( h => h.Id == hotelId) == null)
+            {
+                return BadRequest("Such hotel does not exist");
+            }
             Image[] images = await _hotelsDb.Images
                 .Where(image => image.Hotel.Id == hotelId)
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
@@ -162,8 +165,8 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetImage([FromRoute] int imageId)
         {
-            ImageEntity image = await _hotelsDb.Images.Where(image => image.Id == imageId).SingleAsync();
-            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Images", image.Path);
+            ImageEntity image = await _hotelsDb.Images.Where(image => image.Id == imageId).SingleOrDefaultAsync();
+            string fullPath = Path.Combine(fileFolder, image.Path);
             string extension = image.Path.Split(".")[^1];
             return PhysicalFile(fullPath, $"image/{extension}");
         }

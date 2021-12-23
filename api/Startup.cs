@@ -88,7 +88,7 @@ namespace iTechArt.Hotels.Api
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                FileProvider = new PhysicalFileProvider(Configuration["AppSettings:ImageFolder"]),
                 RequestPath = "/api/hotels/{hotelId}/images"
             });
 

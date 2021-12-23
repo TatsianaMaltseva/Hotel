@@ -15,7 +15,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -35,6 +37,7 @@ import { AccountMenuComponent } from './Components/account-menu/account-menu.com
 import { ChangePasswordComponent } from './Components/change-password/change-password.component';
 import { HotelComponent } from './Components/hotel/hotel.component';
 import { ImagesComponent } from './Components/images/images.component';
+import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-admin.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +54,8 @@ import { ImagesComponent } from './Components/images/images.component';
     AccountMenuComponent,
     ChangePasswordComponent,
     HotelComponent,
-    ImagesComponent
+    ImagesComponent,
+    HotelForAdminComponent
   ],
   imports: [
     BrowserModule,
@@ -73,6 +77,8 @@ import { ImagesComponent } from './Components/images/images.component';
     MatPaginatorModule,
     MatMenuModule,
     MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatToolbarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

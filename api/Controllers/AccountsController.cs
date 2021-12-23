@@ -66,12 +66,15 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{id}")]
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> ChangeAccountPassword([FromRoute] int id, [FromBody] ChangePassword request)
+        public async Task<IActionResult> ChangeAccountPassword([FromBody] ChangePassword request)
         {
             if (request.NewPassword == null)
             {
                 return BadRequest("No new password");
             }
+
+            string authorizationHeaderValue = Request.Headers["Authorization"].ToString();
+            int id = _jwtService.GetAccountId(authorizationHeaderValue);
 
             AccountEntity account = await GetAccountById(id);
 
@@ -83,7 +86,7 @@ namespace iTechArt.Hotels.Api.Controllers
             if (!_hashPasswordsService
                 .CheckIfPasswordIsCorrect(account.Password, request.OldPassword, Convert.FromBase64String(account.Salt)))
             {
-                return BadRequest("You entered wrong old password");
+                return BadRequest("Wrong old password");
             }
 
             string newPasswordHashed = _hashPasswordsService.HashPassword(request.NewPassword, Convert.FromBase64String(account.Salt));
