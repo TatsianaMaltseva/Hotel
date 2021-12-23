@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.IO;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace iTechArt.Hotels.Api
 {
@@ -86,14 +86,18 @@ namespace iTechArt.Hotels.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Configuration["AppSettings:ImageFolder"]),
-                RequestPath = "/api/hotels/{hotelId}/images"
-            });
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(Configuration["Resources:ImageFolder"]),
+                    RequestPath = "/api/hotels/{hotelId}/images"
+                }
+            );
 
             app.UseRouting();
             app.UseCors();
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             app.UseAuthentication();
             app.UseAuthorization();

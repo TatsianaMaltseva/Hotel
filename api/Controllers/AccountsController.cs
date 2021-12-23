@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -68,20 +70,14 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize]
         public async Task<IActionResult> ChangeAccountPassword([FromBody] ChangePassword request)
         {
-            if (request.NewPassword == null)
+            if (request == null)
             {
-                return BadRequest("No new password");
+                return BadRequest("Not enough data");
             }
 
-            string authorizationHeaderValue = Request.Headers["Authorization"].ToString();
-            int id = _jwtService.GetAccountId(authorizationHeaderValue);
+            int id = Convert.ToInt32(User.Claims.Where(claim => claim.Type == "sub").First().Value);
 
             AccountEntity account = await GetAccountById(id);
-
-            if (account == null)
-            {
-                return BadRequest("Such account does not exist");
-            }
 
             if (!_hashPasswordsService
                 .CheckIfPasswordIsCorrect(account.Password, request.OldPassword, Convert.FromBase64String(account.Salt)))

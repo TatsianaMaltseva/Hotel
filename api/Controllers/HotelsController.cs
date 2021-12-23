@@ -5,11 +5,11 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
-using Microsoft.Extensions.Configuration;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -19,7 +19,7 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
-        private readonly string fileFolder;
+        private readonly string _fileFolder;
 
         public HotelsController(
             HotelsDatabaseContext hotelsDb,
@@ -29,7 +29,7 @@ namespace iTechArt.Hotels.Api.Controllers
         {
             _hotelsDb = hotelsDb;
             _mapper = mapper;
-            fileFolder = configuration["AppSettings:ImageFolder"];
+            _fileFolder = configuration["Resources:ImageFolder"];
         }
 
         [HttpPost]
@@ -111,7 +111,7 @@ namespace iTechArt.Hotels.Api.Controllers
                     return BadRequest("Something is wrong with file, probably file is empty");
                 }
                 string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                string fullPath = Path.Combine(fileFolder, fileName);
+                string fullPath = Path.Combine(_fileFolder, fileName);
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
@@ -154,8 +154,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetImage([FromRoute] int imageId)
         {
-            ImageEntity image = await _hotelsDb.Images.Where(image => image.Id == imageId).SingleOrDefaultAsync();
-            string fullPath = Path.Combine(fileFolder, image.Path);
+            ImageEntity image = await _hotelsDb.Images
+                .Where(image => image.Id == imageId)
+                .SingleOrDefaultAsync();
+            string fullPath = Path.Combine(_fileFolder, image.Path);
             string extension = image.Path.Split(".")[^1];
             return PhysicalFile(fullPath, $"image/{extension}");
         }

@@ -37,17 +37,9 @@ namespace iTechArt.Hotels.Api.Services
                 authParams.Audience,
                 claims,
                 expires: DateTime.Now.Add(authParams.ExpireTime),
-                signingCredentials: credentials);
+                signingCredentials: credentials
+            );
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        public int GetAccountId(string authorizationHeaderValue)
-        {
-            string tokenString = authorizationHeaderValue.Replace("Bearer ", "");
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.ReadJwtToken(tokenString);
-            var id = Convert.ToInt32(token.Claims.First(claim => claim.Type == "sub").Value);
-            return id;
         }
     }
 }

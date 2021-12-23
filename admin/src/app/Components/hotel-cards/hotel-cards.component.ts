@@ -39,6 +39,7 @@ export class HotelCardsComponent implements OnInit {
     }
     return `/hotels/${hotel.id}`;
   }
+
   public updateUrl(): void {
     void this.router.navigate(
       [],
@@ -46,7 +47,7 @@ export class HotelCardsComponent implements OnInit {
     );
   }
 
-  public onPaginateChange(event: PageEvent): void {
+  public onPaginationChange(event: PageEvent): void {
     this.pageParameters.updateParameters(event);
     this.updateUrl();
     this.fetchHotels();

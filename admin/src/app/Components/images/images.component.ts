@@ -44,8 +44,8 @@ export class ImagesComponent{
     this.imageService.postImage(files, this.hotelId)
       .subscribe(event => {
         this.fetchImages();
-        if (event.type === HttpEventType.UploadProgress){
-          this.progress = Math.round(100 * event.loaded / event.total ); 
+        if (event.type === HttpEventType.UploadProgress) {
+          this.progress = Math.round(100 * event.loaded / event.total); 
         }
       }
     );
