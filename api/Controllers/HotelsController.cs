@@ -5,7 +5,7 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,44 +19,35 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
-        private readonly string _fileFolder;
+        private readonly string _imagesFolder;
 
         public HotelsController(
             HotelsDatabaseContext hotelsDb,
             IMapper mapper,
-            IConfiguration configuration
+            IOptions<ResourcesOptions> resourcesOptions
         )
         {
             _hotelsDb = hotelsDb;
             _mapper = mapper;
-            _fileFolder = configuration["Resources:ImageFolder"];
+            _imagesFolder = resourcesOptions.Value.ImagesFolder;
         }
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> CreateHotel([FromBody] AddHotel request)
+        public async Task<IActionResult> CreateHotel([FromBody] HotelToAdd request)
         {
-            if (request == null)
-            {
-                return BadRequest("There is not enough data to create hotel");
-            }
-
             HotelEntity hotelEntity = _mapper.Map<HotelEntity>(request); 
             await _hotelsDb.AddAsync(hotelEntity);
             await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(GetHotel), new { id = hotelEntity.Id }, null);
         }
 
-        [Route("{id}")]
+        [Route("{hotelId}")]
         [HttpPut]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> EditHotel([FromRoute] int id, [FromBody] EditHotel request)
+        public async Task<IActionResult> EditHotel([FromRoute] int hotelId, [FromBody] HotelToEdit request)
         {
-            if (request == null)
-            {
-                return BadRequest("No data to change hotel");
-            }
-            HotelEntity hotelEntity = await _hotelsDb.Hotels.SingleOrDefaultAsync(h => h.Id == id);
+            HotelEntity hotelEntity = await GetHotelEntity(hotelId);
             if (hotelEntity == null)
             {
                 return BadRequest("Such hotel does not exist");
@@ -66,12 +57,12 @@ namespace iTechArt.Hotels.Api.Controllers
             return NoContent();
         }
 
-        [Route("{id}")]
+        [Route("{hotelId}")]
         [HttpGet]
-        public async Task<IActionResult> GetHotel([FromRoute] int id)
+        public async Task<IActionResult> GetHotel([FromRoute] int hotelId)
         {
             Hotel hotel = await _hotelsDb.Hotels
-                .Where(h => h.Id == id)
+                .Where(hotel => hotel.Id == hotelId)
                 .ProjectTo<Hotel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
             return Ok(hotel);
@@ -80,11 +71,6 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelCards([FromQuery] PageParameters pageParameters)
         {
-            if (pageParameters == null)
-            {
-                return BadRequest("No page parameters");
-            }
-
             HotelCard[] hotelCards = await _hotelsDb.Hotels
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
@@ -103,48 +89,44 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AddImage([FromRoute] int hotelId)
         {
-            try
+            if (await GetHotelEntity(hotelId) == null)
             {
-                var file = Request.Form.Files[0];
-                if (file.Length <= 0)
-                {
-                    return BadRequest("Something is wrong with file, probably file is empty");
-                }
-                string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                string fullPath = Path.Combine(_fileFolder, fileName);
-                using (var stream = new FileStream(fullPath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-                ImageEntity image = new ImageEntity
-                {
-                    Path = fileName,
-                    HotelId = hotelId,
-                    Hotel = await _hotelsDb.Hotels
-                        .Where(h => h.Id == hotelId)
-                        .SingleOrDefaultAsync(),
-                    IsOuterLink = false
-                };
-                await _hotelsDb.Images.AddAsync(image);
-                await _hotelsDb.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetImage), new { hotelId = image.Hotel.Id, imageId = image.Id }, null);
+                return BadRequest("Such hotel does not exist");
             }
-            catch (Exception ex)
+
+            var file = Request.Form.Files[0];
+            if (file.Length <= 0)
             {
-                return BadRequest(ex);
+                return BadRequest("Something is wrong with file, probably file is empty");
             }
+            string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            string fullPath = Path.Combine(_imagesFolder, fileName);
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            ImageEntity image = new()
+            {
+                Path = fileName,
+                HotelId = hotelId,
+                Hotel = await GetHotelEntity(hotelId),
+                IsOuterLink = false
+            };
+            await _hotelsDb.Images.AddAsync(image);
+            await _hotelsDb.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetImage), new { hotelId = image.Hotel.Id, imageId = image.Id }, null);
         }
 
         [Route("{hotelId}/images")]
         [HttpGet]
-        public async Task<IActionResult> GetImagesId([FromRoute] int hotelId)
+        public async Task<IActionResult> GetImages([FromRoute] int hotelId)
         {
-            if (await _hotelsDb.Hotels.SingleOrDefaultAsync( h => h.Id == hotelId) == null)
+            if (await GetHotelEntity(hotelId) == null)
             {
                 return BadRequest("Such hotel does not exist");
             }
             Image[] images = await _hotelsDb.Images
-                .Where(image => image.Hotel.Id == hotelId)
+                .Where(image => image.HotelId == hotelId)
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
             return Ok(images);
@@ -154,12 +136,18 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetImage([FromRoute] int imageId)
         {
-            ImageEntity image = await _hotelsDb.Images
-                .Where(image => image.Id == imageId)
-                .SingleOrDefaultAsync();
-            string fullPath = Path.Combine(_fileFolder, image.Path);
+            ImageEntity image = await GetImageEntity(imageId);
+            string fullPath = Path.Combine(_imagesFolder, image.Path);
             string extension = image.Path.Split(".")[^1];
             return PhysicalFile(fullPath, $"image/{extension}");
         }
+
+        private async Task<HotelEntity> GetHotelEntity(int hotelId) =>
+            await _hotelsDb.Hotels
+                .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
+
+        private async Task<ImageEntity> GetImageEntity(int imageId) =>
+            await _hotelsDb.Images
+                .FirstOrDefaultAsync(image => image.Id == imageId);
     }
 }

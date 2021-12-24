@@ -1,5 +1,12 @@
 <mat-progress-spinner *ngIf="loading | async" [mode]="'indeterminate'"></mat-progress-spinner>
 <mat-card *ngIf="(loading | async) === false">
+    <button 
+        *ngIf="isAdmin" 
+        mat-raised-button 
+        [routerLink]="['/hotels', hotelId, 'edit']"
+    >
+        Edit hotel
+    </button>
     <mat-card-content>
         <div>
             <mat-card-title>

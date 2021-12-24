@@ -23,7 +23,7 @@ export class HotelService {
     return this.http.get<Hotel>(`${this.apiUrl}api/hotels/${id}`);
   }
 
-  public getHotels(pageParameters: PageParameters): Observable<HotelCard[]> {
+  public getHotelCards(pageParameters: PageParameters): Observable<HotelCard[]> {
     const httpParams = pageParameters.getHttpParams();
     return this.http.get<HotelCard[]>(`${this.apiUrl}api/hotels`, { params: httpParams });
   }

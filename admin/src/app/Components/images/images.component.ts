@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { HttpEventType } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
-import { environment } from 'src/environments/environment';
 import { ImageService } from 'src/app/image.service';
 import { AccountService } from 'src/app/account.service';
 import { Image } from 'src/app/Dtos/image';
@@ -16,7 +15,6 @@ export class ImagesComponent{
   public progress: number = 0;
   public images: Image[] = [];
   private hotelId: number = 0;
-  private readonly apiUrl: string;
 
   public get isAdmin(): boolean {
     return this.accountService.isAdmin();
@@ -27,17 +25,20 @@ export class ImagesComponent{
     private readonly imageService: ImageService,
     private readonly accountService: AccountService
   ) {
-    this.apiUrl = environment.api;
     this.route.params
-      .subscribe(params => this.hotelId = params.id);
+      .subscribe(params => {
+        this.hotelId = params.id;
+        console.log(params);
+      }
+    );
     this.fetchImages();
   }
 
-  public createImgPath = (image: Image): string => {
-    return `${this.apiUrl}api/hotels/${this.hotelId}/images/${image.id}`;
-  };
+  public createImgPath(image: Image): string {
+    return this.imageService.createImgPath(this.hotelId, image);
+  }
 
-  public uploadFile = (files: FileList | null): void => {
+  public uploadFile(files: FileList | null): void {
     if (files?.length === 0) {
       return;
     }
@@ -49,7 +50,7 @@ export class ImagesComponent{
         }
       }
     );
-  };
+  }
 
   public fetchImages(): void {
     this.imageService

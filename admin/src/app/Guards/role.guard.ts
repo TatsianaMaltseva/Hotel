@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 
 import { AuthService } from '../auth.service';
 
@@ -21,8 +20,9 @@ export class RoleGuard implements CanActivate {
   public canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (route.data['roles'].indexOf(this.role) !== -1){
+  ): Promise<boolean> | boolean {
+    const roles = route.data.roles;
+    if (roles === undefined || roles.indexOf(this.role) !== -1){
       return true;
     }
     return this.router.navigate(['']);

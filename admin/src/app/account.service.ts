@@ -12,23 +12,23 @@ import { roles } from './Core/roles';
 export class AccountService {
   private readonly apiUrl: string;
 
+  public get isAdmin(): boolean {
+    return this.authService.role() === roles.admin;
+  }
+  
+  public get isClient(): boolean {
+    return this.authService.role() === roles.client;
+  }
+
+  public get id(): number | null {
+    return this.authService.id();
+  }
+
   public constructor(
     private readonly http: HttpClient,
     private readonly authService: AuthService
   ) { 
     this.apiUrl = environment.api;
-  }
-    
-  public isAdmin(): boolean {
-    return this.authService.role() === roles.admin;
-  }
-
-  public isClient(): boolean {
-    return this.authService.role() === roles.client;
-  }
-
-  public id(): number | null {
-    return this.authService.id();
   }
 
   public createAccount(email: string, password: string): Observable<string> {

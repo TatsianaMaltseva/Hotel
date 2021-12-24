@@ -31,4 +31,8 @@ export class ImageService {
   public getImages(hotelId: number): Observable<Image[]>{
     return this.http.get<Image[]>(`${this.apiUrl}api/hotels/${hotelId}/images`);
   }
+
+  public createImgPath(hotelId: number, image: Image): string {
+    return `${this.apiUrl}api/hotels/${hotelId}/images/${image.id}`;
+  }
 }

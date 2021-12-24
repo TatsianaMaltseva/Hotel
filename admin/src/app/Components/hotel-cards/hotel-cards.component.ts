@@ -33,13 +33,6 @@ export class HotelCardsComponent implements OnInit {
     this.fetchHotels();
   }
 
-  public setRouterLink(hotel: HotelCard): string {
-    if (this.accountService.isAdmin()){
-      return `/hotels/${hotel.id}/edit`;
-    }
-    return `/hotels/${hotel.id}`;
-  }
-
   public updateUrl(): void {
     void this.router.navigate(
       [],
@@ -71,7 +64,7 @@ export class HotelCardsComponent implements OnInit {
 
   private fetchHotels(): void {
     this.hotelService
-      .getHotels(this.pageParameters)
+      .getHotelCards(this.pageParameters)
       .subscribe(hotels => this.hotels = hotels);
   }
 }

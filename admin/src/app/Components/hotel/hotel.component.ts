@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HotelService } from 'src/app/hotel.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { LoadingService } from 'src/app/loading.service';
+import { AccountService } from 'src/app/account.service';
 
 @Component({
   selector: 'app-hotel',
@@ -15,10 +16,15 @@ export class HotelComponent implements OnInit{
   public hotel!: Hotel;
   public loading = this.loader.loading;
 
+  public get isAdmin(): boolean {
+    return this.accountService.isAdmin();
+  }
+
   public constructor(
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
-    private readonly loader: LoadingService
+    private readonly loader: LoadingService,
+    private readonly accountService: AccountService
   ) { 
     this.setHotelId();
   }

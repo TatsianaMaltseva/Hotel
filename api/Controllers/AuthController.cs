@@ -48,7 +48,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("registration")]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegistrationAccountData request)
+        public async Task<IActionResult> Register([FromBody] Account request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
@@ -64,7 +64,7 @@ namespace iTechArt.Hotels.Api.Controllers
             };
             await _hotelsDb.AddAsync(account);
             await _hotelsDb.SaveChangesAsync();
-            var token = _jwtService.GenerateJWT(account);
+            string token = _jwtService.GenerateJWT(account);
             return Ok(token);
         }
 

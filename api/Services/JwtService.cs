@@ -5,7 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 
 namespace iTechArt.Hotels.Api.Services
@@ -21,14 +20,14 @@ namespace iTechArt.Hotels.Api.Services
 
         public string GenerateJWT(AccountEntity account)
         {
-            var authParams = _authOptions.Value;
+            AuthOptions authParams = _authOptions.Value;
 
             var securityKey = authParams.GetSymmetricSecurityKey();
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>() {
                 new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
+                new Claim(ClaimTypes.Name, account.Id.ToString()),
                 new Claim("role", account.Role.ToString())
             };
 

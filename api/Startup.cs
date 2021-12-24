@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace iTechArt.Hotels.Api
 {
@@ -33,7 +32,9 @@ namespace iTechArt.Hotels.Api
 
             var authOptionsConfiguration = Configuration.GetSection("Auth");
             services.Configure<AuthOptions>(authOptionsConfiguration);
-            var authOptions = authOptionsConfiguration.Get<AuthOptions>();
+            AuthOptions authOptions = authOptionsConfiguration.Get<AuthOptions>();
+
+            services.Configure<ResourcesOptions>(Configuration.GetSection("Resources"));
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -59,7 +60,7 @@ namespace iTechArt.Hotels.Api
             services.AddSingleton<HashPasswordsService>();
             services.AddSingleton<JwtService>();
 
-            var mapperConfig = new MapperConfiguration(mc =>
+            MapperConfiguration mapperConfig = new (mc =>
             {
                 mc.AddProfile(new Services.Mapper());
             });
@@ -89,15 +90,13 @@ namespace iTechArt.Hotels.Api
             app.UseStaticFiles(
                 new StaticFileOptions
                 {
-                    FileProvider = new PhysicalFileProvider(Configuration["Resources:ImageFolder"]),
+                    FileProvider = new PhysicalFileProvider(Configuration["Resources:ImagesFolder"]),
                     RequestPath = "/api/hotels/{hotelId}/images"
                 }
             );
 
             app.UseRouting();
             app.UseCors();
-
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             app.UseAuthentication();
             app.UseAuthorization();
