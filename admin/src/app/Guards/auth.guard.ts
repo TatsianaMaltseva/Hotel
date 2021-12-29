@@ -8,7 +8,7 @@ import { AuthService } from '../auth.service';
 })
 export class AuthGuard implements CanActivate {
   private get isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
+    return this.authService.isLoggedIn;
   }
 
   public constructor(

@@ -1,0 +1,16 @@
+img {
+    max-width: 340px;
+    max-height: 300px;
+}
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.image-card {
+    width: 350px;
+    max-height: 350px;
+    margin-bottom: 8px;
+}

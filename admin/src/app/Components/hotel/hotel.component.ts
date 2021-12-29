@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 
 import { HotelService } from 'src/app/hotel.service';
 import { Hotel } from 'src/app/Dtos/hotel';
-import { LoadingService } from 'src/app/loading.service';
 import { AccountService } from 'src/app/account.service';
 
 @Component({
@@ -14,23 +13,22 @@ import { AccountService } from 'src/app/account.service';
 export class HotelComponent implements OnInit{
   public hotelId: number = 0;
   public hotel!: Hotel;
-  public loading = this.loader.loading;
+  public loading = false;
 
   public get isAdmin(): boolean {
-    return this.accountService.isAdmin();
+    return this.accountService.isAdmin;
   }
 
   public constructor(
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
-    private readonly loader: LoadingService,
     private readonly accountService: AccountService
   ) { 
     this.setHotelId();
   }
 
   public ngOnInit(): void {
-    this.loader.show();
+    this.loading = true;
     this.fetchHotel();
   }
 
@@ -43,7 +41,7 @@ export class HotelComponent implements OnInit{
       .getHotel(this.hotelId)
       .subscribe(hotel => {
         this.hotel = hotel;
-        this.loader.hide();
+        this.loading = false;
       }
     );
   }

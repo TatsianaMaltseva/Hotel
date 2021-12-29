@@ -1,5 +1,5 @@
-<mat-progress-spinner *ngIf="loading | async" [mode]="'indeterminate'"></mat-progress-spinner>
-<mat-card *ngIf="(loading | async) === false">
+<mat-progress-spinner *ngIf="loading" [mode]="'indeterminate'"></mat-progress-spinner>
+<mat-card *ngIf="!loading">
     <button 
         *ngIf="isAdmin" 
         mat-raised-button 
@@ -19,7 +19,7 @@
             </mat-card-subtitle>
         </div>
         <div>
-            <app-images></app-images>
+            <app-images [hotelId]='hotelId'></app-images>
         </div>
         <div>
             {{hotel.description}}

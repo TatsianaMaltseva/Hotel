@@ -10,11 +10,11 @@ import { AuthService } from 'src/app/auth.service';
 })
 export class NavbarComponent {
   public get isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
+    return this.authService.isLoggedIn;
   }
 
   public get isAdmin(): boolean {
-    return this.accountService.isAdmin();
+    return this.accountService.isAdmin;
   }
   
   public constructor(

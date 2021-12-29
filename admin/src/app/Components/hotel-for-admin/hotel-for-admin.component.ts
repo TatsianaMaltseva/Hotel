@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
-import { LoadingService } from 'src/app/loading.service';
 
 @Component({
   selector: 'app-hotel-for-admin',
@@ -15,13 +14,12 @@ import { LoadingService } from 'src/app/loading.service';
 export class HotelForAdminComponent implements OnInit {
   public hotelId: number = 0;
   public changeHotelForm: FormGroup;
-  public loading = this.loader.loading;
+  public loading = false;
 
   public constructor(
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
-    private readonly formBuilder: FormBuilder,
-    private readonly loader: LoadingService
+    private readonly formBuilder: FormBuilder
   ) {
     this.setHotelId();
     this.changeHotelForm = this.formBuilder.group(
@@ -36,7 +34,7 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.loader.show();
+    this.loading = true;
     this.fetchHotel();
   }
 
@@ -59,7 +57,7 @@ export class HotelForAdminComponent implements OnInit {
       .getHotel(this.hotelId)
       .subscribe(hotel => {
         this.changeHotelForm.patchValue(hotel);
-        this.loader.hide();
+        this.loading = false;
       }
     );
   }

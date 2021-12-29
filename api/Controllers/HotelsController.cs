@@ -114,7 +114,7 @@ namespace iTechArt.Hotels.Api.Controllers
             };
             await _hotelsDb.Images.AddAsync(image);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetImage), new { hotelId = image.Hotel.Id, imageId = image.Id }, null);
+            return CreatedAtAction(nameof(GetImage), new { hotelId = image.Hotel.Id, imageId = image.Id }, image.Id);
         }
 
         [Route("{hotelId}/images")]

@@ -4,40 +4,6 @@
             <mat-grid-tile colspan=6 rowspan=4>
                 <img [src]="createImgPath(image)"/>
             </mat-grid-tile>
-            <mat-grid-tile *ngIf="isAdmin" colspan="3" rowspan="1">
-                <button
-                    mat-button
-                    type="button"
-                >
-                    Remove
-                </button>
-            </mat-grid-tile>
-            <mat-grid-tile *ngIf="isAdmin" colspan="3" rowspan="1">
-                <button 
-                    mat-button
-                    type="button"
-                >
-                    Make main
-                </button>
-            </mat-grid-tile>
         </mat-grid-list>
-    </div>
-</div>
-
-<div *ngIf="isAdmin" class="upload-button">
-    <input 
-        #file
-        type="file"
-        (change)="uploadFile(file.files)"
-        style="display: none"
-    >
-    <button 
-        mat-button
-        (click)="file.click()"
-    >
-        Upload file
-    </button>
-    <div *ngIf="progress > 0">
-        Uploaded {{progress}}%
     </div>
 </div>

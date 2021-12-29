@@ -1,0 +1,29 @@
+<div class="wrapper">
+    <div class="image-card" *ngFor="let image of images">
+        <mat-grid-list cols="6" rowHeight="40px">
+            <mat-grid-tile colspan=6 rowspan=4>
+                <img [src]="createImgPath(image)"/>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3" rowspan="1">
+                <button
+                    mat-button
+                    type="button"
+                >
+                    Remove
+                </button>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="3" rowspan="1">
+                <button 
+                    mat-button
+                    type="button"
+                >
+                    Make main
+                </button>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
+</div>
+<app-images-upload-button 
+    [hotelId]="hotelId" 
+    (imageLoaded)="onImageUpload($event)"
+></app-images-upload-button>

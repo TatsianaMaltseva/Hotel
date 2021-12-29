@@ -70,7 +70,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{id}")]
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> ChangeAccountPassword([FromBody] ChangePassword request)
+        public async Task<IActionResult> ChangeAccountPassword([FromBody] AccountPasswordToEdit request)
         {
             int id = Convert.ToInt32(User.Identity.Name);
 

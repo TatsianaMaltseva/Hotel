@@ -2,7 +2,7 @@
 
 namespace iTechArt.Hotels.Api.Models
 {
-    public class ChangePassword
+    public class AccountPasswordToEdit
     {
         [Required]
         public string OldPassword { get; set; }

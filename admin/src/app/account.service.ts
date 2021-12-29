@@ -13,17 +13,17 @@ export class AccountService {
   private readonly apiUrl: string;
 
   public get isAdmin(): boolean {
-    return this.authService.role() === roles.admin;
+    return this.authService.role === roles.admin;
   }
-  
+
   public get isClient(): boolean {
-    return this.authService.role() === roles.client;
+    return this.authService.role === roles.client;
   }
 
   public get id(): number | null {
-    return this.authService.id();
+    return this.authService.id;
   }
-
+    
   public constructor(
     private readonly http: HttpClient,
     private readonly authService: AuthService
@@ -41,7 +41,7 @@ export class AccountService {
   public changePassword(oldPassword: string, newPassword: string): Observable<string> {
     return this.http
       .put<string>(
-        `${this.apiUrl}api/accounts/${this.id()}`,
+        `${this.apiUrl}api/accounts/${this.id}`,
         { oldPassword, newPassword }
       );
   }

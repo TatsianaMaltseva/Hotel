@@ -1,4 +1,4 @@
-<mat-progress-spinner *ngIf="loading | async" [mode]="'indeterminate'"></mat-progress-spinner>
+<mat-progress-spinner *ngIf="loading" [mode]="'indeterminate'"></mat-progress-spinner>
 <form [formGroup]="changeHotelForm">
     <mat-card>
         <mat-card-title>Edit hotel information</mat-card-title>
@@ -32,7 +32,7 @@
                     Address value should have less than {{getMaxLengthValue('address')}} symbols
                 </mat-error>
             </mat-form-field>
-            <app-images></app-images>
+            <app-images-for-admin [hotelId]='hotelId'></app-images-for-admin>
             <mat-form-field class="input-field">
                 <mat-label>Description</mat-label>
                 <textarea 

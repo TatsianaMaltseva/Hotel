@@ -8,7 +8,7 @@ import { AuthService } from '../auth.service';
 })
 export class RoleGuard implements CanActivate {
   private get role(): string | null {
-    return this.authService.role();
+    return this.authService.role;
   }
 
   public constructor(

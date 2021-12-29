@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
-import { AccountService } from 'src/app/account.service';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -21,8 +20,7 @@ export class HotelCardsComponent implements OnInit {
   public constructor(
     private readonly hotelService: HotelService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly accountService: AccountService
+    private readonly route: ActivatedRoute
   ) {
   }
 
