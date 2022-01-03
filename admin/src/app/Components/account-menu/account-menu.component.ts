@@ -9,7 +9,7 @@ import { AccountService } from 'src/app/account.service';
 })
 export class AccountMenuComponent {
   public get isClient(): boolean {
-    return this.accountService.isClient();
+    return this.accountService.isClient;
   }
 
   public constructor(

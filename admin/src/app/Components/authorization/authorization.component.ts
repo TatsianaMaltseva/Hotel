@@ -11,7 +11,7 @@ import { AuthenticationDialogComponent } from '../authenticationDialog/authentic
 })
 export class AuthorizationComponent {
   public get isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
+    return this.authService.isLoggedIn;
   }
   
   public constructor(

@@ -1,4 +1,6 @@
-﻿using iTechArt.Hotels.Api.Entities;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.Models;
 using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -17,29 +19,31 @@ namespace iTechArt.Hotels.Api.Controllers
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly HashPasswordsService _hashPasswordsService;
         private readonly JwtService _jwtService;
+        private readonly IMapper _mapper;
 
-        public AccountsController
-        (
+        public AccountsController(
             HotelsDatabaseContext hotelsDb, 
             HashPasswordsService hashPasswordsService,
-            JwtService jwtService    
+            JwtService jwtService,
+            IMapper mapper
         )
         {
             _hotelsDb = hotelsDb;
             _hashPasswordsService = hashPasswordsService;
             _jwtService = jwtService;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> CreateAccount([FromBody] RegistrationAccountData request)
+        public async Task<IActionResult> CreateAccount([FromBody] Account request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
                 return BadRequest("User is already registered with this email");
             }
             byte[] salt = _hashPasswordsService.GenerateSalt();
-            AccountEntity account = new AccountEntity
+            AccountEntity account = new()
             {
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
@@ -56,32 +60,21 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetAccountEmail([FromRoute] int Id)
         {
-            string email = await _hotelsDb.Accounts
+            Account account = await _hotelsDb.Accounts
                 .Where(account => account.Id == Id)
-                .Select(account => account.Email)
-                .SingleAsync();
-            return Ok(email);
+                .ProjectTo<Account>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+            return Ok(account);
         }
 
         [Route("{id}")]
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> ChangeAccountPassword([FromBody] ChangePassword request)
+        public async Task<IActionResult> ChangeAccountPassword([FromBody] AccountPasswordToEdit request)
         {
-            if (request.NewPassword == null)
-            {
-                return BadRequest("No new password");
-            }
-
-            string authorizationHeaderValue = Request.Headers["Authorization"].ToString();
-            int id = _jwtService.GetAccountId(authorizationHeaderValue);
+            int id = Convert.ToInt32(User.Identity.Name);
 
             AccountEntity account = await GetAccountById(id);
-
-            if (account == null)
-            {
-                return BadRequest("Such account does not exist");
-            }
 
             if (!_hashPasswordsService
                 .CheckIfPasswordIsCorrect(account.Password, request.OldPassword, Convert.FromBase64String(account.Salt)))
@@ -104,7 +97,7 @@ namespace iTechArt.Hotels.Api.Controllers
         private async Task<AccountEntity> GetAccountById(int id) =>
             await _hotelsDb.Accounts
                 .Where(account => account.Id == id)
-                .SingleAsync();
+                .FirstOrDefaultAsync();
 
         private bool CheckIfEmailUnique(string email) =>
             !_hotelsDb.Accounts.Any(u => u.Email == email);

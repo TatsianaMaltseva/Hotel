@@ -38,6 +38,8 @@ import { ChangePasswordComponent } from './Components/change-password/change-pas
 import { HotelComponent } from './Components/hotel/hotel.component';
 import { ImagesComponent } from './Components/images/images.component';
 import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-admin.component';
+import { ImagesForAdminComponent } from './Components/images-for-admin/images-for-admin.component';
+import { ImagesUploadButtonComponent } from './Components/images-upload-button/images-upload-button.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-a
     ChangePasswordComponent,
     HotelComponent,
     ImagesComponent,
-    HotelForAdminComponent
+    HotelForAdminComponent,
+    ImagesForAdminComponent,
+    ImagesUploadButtonComponent
   ],
   imports: [
     BrowserModule,

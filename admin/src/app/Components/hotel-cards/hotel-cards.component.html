@@ -14,7 +14,7 @@
                 </mat-grid-tile>
                 <mat-grid-tile colspan="3" rowspan="1">
                     <mat-card-actions>
-                        <button mat-flat-button [routerLink]="setRouterLink(hotel)">Look</button>
+                        <button mat-flat-button [routerLink]="['/hotels', hotel.id]">Look</button>
                     </mat-card-actions>
                 </mat-grid-tile>
             </mat-grid-list>
@@ -27,6 +27,6 @@
     [pageSizeOptions]="[1, 2, 5]"
     [pageSize]="pageParameters.pageSize"
     [pageIndex]="pageParameters.pageIndex"
-    (page)="onPaginateChange($event)"
+    (page)="onPaginationChange($event)"
 >
 </mat-paginator>

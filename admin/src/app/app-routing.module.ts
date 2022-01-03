@@ -24,7 +24,8 @@ const routes: Routes = [
   { 
     path: 'change-password',
     canActivate: [AuthGuard],
-    component: ChangePasswordComponent }
+    component: ChangePasswordComponent 
+  }
 ];
 
 @NgModule({

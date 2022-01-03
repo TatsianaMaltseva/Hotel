@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 
 import { AuthService } from '../auth.service';
 
@@ -8,9 +7,8 @@ import { AuthService } from '../auth.service';
   providedIn: 'root'
 })
 export class RoleGuard implements CanActivate {
-  public hotelId: number = 0;
   private get role(): string | null {
-    return this.authService.role();
+    return this.authService.role;
   }
 
   public constructor(
@@ -22,11 +20,11 @@ export class RoleGuard implements CanActivate {
   public canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (route.data['roles'].indexOf(this.role) !== -1){
+  ): Promise<boolean> | boolean {
+    const roles = route.data.roles;
+    if (roles === undefined || roles.indexOf(this.role) !== -1){
       return true;
     }
-    void this.router.navigate(['']);
-    return false;
+    return this.router.navigate(['']);
   }
 }

@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
-import { AccountService } from 'src/app/account.service';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -21,8 +20,7 @@ export class HotelCardsComponent implements OnInit {
   public constructor(
     private readonly hotelService: HotelService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly accountService: AccountService
+    private readonly route: ActivatedRoute
   ) {
   }
 
@@ -33,12 +31,6 @@ export class HotelCardsComponent implements OnInit {
     this.fetchHotels();
   }
 
-  public setRouterLink(hotel: HotelCard): string {
-    if (this.accountService.isAdmin()){
-      return `/hotels/${hotel.id}/edit`;
-    }
-    return `/hotels/${hotel.id}`;
-  }
   public updateUrl(): void {
     void this.router.navigate(
       [],
@@ -46,7 +38,7 @@ export class HotelCardsComponent implements OnInit {
     );
   }
 
-  public onPaginateChange(event: PageEvent): void {
+  public onPaginationChange(event: PageEvent): void {
     this.pageParameters.updateParameters(event);
     this.updateUrl();
     this.fetchHotels();
@@ -70,7 +62,7 @@ export class HotelCardsComponent implements OnInit {
 
   private fetchHotels(): void {
     this.hotelService
-      .getHotels(this.pageParameters)
+      .getHotelCards(this.pageParameters)
       .subscribe(hotels => this.hotels = hotels);
   }
 }

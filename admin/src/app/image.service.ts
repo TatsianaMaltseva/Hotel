@@ -18,7 +18,7 @@ export class ImageService {
   }
 
   public postImage(files: FileList | null, hotelId: number): Observable<any> {
-    const fileToUpload = <File>files?.[0];
+    const fileToUpload = files?.[0] as File;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     return this.http.post(
@@ -30,5 +30,9 @@ export class ImageService {
 
   public getImages(hotelId: number): Observable<Image[]>{
     return this.http.get<Image[]>(`${this.apiUrl}api/hotels/${hotelId}/images`);
+  }
+
+  public createImagePath(hotelId: number, image: Image): string {
+    return `${this.apiUrl}api/hotels/${hotelId}/images/${image.id}`;
   }
 }

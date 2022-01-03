@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
-import { LoadingService } from 'src/app/loading.service';
 
 @Component({
   selector: 'app-hotel-for-admin',
@@ -13,17 +12,16 @@ import { LoadingService } from 'src/app/loading.service';
   styleUrls: ['./hotel-for-admin.component.css']
 })
 export class HotelForAdminComponent implements OnInit {
-  public hotelId: number = 0;
+  public hotelId: number;
   public changeHotelForm: FormGroup;
-  public loading = this.loader.loading;
+  public loading = false;
 
   public constructor(
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
-    private readonly formBuilder: FormBuilder,
-    private readonly loader: LoadingService
+    private readonly formBuilder: FormBuilder
   ) {
-    this.setHotelId();
+    this.hotelId = this.route.snapshot.paramMap.get('id') as unknown as number;
     this.changeHotelForm = this.formBuilder.group(
       {
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
@@ -36,7 +34,7 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.loader.show();
+    this.loading = true;
     this.fetchHotel();
   }
 
@@ -50,16 +48,12 @@ export class HotelForAdminComponent implements OnInit {
     return this.changeHotelForm.get(controlName)?.errors?.maxlength.requiredLength;
   }
 
-  private setHotelId(): void {
-    this.route.params.subscribe(params => this.hotelId = params['id']);
-  }
-
   private fetchHotel(): void {
     this.hotelService
       .getHotel(this.hotelId)
       .subscribe(hotel => {
         this.changeHotelForm.patchValue(hotel);
-        this.loader.hide();
+        this.loading = false;
       }
     );
   }

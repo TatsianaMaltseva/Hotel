@@ -14,14 +14,17 @@ namespace iTechArt.Hotels.Api.Services
             CreateMap<HotelEntity, Hotel>()
                 .ReverseMap();
 
-            CreateMap<HotelEntity, AddHotel>()
+            CreateMap<HotelEntity, HotelToAdd>()
                 .ReverseMap();
 
-            CreateMap<HotelEntity, EditHotel>()
+            CreateMap<HotelEntity, HotelToEdit>()
                 .ReverseMap()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<ImageEntity, Image>()
+                .ReverseMap();
+
+            CreateMap<AccountEntity, Account>()
                 .ReverseMap();
         }
     }

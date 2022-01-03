@@ -1,8 +1,5 @@
-import { Component } from '@angular/core';
-import { HttpEventType } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
 
-import { environment } from 'src/environments/environment';
 import { ImageService } from 'src/app/image.service';
 import { AccountService } from 'src/app/account.service';
 import { Image } from 'src/app/Dtos/image';
@@ -12,44 +9,28 @@ import { Image } from 'src/app/Dtos/image';
   templateUrl: './images.component.html',
   styleUrls: ['./images.component.css']
 })
-export class ImagesComponent{
+export class ImagesComponent implements OnInit {
   public progress: number = 0;
   public images: Image[] = [];
-  private hotelId: number = 0;
-  private readonly apiUrl: string;
+  @Input() public hotelId: number = 0;
 
   public get isAdmin(): boolean {
-    return this.accountService.isAdmin();
+    return this.accountService.isAdmin;
   }
   
   public constructor(
-    private readonly route: ActivatedRoute,
     private readonly imageService: ImageService,
     private readonly accountService: AccountService
   ) {
-    this.apiUrl = environment.api;
-    this.route.params
-      .subscribe(params => this.hotelId = params.id);
+  }
+
+  public ngOnInit(): void {
     this.fetchImages();
   }
 
-  public createImgPath = (image: Image): string => {
-    return `${this.apiUrl}api/hotels/${this.hotelId}/images/${image.id}`;
-  };
-
-  public uploadFile = (files: FileList | null): void => {
-    if (files?.length === 0) {
-      return;
-    }
-    this.imageService.postImage(files, this.hotelId)
-      .subscribe(event => {
-        this.fetchImages();
-        if (event.type === HttpEventType.UploadProgress){
-          this.progress = Math.round(100 * event.loaded / event.total ); 
-        }
-      }
-    );
-  };
+  public createImgPath(image: Image): string {
+    return this.imageService.createImagePath(this.hotelId, image);
+  }
 
   public fetchImages(): void {
     this.imageService
