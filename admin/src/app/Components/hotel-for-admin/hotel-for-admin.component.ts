@@ -21,6 +21,7 @@ export class HotelForAdminComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly formBuilder: FormBuilder
   ) {
+    //const id = this.route.snapshot.paramMap.get('id');
     this.hotelId = this.route.snapshot.paramMap.get('id') as unknown as number;
     this.changeHotelForm = this.formBuilder.group(
       {

@@ -1,17 +1,18 @@
 <aside>
-    <mat-form-field>
-        <mat-label>Enter hotel name</mat-label>
+    <mat-form-field [formGroup]="filterForm">
+        <mat-label>Hotel name</mat-label>
         <input
             type="text"
             matInput
+            formControlName="name"
             [matAutocomplete]="name"
         >
         <mat-autocomplete #name ="matAutocomplete">
             <mat-option 
-                *ngFor="let hotelName of hotelNames" 
-                [value]="hotelName"
+                *ngFor="let name of names" 
+                [value]="name"
             >
-                {{hotelName}}
+                {{name}}
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>

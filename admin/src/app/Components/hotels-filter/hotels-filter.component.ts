@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { startWith, map } from 'rxjs/operators';
+
 import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
 import { FilterService } from 'src/app/filterService';
 
@@ -9,7 +9,7 @@ import { FilterService } from 'src/app/filterService';
   templateUrl: './hotels-filter.component.html'
 })
 export class HotelsFilterComponent implements OnInit {
-  public hotelNames: string[] = [];
+  public names: string[] = [];
   public countries: string[] = [];
   public cities: string[] = [];
   public filterForm: FormGroup;
@@ -40,22 +40,12 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.fetchNames();
-    this.name?.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filter(value))
-    );
+    this.name?.valueChanges.subscribe((value) => this.filter(value));
   }
 
-  public fetchNames(): void {
-    this.filterService.getHotelNames()
-      .subscribe(hotelNames => this.hotelNames = hotelNames);
-  }
-
-  private filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.hotelNames.filter(hotelName => 
-      hotelName.toLowerCase().includes(filterValue));
+  public filter(value: string): void {
+    const filterValue: string = value;
+    this.filterService.getHotelNames(filterValue)
+      .subscribe(names => this.names = names);
   }
 }

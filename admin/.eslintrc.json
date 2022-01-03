@@ -38,12 +38,6 @@
         "@typescript-eslint/adjacent-overload-signatures": [
           "warn"
         ],
-        "@typescript-eslint/array-type": [
-          "warn",
-          {
-            "default": "generic"
-          }
-        ],
         "@typescript-eslint/await-thenable": [
           "warn"
         ],

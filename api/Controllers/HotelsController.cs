@@ -69,9 +69,17 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHotelCards([FromQuery] PageParameters pageParameters)
+        public async Task<IActionResult> GetHotelCards(
+            [FromQuery] PageParams pageParameters, 
+            [FromQuery] FilterParams filterParameters
+        )
         {
-            HotelCard[] hotelCards = await _hotelsDb.Hotels
+            var filteredHotelCards = _hotelsDb.Hotels;
+            if (filterParameters.Name != null)
+            {
+                var f  = filteredHotelCards.Where(h => h.Name.Contains(filterParameters.Name));
+            }
+            HotelCard[] hotelCards = await filteredHotelCards
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
                 .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
@@ -83,6 +91,20 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelsCount() =>
             Ok(await _hotelsDb.Hotels.CountAsync());
+
+        [Route("names")]
+        [HttpGet]
+        public async Task<IActionResult> GetHotelNames([FromQuery] string name)//number
+        {
+            string[] names = await _hotelsDb.Hotels
+                .Where(h => h.Name.ToLower().Contains(name.ToLower()))// TODO
+                .OrderBy(h => h.Name)
+                .Distinct()
+                .Take(2) // from front
+                .Select(h => h.Name)
+                .ToArrayAsync();
+            return Ok(names);
+        }
 
         [Route("{hotelId}/images")]
         [HttpPost]
@@ -130,17 +152,6 @@ namespace iTechArt.Hotels.Api.Controllers
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
             return Ok(images);
-        }
-
-        [Route("countries")]
-        [HttpGet]
-        public async Task<IActionResult> GetHotelNames()
-        {
-            string[] names =  await _hotelsDb.Hotels
-                                .Select(h => h.Name)
-                                .Distinct()
-                                .ToArrayAsync();
-            return Ok(names);
         }
 
         [Route("{hotelId}/images/{imageId}")]

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace iTechArt.Hotels.Api.Models
 {
-    public class PageParameters
+    public class PageParams
     {
         [Required]
         [Min(0)]
