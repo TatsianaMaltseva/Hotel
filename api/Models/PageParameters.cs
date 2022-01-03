@@ -10,8 +10,7 @@ namespace iTechArt.Hotels.Api.Models
         public int PageIndex { get; set; }
 
         [Required]
-        [Min(1)]
-        [Max(60)]
+        [Range(1, 60)]
         public int PageSize { get; set; }
     }
 }

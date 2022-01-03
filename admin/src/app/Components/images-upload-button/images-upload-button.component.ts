@@ -21,7 +21,8 @@ export class ImagesUploadButtonComponent {
     if (files?.length === 0 || this.hotelId === undefined) {
       return;
     }
-    this.imageService.postImage(files, this.hotelId)
+    this.imageService
+      .postImage(files, this.hotelId)
       .subscribe(event => {
         if (event.type === HttpEventType.UploadProgress) {
           this.progress = Math.round(100 * event.loaded / event.total); 
