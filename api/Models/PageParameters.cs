@@ -11,6 +11,7 @@ namespace iTechArt.Hotels.Api.Models
 
         [Required]
         [Min(1)]
+        [Max(60)]
         public int PageSize { get; set; }
     }
 }

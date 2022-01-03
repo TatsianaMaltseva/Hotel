@@ -4,12 +4,6 @@ mat-card {
     padding: 2%;
 }
 
-button {
-    position: absolute;
-    top: 8%;
-    left: 80%;
-}
-
 mat-progress-spinner {
     position: absolute;
     top: 50%;

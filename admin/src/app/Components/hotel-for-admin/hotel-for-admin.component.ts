@@ -12,7 +12,7 @@ import { HotelService } from 'src/app/hotel.service';
   styleUrls: ['./hotel-for-admin.component.css']
 })
 export class HotelForAdminComponent implements OnInit {
-  public hotelId: number = 0;
+  public hotelId: number;
   public changeHotelForm: FormGroup;
   public loading = false;
 
@@ -21,7 +21,7 @@ export class HotelForAdminComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly formBuilder: FormBuilder
   ) {
-    this.setHotelId();
+    this.hotelId = this.route.snapshot.paramMap.get('id') as unknown as number;
     this.changeHotelForm = this.formBuilder.group(
       {
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
@@ -46,10 +46,6 @@ export class HotelForAdminComponent implements OnInit {
 
   public getMaxLengthValue(controlName: string): number {
     return this.changeHotelForm.get(controlName)?.errors?.maxlength.requiredLength;
-  }
-
-  private setHotelId(): void {
-    this.route.params.subscribe(params => this.hotelId = params['id']);
   }
 
   private fetchHotel(): void {

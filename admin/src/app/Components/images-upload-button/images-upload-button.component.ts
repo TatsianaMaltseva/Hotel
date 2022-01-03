@@ -9,7 +9,7 @@ import { ImageService } from 'src/app/image.service';
 })
 export class ImagesUploadButtonComponent {
   public progress: number = 0;
-  @Input() public hotelId: number = 0;
+  @Input() public hotelId?: number;
   @Output() public imageLoaded = new EventEmitter<number>();
 
   public constructor(
@@ -18,7 +18,7 @@ export class ImagesUploadButtonComponent {
   }
 
   public uploadFile(files: FileList | null): void {
-    if (files?.length === 0) {
+    if (files?.length === 0 || this.hotelId === undefined) {
       return;
     }
     this.imageService.postImage(files, this.hotelId)

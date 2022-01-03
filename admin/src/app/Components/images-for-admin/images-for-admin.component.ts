@@ -11,7 +11,7 @@ import { Image } from 'src/app/Dtos/image';
 export class ImagesForAdminComponent implements OnInit {
   public progress: number = 0;
   public images: Image[] = [];
-  @Input() public hotelId: number = 0;
+  @Input() public hotelId?: number;
 
   public constructor(
     private readonly imageService: ImageService
@@ -22,17 +22,23 @@ export class ImagesForAdminComponent implements OnInit {
     this.fetchImages();
   }
   
-  public createImgPath(image: Image): string {
-    return this.imageService.createImgPath(this.hotelId, image);
+  public createImagePath(image: Image): string {
+    if (this.hotelId === undefined) {
+      return '';
+    }
+    return this.imageService.createImagePath(this.hotelId, image);
   }
 
-  public fetchImages(): void {
+  public addImage(imageId: number): void {
+    this.images.push({ id: imageId } as Image);
+  }
+
+  private fetchImages(): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
     this.imageService
       .getImages(this.hotelId)
       .subscribe(images => this.images = images);
-  }
-
-  public onImageUpload(imageId: number): void {
-    this.images.push({ id: imageId } as Image);
   }
 }

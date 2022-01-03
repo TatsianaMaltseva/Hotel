@@ -2,7 +2,7 @@
     <div class="image-card" *ngFor="let image of images">
         <mat-grid-list cols="6" rowHeight="40px">
             <mat-grid-tile colspan=6 rowspan=4>
-                <img [src]="createImgPath(image)"/>
+                <img [src]="createImagePath(image)"/>
             </mat-grid-tile>
             <mat-grid-tile colspan="3" rowspan="1">
                 <button
@@ -25,5 +25,5 @@
 </div>
 <app-images-upload-button 
     [hotelId]="hotelId" 
-    (imageLoaded)="onImageUpload($event)"
+    (imageLoaded)="addImage($event)"
 ></app-images-upload-button>

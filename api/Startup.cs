@@ -60,7 +60,7 @@ namespace iTechArt.Hotels.Api
             services.AddSingleton<HashPasswordsService>();
             services.AddSingleton<JwtService>();
 
-            MapperConfiguration mapperConfig = new (mc =>
+            MapperConfiguration mapperConfig = new(mc =>
             {
                 mc.AddProfile(new Services.Mapper());
             });

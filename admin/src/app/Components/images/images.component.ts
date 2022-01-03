@@ -29,7 +29,7 @@ export class ImagesComponent implements OnInit {
   }
 
   public createImgPath(image: Image): string {
-    return this.imageService.createImgPath(this.hotelId, image);
+    return this.imageService.createImagePath(this.hotelId, image);
   }
 
   public fetchImages(): void {
