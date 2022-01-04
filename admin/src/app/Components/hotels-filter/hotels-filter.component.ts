@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Params, Router } from '@angular/router';
 
 import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
 import { FilterService } from 'src/app/filterService';
@@ -34,9 +34,7 @@ export class HotelsFilterComponent implements OnInit {
   ) {
     this.filterForm = this.formBuilder.group(
       {
-        name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
-        country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],
-        city: ['', Validators.maxLength(hotelParamsMaxLenght.city)]
+        name: ['', Validators.maxLength(hotelParamsMaxLenght.name)]
       }
     );
   }
@@ -46,12 +44,14 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public updateUrl(): void {
-    const params = {
-      'name': this.name?.value
-    };
+    this.filterService.updateParameters({ name: this.name?.value }); //do not like it
+    const params = this.filterService.filter as Params;
     void this.router.navigate(
       [],
-      { queryParams: params }
+      {
+        queryParams: params,
+        queryParamsHandling: 'merge'
+      }
     );
   }
 
@@ -61,4 +61,3 @@ export class HotelsFilterComponent implements OnInit {
       .subscribe(names => this.names = names);
   }
 }
-//filter component should also have pageParams, it is wrong; I should add new params to those that already exists

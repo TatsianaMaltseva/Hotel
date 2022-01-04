@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
+import { FilterService } from 'src/app/filterService';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -20,7 +21,8 @@ export class HotelCardsComponent implements OnInit {
   public constructor(
     private readonly hotelService: HotelService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly filterService: FilterService
   ) {
   }
 
@@ -29,12 +31,22 @@ export class HotelCardsComponent implements OnInit {
     this.updateUrl();
     this.fetchHotelsCount();
     this.fetchHotels();
+    this.router.events
+      .subscribe((event) => {
+        if (event instanceof NavigationEnd){
+          this.setFilterParams();
+          this.fetchHotelsCount();
+          this.fetchHotels();
+        }
+      } 
+    );
   }
 
   public updateUrl(): void {
+    const params = Object.assign(this.pageParameters, this.filterService.filter) as Params;
     void this.router.navigate(
       [],
-      { queryParams: this.pageParameters.getQueryParams() }
+      { queryParams: params }
     );
   }
 
@@ -42,6 +54,12 @@ export class HotelCardsComponent implements OnInit {
     this.pageParameters.updateParameters(event);
     this.updateUrl();
     this.fetchHotels();
+  }
+
+  public fetchHotels(): void {
+    this.hotelService
+      .getHotelCards(this.pageParameters, this.filterService.filter)
+      .subscribe(hotels => this.hotels = hotels);
   }
 
   private setPageParams(): void {
@@ -54,15 +72,19 @@ export class HotelCardsComponent implements OnInit {
     );
   }
 
-  private fetchHotelsCount(): void {
-    this.hotelService
-      .getHotelsCount()
-      .subscribe(number => this.hotelCount = number);
+  private setFilterParams(): void {
+    this.route.queryParams
+      .subscribe(params => {
+        if (params.name !== undefined) {
+          this.filterService.updateParameters(params);
+        }
+      }
+    );
   }
 
-  private fetchHotels(): void {
+  private fetchHotelsCount(): void {
     this.hotelService
-      .getHotelCards(this.pageParameters)
-      .subscribe(hotels => this.hotels = hotels);
+      .getHotelsCount(this.filterService.filter)
+      .subscribe(number => this.hotelCount = number);
   }
 }

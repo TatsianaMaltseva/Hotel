@@ -16,14 +16,6 @@ export class PageParameters {
     return params;
   }
 
-  public getQueryParams(): Params {
-    const params = {
-      'pageIndex': this.pageIndex,
-      'pageSize': this.pageSize
-    };
-    return params;
-  }
-
   public updateParameters(data: PageEvent | Params): void {
       this.pageIndex = data.pageIndex;
       this.pageSize = data.pageSize;

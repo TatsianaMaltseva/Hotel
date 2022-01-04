@@ -71,21 +71,21 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelCards(
             [FromQuery] PageParams pageParameters, 
-            [FromQuery] FilterParams filterParameters
+            [FromQuery] FilterParams filterParams
         )
         {
             var filteredHotelCards = _hotelsDb.Hotels.AsQueryable();
-            if (filterParameters.Name != null)
+            if (!string.IsNullOrEmpty(filterParams.Name))
             {
-                filteredHotelCards = filteredHotelCards.Where(h => h.Name.Contains(filterParameters.Name));//toLower
+                filteredHotelCards = filteredHotelCards.Where(h => h.Name.ToLower().Contains(filterParams.Name.ToLower()));//toLower
             }
-            if (filterParameters.Country != null)
+            if (filterParams.Country != null)
             {
-                filteredHotelCards = filteredHotelCards.Where(h => h.Country.Contains(filterParameters.Country));//toLower
+                filteredHotelCards = filteredHotelCards.Where(h => h.Country.Contains(filterParams.Country));//toLower
             }
-            if (filterParameters.City != null)
+            if (filterParams.City != null)
             {
-                filteredHotelCards = filteredHotelCards.Where(h => h.City.Contains(filterParameters.City));//toLower
+                filteredHotelCards = filteredHotelCards.Where(h => h.City.Contains(filterParams.City));//toLower
             }
             HotelCard[] hotelCards = await filteredHotelCards
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
@@ -97,13 +97,25 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("count")]
         [HttpGet]
-        public async Task<IActionResult> GetHotelsCount() =>
-            Ok(await _hotelsDb.Hotels.CountAsync());
+        public async Task<IActionResult> GetHotelsCount([FromQuery] FilterParams filterParams)
+        {
+            var hotelCards = _hotelsDb.Hotels.AsQueryable();
+            if (!string.IsNullOrEmpty(filterParams.Name))
+            {
+                hotelCards = hotelCards.Where(h => h.Name.ToLower().Contains(filterParams.Name.ToLower()));
+            }
+            var hotelCardsNumber = await hotelCards.CountAsync();
+            return Ok(hotelCardsNumber);
+        }
 
         [Route("names")]
         [HttpGet]
         public async Task<IActionResult> GetHotelNames([FromQuery] string name)//number
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return NoContent();
+            }
             string[] names = await _hotelsDb.Hotels
                 .Where(h => h.Name.ToLower().Contains(name.ToLower()))// TODO
                 .OrderBy(h => h.Name)
