@@ -74,10 +74,18 @@ namespace iTechArt.Hotels.Api.Controllers
             [FromQuery] FilterParams filterParameters
         )
         {
-            var filteredHotelCards = _hotelsDb.Hotels;
+            var filteredHotelCards = _hotelsDb.Hotels.AsQueryable();
             if (filterParameters.Name != null)
             {
-                var f  = filteredHotelCards.Where(h => h.Name.Contains(filterParameters.Name));
+                filteredHotelCards = filteredHotelCards.Where(h => h.Name.Contains(filterParameters.Name));//toLower
+            }
+            if (filterParameters.Country != null)
+            {
+                filteredHotelCards = filteredHotelCards.Where(h => h.Country.Contains(filterParameters.Country));//toLower
+            }
+            if (filterParameters.City != null)
+            {
+                filteredHotelCards = filteredHotelCards.Where(h => h.City.Contains(filterParameters.City));//toLower
             }
             HotelCard[] hotelCards = await filteredHotelCards
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
