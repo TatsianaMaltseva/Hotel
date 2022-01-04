@@ -12,7 +12,7 @@ import { Image } from 'src/app/Dtos/image';
 export class ImagesComponent implements OnInit {
   public progress: number = 0;
   public images: Image[] = [];
-  @Input() public hotelId: number = 0;
+  @Input() public hotelId?: number;
 
   public get isAdmin(): boolean {
     return this.accountService.isAdmin;
@@ -29,10 +29,16 @@ export class ImagesComponent implements OnInit {
   }
 
   public createImgPath(image: Image): string {
+    if (this.hotelId === undefined) {
+      return '';
+    }
     return this.imageService.createImagePath(this.hotelId, image);
   }
 
-  public fetchImages(): void {
+  private fetchImages(): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
     this.imageService
       .getImages(this.hotelId)
       .subscribe(images => this.images = images);

@@ -47,7 +47,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> EditHotel([FromRoute] int hotelId, [FromBody] HotelToEdit request)
         {
-            HotelEntity hotelEntity = await GetHotelEntity(hotelId);
+            HotelEntity hotelEntity = await GetHotelEntityAsync(hotelId);
             if (hotelEntity == null)
             {
                 return BadRequest("Such hotel does not exist");
@@ -65,6 +65,10 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(hotel => hotel.Id == hotelId)
                 .ProjectTo<Hotel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+            if (hotel == null)
+            {
+                return NotFound($"Hotel with {hotelId} id does not exist");
+            }
             return Ok(hotel);
         }
 
@@ -123,7 +127,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AddImage([FromRoute] int hotelId)
         {
-            if (await GetHotelEntity(hotelId) == null)
+            if (await GetHotelEntityAsync(hotelId) == null)
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -143,7 +147,7 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 Path = fileName,
                 HotelId = hotelId,
-                Hotel = await GetHotelEntity(hotelId),
+                Hotel = await GetHotelEntityAsync(hotelId),
                 IsOuterLink = false
             };
             await _hotelsDb.Images.AddAsync(image);
@@ -155,7 +159,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetImages([FromRoute] int hotelId)
         {
-            if (await GetHotelEntity(hotelId) == null)
+            if (await GetHotelEntityAsync(hotelId) == null)
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -170,17 +174,17 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetImage([FromRoute] int imageId)
         {
-            ImageEntity image = await GetImageEntity(imageId);
+            ImageEntity image = await GetImageEntityAsync(imageId);
             string fullPath = Path.Combine(_imagesFolder, image.Path);
             string extension = image.Path.Split(".")[^1];
             return PhysicalFile(fullPath, $"image/{extension}");
         }
 
-        private async Task<HotelEntity> GetHotelEntity(int hotelId) =>
+        private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
             await _hotelsDb.Hotels
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
 
-        private async Task<ImageEntity> GetImageEntity(int imageId) =>
+        private async Task<ImageEntity> GetImageEntityAsync(int imageId) =>
             await _hotelsDb.Images
                 .FirstOrDefaultAsync(image => image.Id == imageId);
     }
