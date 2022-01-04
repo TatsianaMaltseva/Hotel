@@ -1,5 +1,5 @@
 <mat-progress-spinner *ngIf="loading" [mode]="'indeterminate'"></mat-progress-spinner>
-<form [formGroup]="changeHotelForm">
+<form *ngIf="isHotelLoaded"  [formGroup]="changeHotelForm">
     <mat-card>
         <mat-card-title>Edit hotel information</mat-card-title>
         <mat-card-subtitle>Click "Save changes" button at the bottom of the page to apply changes</mat-card-subtitle>

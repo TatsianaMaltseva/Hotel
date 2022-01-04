@@ -1,5 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 
 import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
@@ -12,16 +14,17 @@ import { HotelService } from 'src/app/hotel.service';
   styleUrls: ['./hotel-for-admin.component.css']
 })
 export class HotelForAdminComponent implements OnInit {
-  public hotelId: number;
+  public hotelId?: number;
   public changeHotelForm: FormGroup;
   public loading = false;
+  public isHotelLoaded = false;
 
   public constructor(
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly snackBar: MatSnackBar
   ) {
-    this.hotelId = this.route.snapshot.paramMap.get('id') as unknown as number;
     this.changeHotelForm = this.formBuilder.group(
       {
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
@@ -34,11 +37,20 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.loading = true;
-    this.fetchHotel();
+    const id: string | null = this.route.snapshot.paramMap.get('id');
+    if (id === null || !this.isValidId(id)) {
+      this.openErrorSnackBar('Hotel id is not valid');
+    } else {
+      this.loading = true;
+      this.hotelId = +id;
+      this.fetchHotel(this.hotelId);
+    }
   }
 
   public editHotel(): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
     this.hotelService
       .editHotel(this.hotelId, this.changeHotelForm.value as Hotel)
       .subscribe();
@@ -48,13 +60,36 @@ export class HotelForAdminComponent implements OnInit {
     return this.changeHotelForm.get(controlName)?.errors?.maxlength.requiredLength;
   }
 
-  private fetchHotel(): void {
-    this.hotelService
-      .getHotel(this.hotelId)
-      .subscribe(hotel => {
-        this.changeHotelForm.patchValue(hotel);
-        this.loading = false;
+  private openErrorSnackBar(errorMessage: string): void {
+    this.snackBar.open(
+      `${errorMessage}`,
+      'Close',
+      {
+        duration: 15000
       }
     );
+  }
+
+  private isValidId(id: string): boolean { 
+    return !isNaN(+id);
+  }
+
+  private fetchHotel(hotelId: number): void {
+    this.hotelService
+      .getHotel(hotelId)
+      .subscribe(
+        (hotel) => {
+          this.changeHotelForm.patchValue(hotel);
+          this.isHotelLoaded = true;
+        },
+        (serverError: HttpErrorResponse) => {
+          this.openErrorSnackBar(serverError.error as string);
+        }
+      )
+      .add(
+        () => {
+          this.loading = false;
+        }
+      );
   }
 }
