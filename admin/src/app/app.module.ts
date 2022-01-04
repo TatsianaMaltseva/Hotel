@@ -14,6 +14,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -29,6 +32,13 @@ import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.component';
 import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.component';
+import { AccountMenuComponent } from './Components/account-menu/account-menu.component';
+import { ChangePasswordComponent } from './Components/change-password/change-password.component';
+import { HotelComponent } from './Components/hotel/hotel.component';
+import { ImagesComponent } from './Components/images/images.component';
+import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-admin.component';
+import { ImagesForAdminComponent } from './Components/images-for-admin/images-for-admin.component';
+import { ImagesUploadButtonComponent } from './Components/images-upload-button/images-upload-button.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +51,14 @@ import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.
     LoginComponent,
     RegisterComponent,
     HotelCardsComponent,
-    HotelsFilterComponent
+    HotelsFilterComponent,
+    AccountMenuComponent,
+    ChangePasswordComponent,
+    HotelComponent,
+    ImagesComponent,
+    HotelForAdminComponent,
+    ImagesForAdminComponent,
+    ImagesUploadButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +78,9 @@ import { HotelsFilterComponent } from './Components/hotels-filter/hotels-filter.
     MatCardModule,
     MatGridListModule,
     MatPaginatorModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatToolbarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

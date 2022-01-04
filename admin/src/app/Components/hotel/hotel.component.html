@@ -1,0 +1,22 @@
+<mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
+<mat-card *ngIf="isHotelLoaded">
+    <mat-card-title>
+        {{ hotel.name }}
+    </mat-card-title>
+    <mat-card-subtitle>
+        {{ hotel.country }} {{ hotel.city }} {{ hotel.address }}
+    </mat-card-subtitle>
+    <app-images [hotelId]="hotelId"></app-images>
+    <mat-card-content>
+        {{ hotel.description }}
+    </mat-card-content>
+    <mat-card-actions>
+        <button 
+            *ngIf="isAdmin" 
+            mat-raised-button 
+            [routerLink]="['/hotels', hotelId, 'edit']"
+        >
+            Edit hotel
+        </button>
+    </mat-card-actions>
+</mat-card>

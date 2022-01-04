@@ -3,13 +3,8 @@ using iTechArt.Hotels.Api.Models;
 using iTechArt.Hotels.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace iTechArt.Hotels.Api.Controllers
@@ -18,19 +13,19 @@ namespace iTechArt.Hotels.Api.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly IOptions<AuthOptions> _authOptions;
-        private readonly HashPasswordsService _hashPasswordsService;
         private readonly HotelsDatabaseContext _hotelsDb;
+        private readonly HashPasswordsService _hashPasswordsService;
+        private readonly JwtService _jwtService;
 
         public AuthController(
-            IOptions<AuthOptions> authOptions, 
             HotelsDatabaseContext hotelsDb, 
-            HashPasswordsService hashPasswordsService
+            HashPasswordsService hashPasswordsService,
+            JwtService jwtService
         )
         {
-            _authOptions = authOptions;
             _hotelsDb = hotelsDb;
             _hashPasswordsService = hashPasswordsService;
+            _jwtService = jwtService;
         }
 
         [Route("login")]
@@ -47,29 +42,29 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return Unauthorized();
             }
-            var token = GenerateJWT(account);
+            string token = _jwtService.GenerateJWT(account);
             return Ok(token);
         }
 
         [Route("registration")]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegistrationAccountData request)
+        public async Task<IActionResult> Register([FromBody] Account request)
         {
             if (!CheckIfEmailUnique(request.Email))
             {
                 return BadRequest("User is already registered with this email");
             }
             byte[] salt = _hashPasswordsService.GenerateSalt();
-            var account = new AccountEntity
+            AccountEntity account = new AccountEntity
             {
                 Email = request.Email,
                 Salt = Convert.ToBase64String(salt),
                 Password = _hashPasswordsService.HashPassword(request.Password, salt),
                 Role = Role.Client
             };
-            _hotelsDb.Add(account);
+            await _hotelsDb.AddAsync(account);
             await _hotelsDb.SaveChangesAsync();
-            var token = GenerateJWT(account);
+            string token = _jwtService.GenerateJWT(account);
             return Ok(token);
         }
 
@@ -88,29 +83,6 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Select(account => account.Email)
                 .SingleAsync();
             return Ok(email);
-        }
-
-        private string GenerateJWT(AccountEntity account)
-        {
-            var authParams = _authOptions.Value;
-
-            var securityKey = authParams.GetSymmetricSecurityKey();
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>() {
-                new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                new Claim(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
-                new Claim("role", account.Role.ToString())
-            };
-
-            var token = new JwtSecurityToken(
-                authParams.Issuer,
-                authParams.Audience,
-                claims,
-                expires: DateTime.Now.Add(authParams.ExpireTime),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

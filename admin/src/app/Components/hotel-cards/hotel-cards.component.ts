@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
-import { HotelCard } from 'src/app/HotelDtos/hotelCard';
+import { HotelCard } from 'src/app/Dtos/hotelCard';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -16,18 +18,40 @@ export class HotelCardsComponent implements OnInit {
   public readonly pageParameters = new PageParameters(2);
 
   public constructor(
-    private readonly hotelService: HotelService
+    private readonly hotelService: HotelService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
   ) {
   }
 
   public ngOnInit(): void {
-    this.fetchHotels();
+    this.setPageParams();
+    this.updateUrl();
     this.fetchHotelsCount();
+    this.fetchHotels();
   }
 
-  public onPaginateChange(event?: PageEvent): void {
+  public updateUrl(): void {
+    void this.router.navigate(
+      [],
+      { queryParams: this.pageParameters.getQueryParams() }
+    );
+  }
+
+  public onPaginationChange(event: PageEvent): void {
     this.pageParameters.updateParameters(event);
+    this.updateUrl();
     this.fetchHotels();
+  }
+
+  private setPageParams(): void {
+    this.route.queryParams
+      .subscribe(params => {
+        if (params.pageIndex !== undefined) {
+          this.pageParameters.updateParameters(params);
+        }
+      }
+    );
   }
 
   private fetchHotelsCount(): void {
@@ -38,7 +62,7 @@ export class HotelCardsComponent implements OnInit {
 
   private fetchHotels(): void {
     this.hotelService
-      .getHotels(this.pageParameters)
+      .getHotelCards(this.pageParameters)
       .subscribe(hotels => this.hotels = hotels);
   }
 }

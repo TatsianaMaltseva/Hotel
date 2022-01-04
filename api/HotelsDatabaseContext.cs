@@ -12,6 +12,7 @@ namespace iTechArt.Hotels.Api
 
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<HotelEntity> Hotels { get; set; }
+        public DbSet<ImageEntity> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,7 +45,6 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(155);
 
                 entity.Property(e => e.Country)
-                    .IsRequired()
                     .HasMaxLength(56);
 
                 entity.Property(e => e.Name)
@@ -52,7 +52,6 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(60);
 
                 entity.Property(e => e.City)
-                    .IsRequired()
                     .HasMaxLength(85);
 
                 entity.Property(e => e.Description)

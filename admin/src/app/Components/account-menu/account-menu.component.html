@@ -1,0 +1,7 @@
+<button mat-raised-button [matMenuTriggerFor]="menu">My account</button>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item>
+        <a routerLink="/change-password">Change password</a>
+    </button>
+    <button *ngIf="isClient" mat-menu-item>My orders</button>
+</mat-menu>

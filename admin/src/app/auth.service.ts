@@ -22,24 +22,32 @@ export interface Token {
 export class AuthService {
   private readonly apiUrl: string;
   
+  public get isLoggedIn(): boolean {
+    const token: string | null = getToken();
+    return token !== null && !this.jwtHelper.isTokenExpired(token);
+  }
+
+  public get role(): string | null {
+    if (this.isLoggedIn) {
+      const decodedToken: Token = this.jwtHelper.decodeToken(getToken()!);
+      return decodedToken.role;
+    }
+    return null;
+  }
+
+  public get id(): number | null {
+    if (this.isLoggedIn) {
+      const decodedToken: Token = this.jwtHelper.decodeToken(getToken()!);
+      return decodedToken.sub;
+    }
+    return null;
+  }
+
   public constructor(
     private readonly http: HttpClient,
     private readonly jwtHelper: JwtHelperService
   ) { 
     this.apiUrl = environment.api;
-  }
-
-  public isLoggedIn(): boolean {
-    const token: string | null = getToken();
-    return token !== null && !this.jwtHelper.isTokenExpired(token);
-  }
-
-  public role(): string | null {
-    if (this.isLoggedIn()) {
-      const decodedToken: Token = this.jwtHelper.decodeToken(getToken()!);
-      return decodedToken.role;
-    }
-    return null;
   }
 
   public login(email: string, password: string): Observable<string> {

@@ -8,14 +8,24 @@ namespace iTechArt.Hotels.Api.Services
     {
         public Mapper()
         {
-            CreateMap<HotelCard, HotelEntity>();
-            CreateMap<HotelEntity, HotelCard>();
+            CreateMap<HotelEntity, HotelCard>()
+                .ReverseMap();
 
-            CreateMap<AddHotelRepresentation, HotelEntity>();
-            CreateMap<HotelEntity, AddHotelRepresentation>();
+            CreateMap<HotelEntity, Hotel>()
+                .ReverseMap();
 
-            CreateMap<HotelRepresentation, HotelEntity>();
-            CreateMap<HotelEntity, HotelRepresentation>();
+            CreateMap<HotelEntity, HotelToAdd>()
+                .ReverseMap();
+
+            CreateMap<HotelEntity, HotelToEdit>()
+                .ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<ImageEntity, Image>()
+                .ReverseMap();
+
+            CreateMap<AccountEntity, Account>()
+                .ReverseMap();
         }
     }
 }

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+
+import { AccountService } from 'src/app/account.service';
 import { AuthService } from 'src/app/auth.service';
 
 @Component({
@@ -8,19 +10,16 @@ import { AuthService } from 'src/app/auth.service';
 })
 export class NavbarComponent {
   public get isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
-  }
-
-  public get role(): string | null {
-    return this.authService.role();
+    return this.authService.isLoggedIn;
   }
 
   public get isAdmin(): boolean {
-    return this.isLoggedIn && this.role === 'admin';
+    return this.accountService.isAdmin;
   }
   
   public constructor(
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly accountService: AccountService
   ) {
   }
 }
