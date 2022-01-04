@@ -27,8 +27,7 @@ export class HotelComponent implements OnInit{
     private readonly route: ActivatedRoute,
     private readonly accountService: AccountService,
     private readonly snackBar: MatSnackBar
-  ) { 
-    this.hotelId = this.route.snapshot.paramMap.get('id') as unknown as number;
+  ) {
   }
 
   public ngOnInit(): void {

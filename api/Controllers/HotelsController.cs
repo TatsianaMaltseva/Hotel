@@ -67,7 +67,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 .FirstOrDefaultAsync();
             if (hotel == null)
             {
-                return NotFound($"Hotel with {hotelId} does not exist");
+                return NotFound($"Hotel with {hotelId} id does not exist");
             }
             return Ok(hotel);
         }
