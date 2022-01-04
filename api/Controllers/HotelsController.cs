@@ -74,8 +74,8 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetHotelCards(
-            [FromQuery] PageParams pageParameters, 
-            [FromQuery] FilterParams filterParams
+            [FromQuery] PageParameters pageParameters, 
+            [FromQuery] FilterParameters filterParams
         )
         {
             var filteredHotelCards = _hotelsDb.Hotels.AsQueryable();
@@ -93,7 +93,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("count")]
         [HttpGet]
-        public async Task<IActionResult> GetHotelsCount([FromQuery] FilterParams filterParams)
+        public async Task<IActionResult> GetHotelsCount([FromQuery] FilterParameters filterParams)
         {
             var hotelCards = _hotelsDb.Hotels.AsQueryable();
             if (!string.IsNullOrEmpty(filterParams.Name))

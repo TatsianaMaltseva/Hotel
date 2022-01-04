@@ -14,7 +14,7 @@ export class FilterService{
   private readonly autocompleteVariantNumber = 2;
   private readonly apiUrl: string;
 
-  public get filter(): FilterParameters {
+  public get filterParameters(): FilterParameters {
     const filter: FilterParameters = {
       name: this.name
     };

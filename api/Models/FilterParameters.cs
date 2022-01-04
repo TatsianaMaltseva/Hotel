@@ -2,7 +2,7 @@
 
 namespace iTechArt.Hotels.Api.Models
 {
-    public class FilterParams
+    public class FilterParameters
     {
         [MaxLength(60)]
         public string Name { get; set; }

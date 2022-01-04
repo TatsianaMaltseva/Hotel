@@ -43,7 +43,7 @@ export class HotelCardsComponent implements OnInit {
   }
 
   public updateUrl(): void {
-    const params = Object.assign(this.pageParameters, this.filterService.filter) as Params;
+    const params = Object.assign(this.pageParameters, this.filterService.filterParameters) as Params;
     void this.router.navigate(
       [],
       { queryParams: params }
@@ -58,7 +58,7 @@ export class HotelCardsComponent implements OnInit {
 
   public fetchHotels(): void {
     this.hotelService
-      .getHotelCards(this.pageParameters, this.filterService.filter)
+      .getHotelCards(this.pageParameters, this.filterService.filterParameters)
       .subscribe(hotels => this.hotels = hotels);
   }
 
@@ -84,7 +84,7 @@ export class HotelCardsComponent implements OnInit {
 
   private fetchHotelsCount(): void {
     this.hotelService
-      .getHotelsCount(this.filterService.filter)
+      .getHotelsCount(this.filterService.filterParameters)
       .subscribe(number => this.hotelCount = number);
   }
 }

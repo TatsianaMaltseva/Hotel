@@ -30,15 +30,15 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    if (!this.isEmpty(this.filterService.filter)) {
-      this.filterForm.patchValue(this.filterService.filter);
+    if (!this.isEmpty(this.filterService.filterParameters)) {
+      this.filterForm.patchValue(this.filterService.filterParameters);
     }
     this.name?.valueChanges.subscribe((value) => this.filter(value));
   }
 
   public updateUrl(): void {
     this.filterService.updateParameters(this.filterForm.value);
-    const params = this.filterService.filter as Params;
+    const params = this.filterService.filterParameters as Params;
     void this.router.navigate(
       [],
       {
