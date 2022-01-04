@@ -5,7 +5,7 @@
 export const environment = {
   production : false,
   api: 'http://localhost:5020/',
-  allowedDomains: ['localhost:5020', 'localhost:5000']
+  allowedDomains: ['localhost:5020']
 };
 
 /*

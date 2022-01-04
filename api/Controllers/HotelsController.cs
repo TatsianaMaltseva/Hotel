@@ -77,15 +77,7 @@ namespace iTechArt.Hotels.Api.Controllers
             var filteredHotelCards = _hotelsDb.Hotels.AsQueryable();
             if (!string.IsNullOrEmpty(filterParams.Name))
             {
-                filteredHotelCards = filteredHotelCards.Where(h => h.Name.ToLower().Contains(filterParams.Name.ToLower()));//toLower
-            }
-            if (filterParams.Country != null)
-            {
-                filteredHotelCards = filteredHotelCards.Where(h => h.Country.Contains(filterParams.Country));//toLower
-            }
-            if (filterParams.City != null)
-            {
-                filteredHotelCards = filteredHotelCards.Where(h => h.City.Contains(filterParams.City));//toLower
+                filteredHotelCards = filteredHotelCards.Where(h => h.Name.ToLower().Contains(filterParams.Name.ToLower()));
             }
             HotelCard[] hotelCards = await filteredHotelCards
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
@@ -110,17 +102,17 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("names")]
         [HttpGet]
-        public async Task<IActionResult> GetHotelNames([FromQuery] string name)//number
+        public async Task<IActionResult> GetHotelNames([FromQuery] string name, [FromQuery] string number = "2")
         {
             if (string.IsNullOrEmpty(name))
             {
                 return NoContent();
             }
             string[] names = await _hotelsDb.Hotels
-                .Where(h => h.Name.ToLower().Contains(name.ToLower()))// TODO
+                .Where(h => h.Name.ToLower().Contains(name.ToLower()))// TODO Discuss with Andrew .ToLower() solution
                 .OrderBy(h => h.Name)
                 .Distinct()
-                .Take(2) // from front
+                .Take(Convert.ToInt32(number))
                 .Select(h => h.Name)
                 .ToArrayAsync();
             return Ok(names);

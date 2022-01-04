@@ -11,20 +11,10 @@ import { FilterService } from 'src/app/filterService';
 })
 export class HotelsFilterComponent implements OnInit {
   public names: string[] = [];
-  public countries: string[] = [];
-  public cities: string[] = [];
   public filterForm: FormGroup;
 
   public get name(): AbstractControl | null {
     return this.filterForm.get('name');
-  }
-
-  public get country(): AbstractControl | null {
-    return this.filterForm.get('county');
-  }
-
-  public get city(): AbstractControl | null {
-    return this.filterForm.get('city');
   }
 
   public constructor(
@@ -40,11 +30,14 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    if (!this.isEmpty(this.filterService.filter)) {
+      this.filterForm.patchValue(this.filterService.filter);
+    }
     this.name?.valueChanges.subscribe((value) => this.filter(value));
   }
 
   public updateUrl(): void {
-    this.filterService.updateParameters({ name: this.name?.value }); //do not like it
+    this.filterService.updateParameters(this.filterForm.value);
     const params = this.filterService.filter as Params;
     void this.router.navigate(
       [],
@@ -57,7 +50,12 @@ export class HotelsFilterComponent implements OnInit {
 
   public filter(value: string): void {
     const filterValue: string = value;
-    this.filterService.getHotelNames(filterValue)
+    this.filterService
+      .getHotelNames(filterValue)
       .subscribe(names => this.names = names);
+  }
+
+  private isEmpty(obj: object): boolean {
+    return Object.values(obj).every(x => x === '');
   }
 }

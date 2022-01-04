@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/pageParameters';
-import { FilterParameters } from './filterService';
 import { HotelCard } from './Dtos/hotelCard';
 import { Hotel } from './Dtos/hotel';
+import { FilterParameters } from './Core/filterParameters';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,7 @@ export class HotelService {
   }
 
   public getHotelsCount(filterParameters: FilterParameters): Observable<number> {
-    const httpParams = filterParameters as Params
+    const httpParams = filterParameters as Params;
     return this.http.get<number>(`${this.apiUrl}api/hotels/count`, { params: httpParams });
   }
 }

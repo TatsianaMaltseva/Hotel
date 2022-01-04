@@ -33,7 +33,7 @@ export class HotelCardsComponent implements OnInit {
     this.fetchHotels();
     this.router.events
       .subscribe((event) => {
-        if (event instanceof NavigationEnd){
+        if (event instanceof NavigationEnd) {
           this.setFilterParams();
           this.fetchHotelsCount();
           this.fetchHotels();
