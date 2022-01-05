@@ -37,7 +37,7 @@ export class CreateAdminComponent {
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar
   ) {
-      this.createAdminForm = this.formBuilder.group(
+      this.createAdminForm = formBuilder.group(
         {
           email: [
             '',

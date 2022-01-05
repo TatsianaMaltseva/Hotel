@@ -61,7 +61,7 @@ export class HotelComponent implements OnInit{
       .subscribe(
         (hotel) => {
           this.hotel = hotel;
-          this.isHotelLoaded = true
+          this.isHotelLoaded = true;
         },
         (serverError: HttpErrorResponse) => {
           this.openErrorSnackBar(serverError.error as string);

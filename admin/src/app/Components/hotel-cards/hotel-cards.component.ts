@@ -32,14 +32,15 @@ export class HotelCardsComponent implements OnInit {
     this.fetchHotelsCount();
     this.fetchHotels();
     this.router.events
-      .subscribe((event) => {
-        if (event instanceof NavigationEnd) {
-          this.setFilterParams();
-          this.fetchHotelsCount();
-          this.fetchHotels();
-        }
-      } 
-    );
+      .subscribe(
+        (event) => {
+          if (event instanceof NavigationEnd) {
+            this.setFilterParams();
+            this.fetchHotelsCount();
+            this.fetchHotels();
+          }
+        } 
+      );
   }
 
   public updateUrl(): void {
@@ -64,22 +65,24 @@ export class HotelCardsComponent implements OnInit {
 
   private setPageParams(): void {
     this.route.queryParams
-      .subscribe(params => {
-        if (params.pageIndex !== undefined) {
-          this.pageParameters.updateParameters(params);
+      .subscribe(
+        (params) => {
+          if (params.pageIndex !== undefined) {
+            this.pageParameters.updateParameters(params);
+          }
         }
-      }
-    );
+      );
   }
 
   private setFilterParams(): void {
     this.route.queryParams
-      .subscribe(params => {
-        if (params.name !== undefined) {
-          this.filterService.updateParameters(params);
+      .subscribe(
+        (params) => {
+          if (params.name !== undefined) {
+            this.filterService.updateParameters(params);
+          }
         }
-      }
-    );
+      );
   }
 
   private fetchHotelsCount(): void {

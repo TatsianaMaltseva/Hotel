@@ -28,9 +28,9 @@ export class FilterService{
   }
 
   public getHttpParams(): HttpParams {
-    const params = new HttpParams();
-      params.set('name', this.name);
-    return params;
+    const params = this.filterParameters as Params;
+    const httpParams = new HttpParams({ fromObject: params } as Params);
+    return httpParams;
   }
 
   public updateParameters(data: Params | any): void {

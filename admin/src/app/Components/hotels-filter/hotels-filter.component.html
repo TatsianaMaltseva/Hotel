@@ -5,9 +5,9 @@
             matInput
             type="text"
             formControlName="name"
-            [matAutocomplete]="name"
+            [matAutocomplete]="nameAutocomplete"
         >
-        <mat-autocomplete #name ="matAutocomplete">
+        <mat-autocomplete #nameAutocomplete ="matAutocomplete">
             <mat-option 
                 *ngFor="let name of names" 
                 [value]="name"

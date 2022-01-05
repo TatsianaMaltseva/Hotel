@@ -22,7 +22,7 @@ export class HotelsFilterComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly router: Router
   ) {
-    this.filterForm = this.formBuilder.group(
+    this.filterForm = formBuilder.group(
       {
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)]
       }
@@ -33,7 +33,12 @@ export class HotelsFilterComponent implements OnInit {
     if (!this.isEmpty(this.filterService.filterParameters)) {
       this.filterForm.patchValue(this.filterService.filterParameters);
     }
-    this.name?.valueChanges.subscribe((value) => this.filter(value));
+    this.name?.valueChanges
+      .subscribe(
+        (value) => {
+            this.fetchAutocompleteValues(value);
+        }
+      );
   }
 
   public updateUrl(): void {
@@ -48,7 +53,7 @@ export class HotelsFilterComponent implements OnInit {
     );
   }
 
-  public filter(value: string): void {
+  public fetchAutocompleteValues(value: string): void {
     const filterValue: string = value;
     this.filterService
       .getHotelNames(filterValue)

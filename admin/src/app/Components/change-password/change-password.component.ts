@@ -36,7 +36,7 @@ export class ChangePasswordComponent{
     private readonly snackBar: MatSnackBar,
     private readonly location: Location
   ) {
-      this.changePasswordForm = this.formBuilder.group(
+      this.changePasswordForm = formBuilder.group(
         {
           oldPassword: ['', Validators.required],
           newPassword: ['', Validators.required],

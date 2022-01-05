@@ -106,7 +106,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("names")]
         [HttpGet]
-        public async Task<IActionResult> GetHotelNames([FromQuery] string name, [FromQuery] string number = "2")
+        public async Task<IActionResult> GetHotelNames([FromQuery] string name, [FromQuery] int number = 2)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -116,7 +116,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(h => h.Name.ToLower().Contains(name.ToLower()))// TODO Discuss with Andrew .ToLower() solution
                 .OrderBy(h => h.Name)
                 .Distinct()
-                .Take(Convert.ToInt32(number))
+                .Take(number)
                 .Select(h => h.Name)
                 .ToArrayAsync();
             return Ok(names);

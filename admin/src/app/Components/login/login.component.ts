@@ -27,7 +27,7 @@ export class LoginComponent {
     private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder
   ) {
-    this.authForm = this.formBuilder.group({
+    this.authForm = formBuilder.group({
       email: [
         '', 
         [

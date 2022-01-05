@@ -25,7 +25,7 @@ export class HotelForAdminComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar
   ) {
-    this.changeHotelForm = this.formBuilder.group(
+    this.changeHotelForm = formBuilder.group(
       {
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
         country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],

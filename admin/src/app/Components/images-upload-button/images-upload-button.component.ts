@@ -23,13 +23,14 @@ export class ImagesUploadButtonComponent {
     }
     this.imageService
       .postImage(files, this.hotelId)
-      .subscribe(event => {
-        if (event.type === HttpEventType.UploadProgress) {
-          this.progress = Math.round(100 * event.loaded / event.total); 
-        } else if (event.type === HttpEventType.Response) {
-          this.imageLoaded.emit(event.body as number);
+      .subscribe(
+        (event) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            this.progress = Math.round(100 * event.loaded / event.total); 
+          } else if (event.type === HttpEventType.Response) {
+            this.imageLoaded.emit(event.body as number);
+          }
         }
-      }
     );
   }
 }
