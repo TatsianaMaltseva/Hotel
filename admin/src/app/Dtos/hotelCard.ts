@@ -3,4 +3,5 @@ export interface HotelCard {
   name: string;
   country: string;
   city: string;
+  mainImageId?: number;
 }

@@ -5,5 +5,7 @@
     [City] NVARCHAR(85) NOT NULL,
     [Address] NVARCHAR(155) NOT NULL,
     [Description] NVARCHAR(3000) NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC)
+    [MainImageId] INT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    FOREIGN KEY (MainImageId) REFERENCES [dbo].[Images](Id) on delete set null
 );

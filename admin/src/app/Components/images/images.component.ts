@@ -28,11 +28,11 @@ export class ImagesComponent implements OnInit {
     this.fetchImages();
   }
 
-  public createImgPath(image: Image): string {
+  public createImagePath(image: Image): string {
     if (this.hotelId === undefined) {
       return '';
     }
-    return this.imageService.createImagePath(this.hotelId, image);
+    return this.imageService.createImagePath(this.hotelId, image.id);
   }
 
   private fetchImages(): void {

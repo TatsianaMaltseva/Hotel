@@ -8,6 +8,7 @@ import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelCard } from './Dtos/hotelCard';
 import { Hotel } from './Dtos/hotel';
 import { FilterParameters } from './Core/filterParameters';
+import { Image } from './Dtos/image';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +32,8 @@ export class HotelService {
     return this.http.get<HotelCard[]>(`${this.apiUrl}api/hotels`, { params: httpParams });
   }
 
-  public editHotel(hotelId: number, editedHotel: Hotel): Observable<any> {
-    return this.http.put(
+  public editHotel(hotelId: number, editedHotel: Hotel): Observable<string> {
+    return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}`,
       { ...editedHotel }
     );
@@ -41,5 +42,12 @@ export class HotelService {
   public getHotelsCount(filterParameters: FilterParameters): Observable<number> {
     const httpParams = filterParameters as Params;
     return this.http.get<number>(`${this.apiUrl}api/hotels/count`, { params: httpParams });
+  }
+
+  public changeMainImage(hotelId: number, image: Image): Observable<string> {
+    return this.http.put<string>(
+      `${this.apiUrl}api/hotels/${hotelId}/images`,
+      { id: image.id }
+    );
   }
 }

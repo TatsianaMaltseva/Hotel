@@ -36,10 +36,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> CreateHotel([FromBody] HotelToAdd request)
         {
-            HotelEntity hotelEntity = _mapper.Map<HotelEntity>(request); 
+            HotelEntity hotelEntity = _mapper.Map<HotelEntity>(request);
             await _hotelsDb.AddAsync(hotelEntity);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetHotel), new { id = hotelEntity.Id }, null);
+            return CreatedAtAction(nameof(GetHotel), new { hotelId = hotelEntity.Id }, null);
         }
 
         [Route("{hotelId}")]
@@ -198,6 +198,25 @@ namespace iTechArt.Hotels.Api.Controllers
             _hotelsDb.Images.Remove(image);
             await _hotelsDb.SaveChangesAsync();
             return NoContent();
+        }
+
+        [Route("{hotelId}/images")]
+        [HttpPut]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> ChangeMainImage([FromRoute] int hotelId, [FromBody] Image image)
+        {
+            HotelEntity hotel = await GetHotelEntityAsync(hotelId);
+            if (hotel == null)
+            {
+                return NotFound("Such hotel does not exist");
+            }
+            if (await GetImageEntityAsync(image.Id) == null)
+            {
+                return NotFound("Such image does not exist");
+            }
+            hotel.MainImageId = image.Id;
+            await _hotelsDb.SaveChangesAsync();
+            return Ok();
         }
 
         private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>

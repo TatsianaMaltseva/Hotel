@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { ImageService } from 'src/app/image.service';
 import { Image } from 'src/app/Dtos/image';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HotelService } from 'src/app/hotel.service';
 
 @Component({
   selector: 'app-images-for-admin',
@@ -17,7 +18,8 @@ export class ImagesForAdminComponent implements OnInit {
 
   public constructor(
     private readonly imageService: ImageService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly hotelService: HotelService
   ) { 
   }
 
@@ -29,7 +31,7 @@ export class ImagesForAdminComponent implements OnInit {
     if (this.hotelId === undefined) {
       return '';
     }
-    return this.imageService.createImagePath(this.hotelId, image);
+    return this.imageService.createImagePath(this.hotelId, image.id);
   }
 
   public addImage(imageId: number): void {
@@ -44,10 +46,24 @@ export class ImagesForAdminComponent implements OnInit {
       .deleteImage(this.hotelId, image)
       .subscribe(
         () => {
-          const id = this.images.indexOf(image);
-          delete this.images[id];
-          this.images.length -= 1;
+          this.images = this.images.filter(img => img !== image);
           this.openSnackBar('Image was successfully deleted');
+        },
+        (serverError: HttpErrorResponse) => {
+          this.openSnackBar(serverError.error as string);
+        }
+      );
+  }
+
+  public changeMainImage(image: Image): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
+    this.hotelService
+      .changeMainImage(this.hotelId, image)
+      .subscribe(
+        () => {
+          this.openSnackBar('Main image was successfully changed');
         },
         (serverError: HttpErrorResponse) => {
           this.openSnackBar(serverError.error as string);
