@@ -180,6 +180,26 @@ namespace iTechArt.Hotels.Api.Controllers
             return PhysicalFile(fullPath, $"image/{extension}");
         }
 
+        [Route("{hotelId}/images/{imageId}")]
+        [HttpDelete]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> DeleteImage([FromRoute] int imageId)
+        {
+            ImageEntity image = await GetImageEntityAsync(imageId);
+            if (image == null)
+            {
+                return NotFound("Such image does not exist");
+            }
+            string imageFullPath = Path.Combine(_imagesFolder, image.Path);
+            if (System.IO.File.Exists(imageFullPath))
+            {
+                System.IO.File.Delete(imageFullPath);
+            }
+            _hotelsDb.Images.Remove(image);
+            await _hotelsDb.SaveChangesAsync();
+            return NoContent();
+        }
+
         private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
             await _hotelsDb.Hotels
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);

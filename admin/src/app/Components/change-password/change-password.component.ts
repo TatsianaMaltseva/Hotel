@@ -66,9 +66,9 @@ export class ChangePasswordComponent{
   private openSuccessSnackBar(message: string): void {
     this.snackBar.open(
       `${message}`,
-      'Confirm',
+      'Close',
       { 
-        duration: 5000
+        duration: 15000
       }
     );
   }

@@ -35,4 +35,8 @@ export class ImageService {
   public createImagePath(hotelId: number, image: Image): string {
     return `${this.apiUrl}api/hotels/${hotelId}/images/${image.id}`;
   }
+
+  public deleteImage(hotelId: number, image: Image): Observable<string>{
+    return this.http.delete<string>(`${this.apiUrl}api/hotels/${hotelId}/images/${image.id}`);
+  }
 }
