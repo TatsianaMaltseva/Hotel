@@ -1,7 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { ImageService } from 'src/app/image.service';
+import { ImageForHotelService } from 'src/app/image-for-hotel.service';
 
 @Component({
   selector: 'app-images-upload-button',
@@ -13,7 +13,7 @@ export class ImagesUploadButtonComponent {
   @Output() public imageLoaded = new EventEmitter<number>();
 
   public constructor(
-    private readonly imageService: ImageService
+    private readonly imageHotelService: ImageForHotelService
   ) {
   }
 
@@ -21,8 +21,8 @@ export class ImagesUploadButtonComponent {
     if (files?.length === 0 || this.hotelId === undefined) {
       return;
     }
-    this.imageService
-      .postImage(files, this.hotelId)
+    this.imageHotelService
+      .postImageHotel(files, this.hotelId)
       .subscribe(
         (event) => {
           if (event.type === HttpEventType.UploadProgress) {

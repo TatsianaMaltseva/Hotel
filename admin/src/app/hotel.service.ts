@@ -9,6 +9,7 @@ import { HotelCard } from './Dtos/hotelCard';
 import { Hotel } from './Dtos/hotel';
 import { FilterParameters } from './Core/filterParameters';
 import { Image } from './Dtos/image';
+import { Room } from './Core/room';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,12 @@ export class HotelService {
     return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}/images`,
       { id: image.id }
+    );
+  }
+
+  public getRooms(hotelId: number): Observable<Room[]> {
+    return this.http.get<Room[]>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms`
     );
   }
 }

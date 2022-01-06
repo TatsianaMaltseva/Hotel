@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { ImageService } from 'src/app/image.service';
+import { ImageForHotelService } from 'src/app/image-for-hotel.service';
 import { Image } from 'src/app/Dtos/image';
 import { HotelService } from 'src/app/hotel.service';
+import { ImageForFoomService } from '../image-for-foom.service';
 
 @Component({
   selector: 'app-images-for-admin',
@@ -15,9 +16,11 @@ export class ImagesForAdminComponent implements OnInit {
   public progress: number = 0;
   public images: Image[] = [];
   @Input() public hotelId?: number;
+  @Input() public roomId?: number;
 
   public constructor(
-    private readonly imageService: ImageService,
+    private readonly imageHotelService: ImageForHotelService,
+    private readonly imageFoomService: ImageForFoomService,
     private readonly snackBar: MatSnackBar,
     private readonly hotelService: HotelService
   ) { 
@@ -31,7 +34,15 @@ export class ImagesForAdminComponent implements OnInit {
     if (this.hotelId === undefined) {
       return '';
     }
-    return this.imageService.createImagePath(this.hotelId, image.id);
+    if (this.roomId === undefined) {
+      return this.imageHotelService.createImagePath(this.hotelId, image.id);
+    }
+    return this.imageFoomService
+      .createImagePath(
+        this.hotelId, 
+        this.roomId, 
+        image.id
+      );
   }
 
   public addImage(imageId: number): void {
@@ -42,17 +53,7 @@ export class ImagesForAdminComponent implements OnInit {
     if (this.hotelId === undefined) {
       return;
     }
-    this.imageService
-      .deleteImage(this.hotelId, image)
-      .subscribe(
-        () => {
-          this.images = this.images.filter(img => img !== image);
-          this.openSnackBar('Image was successfully deleted');
-        },
-        (serverError: HttpErrorResponse) => {
-          this.openSnackBar(serverError.error as string);
-        }
-      );
+    this.deleteHotelImage(this.hotelId, image);
   }
 
   public changeMainImage(image: Image): void {
@@ -71,11 +72,25 @@ export class ImagesForAdminComponent implements OnInit {
       );
   }
 
+  private deleteHotelImage(hotelId: number, image: Image): void {
+    this.imageHotelService
+    .deleteImage(hotelId, image)
+    .subscribe(
+      () => {
+        this.images = this.images.filter(img => img !== image);
+        this.openSnackBar('Image was successfully deleted');
+      },
+      (serverError: HttpErrorResponse) => {
+        this.openSnackBar(serverError.error as string);
+      }
+    );
+  }
+
   private fetchImages(): void {
     if (this.hotelId === undefined) {
       return;
     }
-    this.imageService
+    this.imageHotelService
       .getImages(this.hotelId)
       .subscribe(images => this.images = images);
   }

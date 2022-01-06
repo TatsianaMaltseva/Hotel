@@ -1,0 +1,51 @@
+<form [formGroup]="roomsForm">
+    <table mat-table [dataSource]="rooms">
+        <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: tableColumns;" mat-row></tr>
+    
+        <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+                <div class="img__wrap">
+                    <img class="img__img" [src]="createImagePath(element)"/>
+                    <p class="img__description" (click)="showImagesDialog(element)">
+                        Click to see other images
+                    </p>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Room type</th>
+            <td mat-cell *matCellDef="let element">{{element.name}}</td>
+        </ng-container>
+    
+        <ng-container matColumnDef="sleeps">
+            <th mat-header-cell *matHeaderCellDef>Sleeps</th>
+            <td mat-cell *matCellDef="let element">{{element.sleeps}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="facilities">
+            <th mat-header-cell *matHeaderCellDef>Additional facilities</th>
+            <td mat-cell *matCellDef="let element">{{element.facilities}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price</th>
+            <td mat-cell *matCellDef="let element">US${{element.price}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="reserve">
+            <th mat-header-cell *matHeaderCellDef>Reserve</th>
+            <td mat-cell *matCellDef="let element">
+                <mat-form-field>
+                    <mat-select matInput formControlName="roomsReservedNumber">
+                    <mat-option *ngFor="let room of getNumberArray(element)" [value]="room">
+                        {{room}}
+                    </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td>
+        </ng-container>
+    </table>
+</form>

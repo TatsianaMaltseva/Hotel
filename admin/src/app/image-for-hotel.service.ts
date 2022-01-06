@@ -8,7 +8,7 @@ import { Image } from './Dtos/image';
 @Injectable({
   providedIn: 'root'
 })
-export class ImageService {
+export class ImageForHotelService {
   private readonly apiUrl: string;
 
   public constructor(
@@ -17,7 +17,11 @@ export class ImageService {
     this.apiUrl = environment.api;
   }
 
-  public postImage(files: FileList | null, hotelId: number): Observable<any> {
+  public createImagePath(hotelId: number, imageId: number): string {
+    return `${this.apiUrl}api/hotels/${hotelId}/images/${imageId}`;
+  }
+
+  public postImageHotel(files: FileList | null, hotelId: number): Observable<any> {
     const fileToUpload = files?.[0] as File;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
@@ -27,13 +31,8 @@ export class ImageService {
       { reportProgress: true, observe: 'events' }
     );
   }
-
   public getImages(hotelId: number): Observable<Image[]>{
     return this.http.get<Image[]>(`${this.apiUrl}api/hotels/${hotelId}/images`);
-  }
-
-  public createImagePath(hotelId: number, imageId: number): string {
-    return `${this.apiUrl}api/hotels/${hotelId}/images/${imageId}`;
   }
 
   public deleteImage(hotelId: number, image: Image): Observable<string>{

@@ -6,9 +6,7 @@ import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
 import { FilterService } from 'src/app/filterService';
-import { Image } from 'src/app/Dtos/image';
-import { Hotel } from 'src/app/Dtos/hotel';
-import { ImageService } from 'src/app/image.service';
+import { ImageForHotelService } from 'src/app/image-for-hotel.service';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -26,7 +24,7 @@ export class HotelCardsComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly filterService: FilterService,
-    private readonly imageService: ImageService
+    private readonly imageHotelService: ImageForHotelService
   ) {
   }
 
@@ -68,7 +66,7 @@ export class HotelCardsComponent implements OnInit {
   }
 
   public createImagePath(hotelId: number, image: number): string {
-    return this.imageService.createImagePath(hotelId, image );
+    return this.imageHotelService.createImagePath(hotelId, image );
   }
 
   private setPageParams(): void {

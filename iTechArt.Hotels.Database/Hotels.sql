@@ -7,5 +7,5 @@
     [Description] NVARCHAR(3000) NULL,
     [MainImageId] INT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC),
-    FOREIGN KEY (MainImageId) REFERENCES [dbo].[Images](Id) on delete set null
+    FOREIGN KEY (MainImageId) REFERENCES [dbo].[Images](Id) ON DELETE SET NULL
 );
