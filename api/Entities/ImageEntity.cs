@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iTechArt.Hotels.Api.Entities
 {
@@ -13,10 +14,12 @@ namespace iTechArt.Hotels.Api.Entities
 
         public bool IsOuterLink { get; set; }
 
+        [ForeignKey("Hotel")]
         public int HotelId { get; set; }
 
         public HotelEntity Hotel { get; set; }
 
+        [ForeignKey("Room")]
         public int? RoomId { get; set; }
         public RoomEntity Room { get; set; }
     }

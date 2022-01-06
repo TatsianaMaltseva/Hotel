@@ -10,7 +10,7 @@
     <mat-card-content>
         {{ hotel.description }}
     </mat-card-content>
-    <app-rooms></app-rooms>
+    <app-rooms [hotelId]="hotelId"></app-rooms>
     <mat-card-actions>
         <button 
             *ngIf="isAdmin" 

@@ -5,17 +5,16 @@ import { ImageDialodData } from 'src/app/Core/imageDialogData';
 
 import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
-import { ImageForHotelService } from 'src/app/image-for-hotel.service';
 import { ImageForFoomService } from '../image-for-foom.service';
-import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
+import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
 import { RoomService } from '../room.service';
 
 @Component({
-  selector: 'app-rooms',
-  templateUrl: './rooms.component.html',
-  styleUrls: ['./rooms.component.css']
+  selector: 'app-rooms-for-admin',
+  templateUrl: './rooms-for-admin.component.html',
+  styleUrls: ['./rooms-for-admin.component.css']
 })
-export class RoomsComponent implements OnInit {
+export class RoomsForAdminComponent implements OnInit {
   public roomsForm: FormGroup;
   public readonly tableColumns: string[] = [
     'image',
@@ -27,10 +26,6 @@ export class RoomsComponent implements OnInit {
   ];
   public rooms: Room[] = [];
   @Input() public hotelId?: number;
-
-  public get roomsReservedNumber(): AbstractControl | null {
-    return this.roomsForm.get('roomsReservedNumber');
-  }
 
   public constructor(
     private readonly formBuilder: FormBuilder,
@@ -54,6 +49,7 @@ export class RoomsComponent implements OnInit {
     return this.roomService.getNumberArray(room);
   }
 
+  
   public createImagePath(room: Room): string {
     if (this.hotelId === undefined) {
       return '';
@@ -72,7 +68,7 @@ export class RoomsComponent implements OnInit {
 
   public showImagesDialog(room: Room): void {
     this.matDialog.open(
-      ImagesDialogComponent,
+      ImagesForAdminDialogComponent,
       {
         width: '700px',
         data: { hotelId: this.hotelId, roomId: room.id } as ImageDialodData

@@ -21,7 +21,7 @@ export class ImageForHotelService {
     return `${this.apiUrl}api/hotels/${hotelId}/images/${imageId}`;
   }
 
-  public postImageHotel(files: FileList | null, hotelId: number): Observable<any> {
+  public postImage(files: FileList | null, hotelId: number): Observable<any> {
     const fileToUpload = files?.[0] as File;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);

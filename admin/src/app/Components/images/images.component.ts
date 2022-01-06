@@ -22,7 +22,7 @@ export class ImagesComponent implements OnInit {
   
   public constructor(
     private readonly imageHotelService: ImageForHotelService,
-    private readonly imageRoomsService: ImageForFoomService,
+    private readonly imageRoomService: ImageForFoomService,
     private readonly accountService: AccountService
   ) {
   }
@@ -38,7 +38,7 @@ export class ImagesComponent implements OnInit {
     if (this.roomId === undefined) {
       return this.imageHotelService.createImagePath(this.hotelId, image.id);
     }
-    return this.imageRoomsService
+    return this.imageRoomService
       .createImagePath(
         this.hotelId, 
         this.roomId, 
@@ -51,13 +51,21 @@ export class ImagesComponent implements OnInit {
       return;
     }
     if (this.roomId === undefined) {
-      this.imageHotelService
-      .getImages(this.hotelId)
-      .subscribe(images => this.images = images);
+      this.fetchHotelImages(this.hotelId);
     } else {
-      this.imageRoomsService
-        .getImages(this.hotelId, this.roomId)
-        .subscribe(images => this.images = images);
+      this.fetchRoomImages(this.hotelId, this.roomId);
     }
+  }
+
+  private fetchHotelImages(hotelId: number): void {
+    this.imageHotelService
+      .getImages(hotelId)
+      .subscribe(images => this.images = images);
+  }
+
+  private fetchRoomImages(hotelId: number, roomId: number): void {
+    this.imageRoomService
+      .getImages(hotelId, roomId)
+      .subscribe(images => this.images = images);
   }
 }

@@ -4,14 +4,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ImageDialodData } from 'src/app/Core/imageDialogData';
 
 @Component({
-  selector: 'app-images-dialog',
-  templateUrl: './images-dialog.component.html'
+  selector: 'app-images-for-admin-dialog',
+  templateUrl: './images-for-admin-dialog.component.html'
 })
-export class ImagesDialogComponent {
+export class ImagesForAdminDialogComponent {
   public hotelId: number;
   public roomId: number;
   public constructor(
-    private readonly matDialogRef: MatDialogRef<ImagesDialogComponent>,
+    private readonly matDialogRef: MatDialogRef<ImagesForAdminDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ImageDialodData
   ) { 
     this.roomId = data.roomId;

@@ -43,6 +43,8 @@ import { ImagesUploadButtonComponent } from './Components/images-upload-button/i
 import { RoomsComponent } from './Components/rooms/rooms.component';
 import { MatSelectModule } from '@angular/material/select';
 import { ImagesDialogComponent } from './Components/images-dialog/images-dialog.component';
+import { ImagesForAdminDialogComponent } from './Components/images-for-admin-dialog/images-for-admin-dialog.component';
+import { RoomsForAdminComponent } from './Components/rooms-for-admin/rooms-for-admin.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +66,9 @@ import { ImagesDialogComponent } from './Components/images-dialog/images-dialog.
     ImagesForAdminComponent,
     ImagesUploadButtonComponent,
     RoomsComponent,
-    ImagesDialogComponent
+    ImagesDialogComponent,
+    ImagesForAdminDialogComponent,
+    RoomsForAdminComponent
   ],
   imports: [
     BrowserModule,

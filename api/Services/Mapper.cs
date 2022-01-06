@@ -26,6 +26,9 @@ namespace iTechArt.Hotels.Api.Services
 
             CreateMap<AccountEntity, Account>()
                 .ReverseMap();
+
+            CreateMap<RoomEntity, Room>()
+                .ReverseMap();
         }
     }
 }

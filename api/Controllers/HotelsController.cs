@@ -123,13 +123,19 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [Route("{hotelId}/images")]
+        [Route("{hotelId}/rooms/{roomId}/images")]
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> AddImage([FromRoute] int hotelId)
+        public async Task<IActionResult> AddImage([FromRoute] int hotelId, [FromRoute] int? roomId)
         {
             if (await GetHotelEntityAsync(hotelId) == null)
             {
                 return BadRequest("Such hotel does not exist");
+            }
+
+            if (roomId != null && await GetRoomEntityAsync(roomId) == null)
+            {
+                return BadRequest("Such room does not exist");
             }
 
             var file = Request.Form.Files[0];
@@ -148,11 +154,23 @@ namespace iTechArt.Hotels.Api.Controllers
                 Path = fileName,
                 HotelId = hotelId,
                 Hotel = await GetHotelEntityAsync(hotelId),
-                IsOuterLink = false
+                IsOuterLink = false,
             };
+            
+            if (roomId != null)
+            {
+                var room = await GetRoomEntityAsync(roomId);
+                image.RoomId = roomId;
+                image.Room = room;
+            }
             await _hotelsDb.Images.AddAsync(image);
             await _hotelsDb.SaveChangesAsync();
+
+            if (image.RoomId == null)
+            {
             return CreatedAtAction(nameof(GetImage), new { hotelId = image.Hotel.Id, imageId = image.Id }, image.Id);
+            }
+            return CreatedAtAction(nameof(GetImage), new { hotelId = image.Hotel.Id, roomId = image.RoomId, imageId = image.Id }, image.Id);
         }
 
         [Route("{hotelId}/images")]
@@ -170,7 +188,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such room does not exist");
             }
             var imagesForRoom = imagesForHotel.Where(image => image.RoomId == roomId);
-            var imagesToReturn =await  imagesForRoom.ProjectTo<Image>(_mapper.ConfigurationProvider)
+            var imagesToReturn =await imagesForRoom
+                .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
             return Ok(imagesToReturn);
         }
@@ -187,6 +206,7 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [Route("{hotelId}/images/{imageId}")]
+        [Route("{hotelId}/rooms/{roomId}/images/{imageId}")]
         [HttpDelete]
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> DeleteImage([FromRoute] int imageId)
@@ -207,9 +227,10 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [Route("{hotelId}/images")]
+        [Route("{hotelId}/rooms/{roomId}/images")]
         [HttpPut]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> ChangeMainImage([FromRoute] int hotelId, [FromBody] Image image)
+        public async Task<IActionResult> ChangeMainImage([FromRoute] int hotelId, [FromRoute] int? roomId, [FromBody] Image image)
         {
             HotelEntity hotel = await GetHotelEntityAsync(hotelId);
             if (hotel == null)
@@ -220,7 +241,18 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return NotFound("Such image does not exist");
             }
-            hotel.MainImageId = image.Id;
+            if (roomId != null)
+            {
+                RoomEntity room = await GetRoomEntityAsync(roomId);
+                if (room != null)
+                {
+                    room.MainImageId = image.Id;
+                }
+            }
+            else
+            {
+                hotel.MainImageId = image.Id;
+            }
             await _hotelsDb.SaveChangesAsync();
             return Ok();
         }
@@ -229,7 +261,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRooms([FromRoute] int hotelId)
         {
-            RoomEntity[] rooms = await _hotelsDb.Rooms.Where(r => r.HotelId == hotelId).ToArrayAsync();
+            Room[] rooms = await _hotelsDb.Rooms
+                .Where(r => r.HotelId == hotelId)
+                .ProjectTo<Room>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
             return Ok(rooms);
         }
 
@@ -237,7 +272,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRoom([FromRoute] int roomId)
         {
-            RoomEntity room  = await _hotelsDb.Rooms.FirstOrDefaultAsync(r => r.Id == roomId); //dto for room
+            Room room  = await _hotelsDb.Rooms
+                .Where(room => room.Id == roomId)
+                .ProjectTo<Room>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
             return Ok(room);
         }
 

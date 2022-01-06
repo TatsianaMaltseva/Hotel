@@ -9,7 +9,7 @@ import { HotelCard } from './Dtos/hotelCard';
 import { Hotel } from './Dtos/hotel';
 import { FilterParameters } from './Core/filterParameters';
 import { Image } from './Dtos/image';
-import { Room } from './Core/room';
+import { Room } from './Dtos/room';
 
 @Injectable({
   providedIn: 'root'

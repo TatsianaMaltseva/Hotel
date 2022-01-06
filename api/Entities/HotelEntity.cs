@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iTechArt.Hotels.Api.Entities
 {
@@ -12,5 +13,6 @@ namespace iTechArt.Hotels.Api.Entities
         public string Description { get; set; }
         public int? MainImageId { get; set; }
         public ICollection<ImageEntity> Images { get; set; }
+        public ICollection<RoomEntity> Rooms { get; set; }
     }
 }
