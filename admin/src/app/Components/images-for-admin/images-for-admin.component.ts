@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 import { ImageService } from 'src/app/image.service';
 import { Image } from 'src/app/Dtos/image';
 import { HotelService } from 'src/app/hotel.service';
 import { RoomService } from '../room.service';
-import { Observable } from 'rxjs';
+import { Room } from 'src/app/Dtos/room';
 
 @Component({
   selector: 'app-images-for-admin',
@@ -19,12 +20,13 @@ export class ImagesForAdminComponent implements OnInit {
   @Input() public hotelId?: number;
   @Input() public roomId?: number;
 
+
   public constructor(
     private readonly imageService: ImageService,
     private readonly snackBar: MatSnackBar,
     private readonly hotelService: HotelService,
     private readonly roomService: RoomService
-  ) { 
+  ) {
   }
 
   public ngOnInit(): void {
@@ -45,13 +47,6 @@ export class ImagesForAdminComponent implements OnInit {
 
   public addImage(imageId: number): void {
     this.images.push({ id: imageId } as Image);
-  }
-
-  public deleteImage(image: Image): void {
-    if (this.hotelId === undefined) {
-      return;
-    }
-    this.deleteHotelImage(this.hotelId, image);
   }
 
   public changeMainImage(image: Image): void {
@@ -75,9 +70,12 @@ export class ImagesForAdminComponent implements OnInit {
       );
   }
 
-  private deleteHotelImage(hotelId: number, image: Image): void {
+  public deleteImage(image: Image): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
     this.imageService
-      .deleteImage(hotelId, image.id, this.roomId)
+      .deleteImage(this.hotelId, image.id, this.roomId)
       .subscribe(
         () => {
           this.images = this.images.filter(img => img !== image);

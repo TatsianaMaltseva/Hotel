@@ -1,4 +1,4 @@
-export interface ImageDialodData {
+export interface ImageDialogData {
     hotelId: number;
     roomId: number;
 }

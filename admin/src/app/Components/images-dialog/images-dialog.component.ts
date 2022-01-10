@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import { ImageDialodData } from 'src/app/Core/imageDialogData';
+import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 
 @Component({
   selector: 'app-images-dialog',
@@ -12,7 +12,7 @@ export class ImagesDialogComponent {
   public roomId: number;
   public constructor(
     private readonly matDialogRef: MatDialogRef<ImagesDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ImageDialodData
+    @Inject(MAT_DIALOG_DATA) public data: ImageDialogData
   ) { 
     this.roomId = data.roomId;
     this.hotelId = data.hotelId;

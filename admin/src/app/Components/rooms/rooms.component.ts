@@ -2,12 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
-import { ImageDialodData } from 'src/app/Core/imageDialogData';
 import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
 import { RoomService } from '../room.service';
+import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 
 @Component({
   selector: 'app-rooms',
@@ -16,6 +16,7 @@ import { RoomService } from '../room.service';
 })
 export class RoomsComponent implements OnInit {
   public roomsForm: FormGroup;
+  @Input() public hotelId?: number;
   public readonly tableColumns: string[] = [
     'image',
     'name', 
@@ -25,7 +26,6 @@ export class RoomsComponent implements OnInit {
     'reserve'
   ];
   public rooms: Room[] = [];
-  @Input() public hotelId?: number;
 
   public get roomsReservedNumber(): AbstractControl | null {
     return this.roomsForm.get('roomsReservedNumber');
@@ -70,8 +70,8 @@ export class RoomsComponent implements OnInit {
     this.matDialog.open(
       ImagesDialogComponent,
       {
-        width: '700px',
-        data: { hotelId: this.hotelId, roomId: room.id } as ImageDialodData
+        width: '85%',
+        data: { hotelId: this.hotelId, roomId: room.id } as ImageDialogData
       }
     );
   }
