@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { ImageForHotelService } from 'src/app/image-for-hotel.service';
+import { ImageService } from 'src/app/image.service';
 import { Image } from 'src/app/Dtos/image';
 import { HotelService } from 'src/app/hotel.service';
-import { ImageForFoomService } from '../image-for-foom.service';
 import { RoomService } from '../room.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-images-for-admin',
@@ -20,8 +20,7 @@ export class ImagesForAdminComponent implements OnInit {
   @Input() public roomId?: number;
 
   public constructor(
-    private readonly imageHotelService: ImageForHotelService,
-    private readonly imageRoomService: ImageForFoomService,
+    private readonly imageService: ImageService,
     private readonly snackBar: MatSnackBar,
     private readonly hotelService: HotelService,
     private readonly roomService: RoomService
@@ -36,14 +35,11 @@ export class ImagesForAdminComponent implements OnInit {
     if (this.hotelId === undefined) {
       return '';
     }
-    if (this.roomId === undefined) {
-      return this.imageHotelService.createImagePath(this.hotelId, image.id);
-    }
-    return this.imageRoomService
+    return this.imageService
       .createImagePath(
         this.hotelId, 
-        this.roomId!, 
-        image.id
+        image.id,
+        this.roomId
       );
   }
 
@@ -62,32 +58,13 @@ export class ImagesForAdminComponent implements OnInit {
     if (this.hotelId === undefined) {
       return;
     }
-    if (this.roomId === undefined) {
-      this.changeHotelMainImage(this.hotelId, image);
+    let changeMain$: Observable<string>;
+    if (this.roomId === undefined){
+      changeMain$ = this.hotelService.changeMainImage(this.hotelId, image);
     } else {
-      
-      this.changeRoomMainImage(this.hotelId, this.roomId, image);
+      changeMain$ = this.roomService.changeMainImage(this.hotelId, image, this.roomId);
     }
-  }
-
-  private changeHotelMainImage(hotelId: number, image: Image): void {
-    if (this.roomId === undefined) {
-      this.hotelService
-      .changeMainImage(hotelId, image)
-      .subscribe(
-        () => {
-          this.openSnackBar('Main image was successfully changed');
-        },
-        (serverError: HttpErrorResponse) => {
-          this.openSnackBar(serverError.error as string);
-        }
-      );
-    }
-  }
-
-  private changeRoomMainImage(hotelId: number, roomId: number, image: Image): void {
-    this.roomService
-      .changeMainImage(hotelId, roomId, image)
+    changeMain$      
       .subscribe(
         () => {
           this.openSnackBar('Main image was successfully changed');
@@ -99,8 +76,8 @@ export class ImagesForAdminComponent implements OnInit {
   }
 
   private deleteHotelImage(hotelId: number, image: Image): void {
-    this.imageHotelService
-      .deleteImage(hotelId, image)
+    this.imageService
+      .deleteImage(hotelId, image.id, this.roomId)
       .subscribe(
         () => {
           this.images = this.images.filter(img => img !== image);
@@ -116,22 +93,8 @@ export class ImagesForAdminComponent implements OnInit {
     if (this.hotelId === undefined) {
       return;
     }
-    if (this.roomId === undefined) {
-      this.fetchHotelImages(this.hotelId);
-    } else {
-      this.fetchRoomImages(this.hotelId, this.roomId);
-    }
-  }
-
-  private fetchHotelImages(hotelId: number): void {
-    this.imageHotelService
-      .getImages(hotelId)
-      .subscribe(images => this.images = images);
-  }
-
-  private fetchRoomImages(hotelId: number, roomId: number): void {
-    this.imageRoomService
-      .getImages(hotelId, roomId)
+    this.imageService
+      .getImages(this.hotelId, this.roomId)
       .subscribe(images => this.images = images);
   }
 

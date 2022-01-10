@@ -102,6 +102,6 @@ import { RoomsForAdminComponent } from './Components/rooms-for-admin/rooms-for-a
     })
 ],
   bootstrap: [AppComponent],
-  entryComponents: [ImagesDialogComponent]
+  entryComponents: [ImagesDialogComponent] //??
 })
 export class AppModule { }

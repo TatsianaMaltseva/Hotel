@@ -26,7 +26,7 @@ export class RoomService {
     return numberArray;
   }
 
-  public changeMainImage(hotelId: number, roomId: number, image: Image): Observable<string> {
+  public changeMainImage(hotelId: number, image: Image, roomId: number): Observable<string> {
     return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`,
       { id: image.id }

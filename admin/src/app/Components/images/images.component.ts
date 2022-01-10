@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ImageForHotelService } from 'src/app/image-for-hotel.service';
+import { ImageService } from 'src/app/image.service';
 import { AccountService } from 'src/app/account.service';
 import { Image } from 'src/app/Dtos/image';
-import { ImageForFoomService } from '../image-for-foom.service';
 
 @Component({
   selector: 'app-images',
@@ -21,8 +20,7 @@ export class ImagesComponent implements OnInit {
   }
   
   public constructor(
-    private readonly imageHotelService: ImageForHotelService,
-    private readonly imageRoomService: ImageForFoomService,
+    private readonly imageService: ImageService,
     private readonly accountService: AccountService
   ) {
   }
@@ -35,14 +33,11 @@ export class ImagesComponent implements OnInit {
     if (this.hotelId === undefined) {
       return '';
     }
-    if (this.roomId === undefined) {
-      return this.imageHotelService.createImagePath(this.hotelId, image.id);
-    }
-    return this.imageRoomService
+    return this.imageService
       .createImagePath(
         this.hotelId, 
-        this.roomId, 
-        image.id
+        image.id,
+        this.roomId
       );
   }
 
@@ -50,22 +45,8 @@ export class ImagesComponent implements OnInit {
     if (this.hotelId === undefined) {
       return;
     }
-    if (this.roomId === undefined) {
-      this.fetchHotelImages(this.hotelId);
-    } else {
-      this.fetchRoomImages(this.hotelId, this.roomId);
-    }
-  }
-
-  private fetchHotelImages(hotelId: number): void {
-    this.imageHotelService
-      .getImages(hotelId)
-      .subscribe(images => this.images = images);
-  }
-
-  private fetchRoomImages(hotelId: number, roomId: number): void {
-    this.imageRoomService
-      .getImages(hotelId, roomId)
+    this.imageService
+      .getImages(this.hotelId, this.roomId)
       .subscribe(images => this.images = images);
   }
 }

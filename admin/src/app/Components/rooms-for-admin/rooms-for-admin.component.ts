@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageDialodData } from 'src/app/Core/imageDialogData';
 
 import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
-import { ImageForFoomService } from '../image-for-foom.service';
+import { ImageService } from 'src/app/image.service';
 import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
 import { RoomService } from '../room.service';
 
@@ -29,7 +29,7 @@ export class RoomsForAdminComponent implements OnInit {
 
   public constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly imageRoomService: ImageForFoomService,
+    private readonly imageService: ImageService,
     private readonly matDialog: MatDialog,
     private readonly roomService: RoomService,
     private readonly hotelService: HotelService
@@ -51,17 +51,14 @@ export class RoomsForAdminComponent implements OnInit {
 
   
   public createImagePath(room: Room): string {
-    if (this.hotelId === undefined) {
+    if (this.hotelId === undefined || room.mainImageId === undefined) {
       return '';
     }
-    if (room.mainImageId === undefined) {
-      return '';
-    }
-    let url = this.imageRoomService
+    let url = this.imageService
       .createImagePath(
-        this.hotelId, 
-        room.id, 
-        room.mainImageId
+        this.hotelId,
+        room.mainImageId, 
+        room.id
       );
       return url;
   }

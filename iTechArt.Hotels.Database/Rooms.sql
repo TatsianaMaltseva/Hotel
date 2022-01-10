@@ -5,7 +5,7 @@
     [Sleeps] INT NOT NULL,
     [HotelId] INT NOT NULL,
     [Number] INT NOT NULL,
-    [Price] INT NOT NULL,
+    [Price] DECIMAL(19,4) NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC),
     FOREIGN KEY ([HotelId]) REFERENCES [dbo].[Hotels]([Id]) ON DELETE CASCADE,
     FOREIGN KEY ([MainImageId]) REFERENCES [dbo].[Images]([Id]) ON DELETE SET NULL
