@@ -1,36 +1,4 @@
-table {
-    width: 100%;
-}
-
 img {
     width: 180px;
     height: 100px;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    border: 0;
-}
-  
-.img__wrap {
-    position: relative;
-    width: 180px;
-    height: 100px;
-}
-  
-.img__description {
-    position: absolute;
-    visibility: hidden;
-    background: rgba(100, 38, 109, 0.5);
-    color: rgb(255, 255, 255);
-    inset: 0;
-    opacity: 0;
-    transition: opacity .2s, visibility .2s;
-    font-size: 30px;
-}
-  
-.img__wrap:hover .img__description {
-    visibility: visible;
-    opacity: 1;
 }

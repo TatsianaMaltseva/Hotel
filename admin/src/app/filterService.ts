@@ -9,7 +9,7 @@ import { FilterParameters } from './Core/filterParameters';
 @Injectable({
     providedIn: 'root'
 })
-export class FilterService{
+export class FilterService {
   public name: string = '';
   private readonly autocompleteVariantNumber = 2;
   private readonly apiUrl: string;
