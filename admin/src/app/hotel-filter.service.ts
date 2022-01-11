@@ -4,18 +4,18 @@ import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { FilterParameters } from './Core/filterParameters';
+import { HotelFilterParameters } from './Core/filterParameters';
 
 @Injectable({
     providedIn: 'root'
 })
-export class FilterService{
+export class HotelFilterService{
   public name: string = '';
   private readonly autocompleteVariantNumber = 2;
   private readonly apiUrl: string;
 
-  public get filterParameters(): FilterParameters {
-    const filter: FilterParameters = {
+  public get filterParameters(): HotelFilterParameters {
+    const filter: HotelFilterParameters = {
       name: this.name
     };
     return filter;

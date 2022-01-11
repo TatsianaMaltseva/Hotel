@@ -5,7 +5,8 @@ import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
-import { FilterService } from 'src/app/filterService';
+import { HotelFilterService } from 'src/app/hotel-filter.service';
+import { HotelCardResponse } from 'src/app/Core/hotel-card-response';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -22,21 +23,19 @@ export class HotelCardsComponent implements OnInit {
     private readonly hotelService: HotelService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly filterService: FilterService
+    private readonly hotelFilterService: HotelFilterService
   ) {
   }
 
   public ngOnInit(): void {
     this.setPageParams();
     this.updateUrl();
-    this.fetchHotelsCount();
     this.fetchHotels();
     this.router.events
       .subscribe(
         (event) => {
           if (event instanceof NavigationEnd) {
             this.setFilterParams();
-            this.fetchHotelsCount();
             this.fetchHotels();
           }
         } 
@@ -44,7 +43,7 @@ export class HotelCardsComponent implements OnInit {
   }
 
   public updateUrl(): void {
-    const params = Object.assign(this.pageParameters, this.filterService.filterParameters) as Params;
+    const params = { ...this.pageParameters, ...this.hotelFilterService.filterParameters } as Params;
     void this.router.navigate(
       [],
       { queryParams: params }
@@ -59,8 +58,13 @@ export class HotelCardsComponent implements OnInit {
 
   public fetchHotels(): void {
     this.hotelService
-      .getHotelCards(this.pageParameters, this.filterService.filterParameters)
-      .subscribe(hotels => this.hotels = hotels);
+      .getHotelCards(this.pageParameters, this.hotelFilterService.filterParameters)
+      .subscribe(
+        (response: HotelCardResponse) => {
+            this.hotelCount = response.hotelCount;
+            this.hotels = response.hotelCards;
+          }
+        );
   }
 
   private setPageParams(): void {
@@ -79,15 +83,9 @@ export class HotelCardsComponent implements OnInit {
       .subscribe(
         (params) => {
           if (params.name !== undefined) {
-            this.filterService.updateParameters(params);
+            this.hotelFilterService.updateParameters(params);
           }
         }
       );
-  }
-
-  private fetchHotelsCount(): void {
-    this.hotelService
-      .getHotelsCount(this.filterService.filterParameters)
-      .subscribe(number => this.hotelCount = number);
   }
 }

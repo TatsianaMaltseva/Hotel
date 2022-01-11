@@ -1,3 +1,3 @@
-export interface FilterParameters {
+export interface HotelFilterParameters {
   name: string;
 }

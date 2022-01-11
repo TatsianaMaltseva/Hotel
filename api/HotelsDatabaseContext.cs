@@ -42,17 +42,17 @@ namespace iTechArt.Hotels.Api
             {
                 entity.Property(e => e.Address)
                     .IsRequired()
-                    .HasMaxLength(155);
+                    .HasMaxLength(250);
 
                 entity.Property(e => e.Country)
-                    .HasMaxLength(56);
+                    .HasMaxLength(150);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(60);
+                    .HasMaxLength(150);
 
                 entity.Property(e => e.City)
-                    .HasMaxLength(85);
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(3000);

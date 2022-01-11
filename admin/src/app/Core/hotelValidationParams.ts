@@ -1,7 +1,7 @@
 export const hotelParamsMaxLenght = {
-    name : 60,
-    country : 56,
-    city : 85,
-    address : 155,
+    name : 150,
+    country : 150,
+    city : 200,
+    address : 250,
     desciprion : 3000
 };

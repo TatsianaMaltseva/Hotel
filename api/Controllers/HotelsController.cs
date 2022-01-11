@@ -75,33 +75,21 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelCards(
             [FromQuery] PageParameters pageParameters, 
-            [FromQuery] FilterParameters filterParams
+            [FromQuery] HotelFilterParameters filterParams
         )
         {
             var filteredHotelCards = _hotelsDb.Hotels.AsQueryable();
             if (!string.IsNullOrEmpty(filterParams.Name))
             {
-                filteredHotelCards = filteredHotelCards.Where(h => h.Name.ToLower().Contains(filterParams.Name.ToLower()));
+                filteredHotelCards = filteredHotelCards.Where(h => h.Name.Contains(filterParams.Name));
             }
+            var hotelCount = await filteredHotelCards.CountAsync();
             HotelCard[] hotelCards = await filteredHotelCards
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
                 .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            return Ok(hotelCards);
-        }
-
-        [Route("count")]
-        [HttpGet]
-        public async Task<IActionResult> GetHotelsCount([FromQuery] FilterParameters filterParams)
-        {
-            var hotelCards = _hotelsDb.Hotels.AsQueryable();
-            if (!string.IsNullOrEmpty(filterParams.Name))
-            {
-                hotelCards = hotelCards.Where(h => h.Name.ToLower().Contains(filterParams.Name.ToLower()));
-            }
-            var hotelCardsNumber = await hotelCards.CountAsync();
-            return Ok(hotelCardsNumber);
+            return Ok(new { hotelCards, hotelCount });
         }
 
         [Route("names")]
@@ -113,7 +101,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 return NoContent();
             }
             string[] names = await _hotelsDb.Hotels
-                .Where(h => h.Name.ToLower().Contains(name.ToLower()))// TODO Discuss with Andrew .ToLower() solution
+                .Where(h => h.Name.Contains(name))
                 .OrderBy(h => h.Name)
                 .Distinct()
                 .Take(number)
