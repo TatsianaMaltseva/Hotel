@@ -2,7 +2,7 @@
     <ng-container formArrayName="rooms">
         <ng-container *ngFor="let roomForm of rooms.controls; let i=index">    
             <mat-card [formGroupName]="i">
-                <mat-form-field >
+                <mat-form-field>
                     <mat-label>Room name</mat-label>
                     <input matInput formControlName="name">
                 </mat-form-field>
@@ -19,29 +19,46 @@
                     <mat-label>Number of rooms</mat-label>
                     <input matInput formControlName="number">
                 </mat-form-field>
-                <img 
+                <img
+                    *ngIf="roomForm.value.mainImageId"
                     [src]="createImagePath(roomForm.value)"
                     (click)="showImagesDialog(roomForm.value)"
-                    alt="main photo is not loaded"
                 />
-                <mat-card-actions>
-                    <button mat-button (click)="showImagesDialog(roomForm.value)">
-                        <mat-icon>add_photo_alternate</mat-icon>
-                        images
+                <mat-card-actions *ngIf="roomExists(roomForm.value)">
+                    <button
+                        mat-button
+                        (click)="showImagesDialog(roomForm.value)"
+                    >
+                        <mat-icon>add_photo_alternate</mat-icon>images
                     </button>
-                    <button mat-button>
-                        <mat-icon>add_shopping_cart</mat-icon>
-                        facilities
-                    </button>
-                    <button 
+                    <button
+                        mat-button
+                    >
+                        <mat-icon>add_shopping_cart</mat-icon>facilities</button>
+                    <button
                         mat-button
                         (click)="editRoom(roomForm.value)"
                     >
-                        <mat-icon>save</mat-icon>
-                        apply changes
+                        <mat-icon>save</mat-icon>save changes
                     </button>
-                    <button mat-button (click)="deleteRoom(i, roomForm.value)">
+                    <button
+                        mat-button
+                        (click)="deleteRoom(i, roomForm.value)">
                         <mat-icon>delete</mat-icon> 
+                        delete
+                    </button>
+                </mat-card-actions>
+                <mat-card-actions *ngIf=!roomExists(roomForm.value)>
+                    <button
+                        mat-button
+                        (click)="addRoom(roomForm.value)"
+                    >
+                        <mat-icon>save</mat-icon>add room
+                    </button>
+                    <button
+                        mat-button
+                        (click)="deleteRoomFromArray(i)">
+                        <mat-icon>delete</mat-icon>
                         delete
                     </button>
                 </mat-card-actions>
@@ -50,6 +67,7 @@
     </ng-container>
 </form>
 
-<button mat-button (click)="addRoom()">
+<button mat-button (click)="addEmptyRoomCard()">
     <mat-icon>add_circle_outline</mat-icon>
+    Add new room
 </button>

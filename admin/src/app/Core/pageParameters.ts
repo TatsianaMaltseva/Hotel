@@ -1,4 +1,3 @@
-import { HttpParams } from '@angular/common/http';
 import { PageEvent } from '@angular/material/paginator';
 import { Params } from '@angular/router';
 

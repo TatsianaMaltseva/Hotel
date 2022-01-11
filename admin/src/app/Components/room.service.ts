@@ -46,8 +46,8 @@ export class RoomService {
     );
   }
 
-  public addRoom(hotelId: number, room: Room): Observable<any> {
-    return this.http.post(
+  public addRoom(hotelId: number, room: Room): Observable<number> {
+    return this.http.post<number>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms`,
       { ...room }
     );

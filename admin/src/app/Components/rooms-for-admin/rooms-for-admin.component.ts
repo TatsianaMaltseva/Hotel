@@ -22,6 +22,21 @@ export class RoomsForAdminComponent implements OnInit {
     return this.roomsForm.get('rooms') as FormArray;
   }
 
+  private get emptyRoomForm(): FormGroup {
+    const roomForm = this.formBuilder.group(
+      {
+        id: [],
+        name: [],
+        sleeps: [],
+        mainImageId: [],
+        facilities: [],
+        price: [],
+        number: []
+      }
+    );
+    return roomForm;
+  }
+
   public constructor(
     private readonly formBuilder: FormBuilder,
     private readonly hotelService: HotelService,
@@ -49,8 +64,8 @@ export class RoomsForAdminComponent implements OnInit {
       );
   }
 
-  public addRoom(): void {
-    const roomForm = this.generateEmptyRoomForm();
+  public addEmptyRoomCard(): void {
+    const roomForm = this.emptyRoomForm;
     this.rooms.push(roomForm);
   }
 
@@ -66,21 +81,37 @@ export class RoomsForAdminComponent implements OnInit {
     );
   }
 
-  public editRoom(room: Room): void {
-    console.log(room);
+  public roomExists(room: Room): boolean {
+    return Boolean(room.id);
+  }
+
+  public deleteRoomFromArray(index: number): void {
     if (this.hotelId === undefined) {
       return;
     }
+    this.rooms.removeAt(index);
+  }
 
-    if (room.id) {
-      this.roomService
-        .editRoom(this.hotelId, room.id, room)
-        .subscribe();
-    } else {
-      this.roomService
-        .addRoom(this.hotelId, room)
-        .subscribe();
+  public editRoom(room: Room): void {
+    if (this.hotelId === undefined) {
+      return;
     }
+    this.roomService
+      .editRoom(this.hotelId, room.id, room)
+      .subscribe();
+  }
+
+  public addRoom(room: Room): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
+    this.roomService
+      .addRoom(this.hotelId, room)
+      .subscribe(
+        (id) => {
+          room.id = id;
+        }
+      );
   }
 
   public createImagePath(room: Room): string {
@@ -107,23 +138,8 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   private addRoomToForm(room: Room): void {
-    const roomForm = this.generateEmptyRoomForm();
+    const roomForm = this.emptyRoomForm;
     roomForm.patchValue(room);
     this.rooms.push(roomForm);
-  }
-
-  private generateEmptyRoomForm(): FormGroup {
-    const roomForm = this.formBuilder.group(
-      {
-        id: [],
-        name: [],
-        sleeps: [],
-        mainImageId: [],
-        facilities: [],
-        price: [],
-        number: []
-      }
-    );
-    return roomForm;
   }
 }
