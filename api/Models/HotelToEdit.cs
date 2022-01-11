@@ -4,16 +4,16 @@ namespace iTechArt.Hotels.Api.Models
 {
     public class HotelToEdit
     {
-        [MaxLength(60)]
+        [MaxLength(150)]
         public string Name { get; set; }
 
-        [MaxLength(56)]
+        [MaxLength(150)]
         public string Country { get; set; }
 
-        [MaxLength(85)]
+        [MaxLength(200)]
         public string City { get; set; }
 
-        [MaxLength(155)]
+        [MaxLength(250)]
         public string Address { get; set; }
 
         [MaxLength(3000)]

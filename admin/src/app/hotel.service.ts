@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/pageParameters';
-import { HotelCard } from './Dtos/hotelCard';
+import { HotelCardResponse } from './Core/hotel-card-response';
 import { Hotel } from './Dtos/hotel';
-import { FilterParameters } from './Core/filterParameters';
 import { Image } from './Dtos/image';
 import { Room } from './Dtos/room';
+import { HotelFilterParameters } from './Core/filterParameters';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +27,13 @@ export class HotelService {
     return this.http.get<Hotel>(`${this.apiUrl}api/hotels/${id}`);
   }
 
-  public getHotelCards(pageParameters: PageParameters, filterParameters: FilterParameters): Observable<HotelCard[]> {
-    const params = Object.assign(pageParameters, filterParameters) as Params;
+  public getHotelCards(pageParameters: PageParameters, filterParameters: HotelFilterParameters): Observable<HotelCardResponse> {
+    const params = { ...pageParameters, ...filterParameters } as Params;
     const httpParams = new HttpParams({ fromObject: params });
-    return this.http.get<HotelCard[]>(`${this.apiUrl}api/hotels`, { params: httpParams });
+    return this.http.get<HotelCardResponse>(
+      `${this.apiUrl}api/hotels`,
+      { params: httpParams }
+    );
   }
 
   public editHotel(hotelId: number, editedHotel: Hotel): Observable<string> {
@@ -40,7 +43,7 @@ export class HotelService {
     );
   }
 
-  public getHotelsCount(filterParameters: FilterParameters): Observable<number> {
+  public getHotelsCount(filterParameters: HotelFilterParameters): Observable<number> {
     const httpParams = filterParameters as Params;
     return this.http.get<number>(`${this.apiUrl}api/hotels/count`, { params: httpParams });
   }

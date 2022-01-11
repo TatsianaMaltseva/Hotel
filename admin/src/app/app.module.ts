@@ -40,9 +40,9 @@ import { ImagesComponent } from './Components/images/images.component';
 import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-admin.component';
 import { ImagesForAdminComponent } from './Components/images-for-admin/images-for-admin.component';
 import { ImagesUploadButtonComponent } from './Components/images-upload-button/images-upload-button.component';
-import { RoomsComponent } from './Components/rooms/rooms.component';
 import { MatSelectModule } from '@angular/material/select';
 import { ImagesDialogComponent } from './Components/images-dialog/images-dialog.component';
+import { RoomsComponent } from './Components/rooms/rooms.component';
 import { ImagesForAdminDialogComponent } from './Components/images-for-admin-dialog/images-for-admin-dialog.component';
 import { RoomsForAdminComponent } from './Components/rooms-for-admin/rooms-for-admin.component';
 

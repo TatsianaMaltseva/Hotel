@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { Params, Router } from '@angular/router';
 
 import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
-import { FilterService } from 'src/app/filterService';
+import { HotelFilterService } from 'src/app/hotel-filter.service';
 
 @Component({
   selector: 'app-hotels-filter',
@@ -18,7 +18,7 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public constructor(
-    private readonly filterService: FilterService,
+    private readonly hotelFilterService: HotelFilterService,
     private readonly formBuilder: FormBuilder,
     private readonly router: Router
   ) {
@@ -30,8 +30,8 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    if (!this.isEmpty(this.filterService.filterParameters)) {
-      this.filterForm.patchValue(this.filterService.filterParameters);
+    if (!this.isEmpty(this.hotelFilterService.filterParameters)) {
+      this.filterForm.patchValue(this.hotelFilterService.filterParameters);
     }
     this.name?.valueChanges
       .subscribe(
@@ -42,8 +42,8 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public updateUrl(): void {
-    this.filterService.updateParameters(this.filterForm.value);
-    const params = this.filterService.filterParameters as Params;
+    this.hotelFilterService.updateParameters(this.filterForm.value);
+    const params = this.hotelFilterService.filterParameters as Params;
     void this.router.navigate(
       [],
       {
@@ -55,7 +55,7 @@ export class HotelsFilterComponent implements OnInit {
 
   public fetchAutocompleteValues(value: string): void {
     const filterValue: string = value;
-    this.filterService
+    this.hotelFilterService
       .getHotelNames(filterValue)
       .subscribe(names => this.names = names);
   }
