@@ -26,10 +26,30 @@ export class RoomService {
     return numberArray;
   }
 
+  public editRoom(hotelId: number, roomId: number, editedRoom: Room): Observable<string> {
+    return this.http.patch<string>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}`,
+      { ...editedRoom }
+    );
+  }
+
   public changeMainImage(hotelId: number, image: Image, roomId: number): Observable<string> {
-    return this.http.put<string>(
-      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`,
-      { id: image.id }
+    return this.http.patch<string>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}`,
+      { mainImageId: image.id }
+    );
+  }
+
+  public deleteRoom(hotelId: number, roomId: number): Observable<string> {
+    return this.http.delete<string>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}`
+    );
+  }
+
+  public addRoom(hotelId: number, room: Room): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms`,
+      { ...room }
     );
   }
 }

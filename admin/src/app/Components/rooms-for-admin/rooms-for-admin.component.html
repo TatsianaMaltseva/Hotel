@@ -2,38 +2,49 @@
     <ng-container formArrayName="rooms">
         <ng-container *ngFor="let roomForm of rooms.controls; let i=index">    
             <mat-card [formGroupName]="i">
-                <mat-card-title-group>
-                    <mat-card-title>
-                        <mat-form-field >
-                            <mat-label>Room name</mat-label>
-                            <input matInput formControlName="name">
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Sleeps amount</mat-label>
-                            <input matInput formControlName="sleeps">
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Price</mat-label>
-                            <input matInput formControlName="price">
-                            <span matPrefix>$</span>
-                        </mat-form-field>
-                    </mat-card-title>
-                    <img 
-                        [src]="createImagePath(roomForm.value)"
-                        (click)="showImagesDialog(roomForm.value)"
-                    />
-                    <mat-card-actions>
-                        <button mat-button (click)="showImagesDialog(roomForm.value)">
-                            <mat-icon>add_photo_alternate</mat-icon>
-                        </button>
-                        <button mat-button>
-                            <mat-icon>add_shopping_cart</mat-icon>
-                        </button>
-                        <button mat-button (click)="deleteRoom(i)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                </mat-card-title-group>
+                <mat-form-field >
+                    <mat-label>Room name</mat-label>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Sleeps amount</mat-label>
+                    <input matInput formControlName="sleeps">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Price</mat-label>
+                    <input matInput formControlName="price">
+                    <span matPrefix>US$</span>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Number of rooms</mat-label>
+                    <input matInput formControlName="number">
+                </mat-form-field>
+                <img 
+                    [src]="createImagePath(roomForm.value)"
+                    (click)="showImagesDialog(roomForm.value)"
+                    alt="main photo is not loaded"
+                />
+                <mat-card-actions>
+                    <button mat-button (click)="showImagesDialog(roomForm.value)">
+                        <mat-icon>add_photo_alternate</mat-icon>
+                        images
+                    </button>
+                    <button mat-button>
+                        <mat-icon>add_shopping_cart</mat-icon>
+                        facilities
+                    </button>
+                    <button 
+                        mat-button
+                        (click)="editRoom(roomForm.value)"
+                    >
+                        <mat-icon>save</mat-icon>
+                        apply changes
+                    </button>
+                    <button mat-button (click)="deleteRoom(i, roomForm.value)">
+                        <mat-icon>delete</mat-icon> 
+                        delete
+                    </button>
+                </mat-card-actions>
             </mat-card>
         </ng-container>
     </ng-container>

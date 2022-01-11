@@ -9,13 +9,6 @@ export class PageParameters {
   ) {
   }
 
-  public getHttpParams(): HttpParams {
-    const params = new HttpParams()
-      .set('pageIndex', this.pageIndex)
-      .set('pageSize', this.pageSize);
-    return params;
-  }
-
   public updateParameters(data: PageEvent | Params): void {
       this.pageIndex = data.pageIndex;
       this.pageSize = data.pageSize;

@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 
+import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
+import { RoomService } from '../room.service';
 
 @Component({
   selector: 'app-rooms-for-admin',
@@ -15,11 +16,6 @@ import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images
 })
 export class RoomsForAdminComponent implements OnInit {
   @Input() public hotelId?: number;
-  public readonly tableColumns: string[] = [
-    'name', 
-    'sleeps'
-  ];
-
   public roomsForm: FormGroup;
 
   public get rooms(): FormArray {
@@ -30,7 +26,8 @@ export class RoomsForAdminComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly hotelService: HotelService,
     private readonly imageService: ImageService,
-    private readonly matDialog: MatDialog
+    private readonly matDialog: MatDialog,
+    private readonly roomService: RoomService
   ) {
     this.roomsForm = this.formBuilder.group(
       {
@@ -47,24 +44,43 @@ export class RoomsForAdminComponent implements OnInit {
       .getRooms(this.hotelId)
       .subscribe(
         (rooms) => {
-          rooms.map(room => this.addRooms(room));
+          rooms.map(room => this.addRoomToForm(room));
         }
       );
   }
 
   public addRoom(): void {
-    const roomForm = this.formBuilder.group(
-      {
-        name: [''],
-        sleeps: [''],
-        mainImageId: []
-      }
-    );
+    const roomForm = this.generateEmptyRoomForm();
     this.rooms.push(roomForm);
   }
 
-  public deleteRoom(index: number): void {
-    this.rooms.removeAt(index);
+  public deleteRoom(index: number, room: Room): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
+    this.roomService.deleteRoom(this.hotelId, room.id)
+    .subscribe(
+      () => {
+        this.rooms.removeAt(index);
+      }
+    );
+  }
+
+  public editRoom(room: Room): void {
+    console.log(room);
+    if (this.hotelId === undefined) {
+      return;
+    }
+
+    if (room.id) {
+      this.roomService
+        .editRoom(this.hotelId, room.id, room)
+        .subscribe();
+    } else {
+      this.roomService
+        .addRoom(this.hotelId, room)
+        .subscribe();
+    }
   }
 
   public createImagePath(room: Room): string {
@@ -81,7 +97,6 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public showImagesDialog(room: Room): void {
-    console.log(room);
     this.matDialog.open(
       ImagesForAdminDialogComponent,
       {
@@ -91,18 +106,24 @@ export class RoomsForAdminComponent implements OnInit {
     );
   }
 
-  private addRooms(room: Room): void {
-    let roomForm = this.formBuilder.group(
-      { 
-        id: [],
-        name: [''],
-        sleeps: [''],
-        mainImageId: [],
-        facilities: [],
-        price: []
-      }
-    );
+  private addRoomToForm(room: Room): void {
+    const roomForm = this.generateEmptyRoomForm();
     roomForm.patchValue(room);
     this.rooms.push(roomForm);
+  }
+
+  private generateEmptyRoomForm(): FormGroup {
+    const roomForm = this.formBuilder.group(
+      {
+        id: [],
+        name: [],
+        sleeps: [],
+        mainImageId: [],
+        facilities: [],
+        price: [],
+        number: []
+      }
+    );
+    return roomForm;
   }
 }

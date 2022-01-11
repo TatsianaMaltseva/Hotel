@@ -27,12 +27,6 @@ export class HotelFilterService{
     this.apiUrl = environment.api;
   }
 
-  public getHttpParams(): HttpParams {
-    const params = this.filterParameters as Params;
-    const httpParams = new HttpParams({ fromObject: params } as Params);
-    return httpParams;
-  }
-
   public updateParameters(data: Params | any): void {
     this.name = data.name;
   }

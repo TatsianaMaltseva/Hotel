@@ -37,7 +37,7 @@ export class HotelService {
   }
 
   public editHotel(hotelId: number, editedHotel: Hotel): Observable<string> {
-    return this.http.put<string>(
+    return this.http.patch<string>(
       `${this.apiUrl}api/hotels/${hotelId}`,
       { ...editedHotel }
     );
@@ -49,9 +49,9 @@ export class HotelService {
   }
 
   public changeMainImage(hotelId: number, image: Image): Observable<string> {
-    return this.http.put<string>(
-      `${this.apiUrl}api/hotels/${hotelId}/images`,
-      { id: image.id }
+    return this.http.patch<string>(
+      `${this.apiUrl}api/hotels/${hotelId}`,
+      { mainImageId: image.id }
     );
   }
 

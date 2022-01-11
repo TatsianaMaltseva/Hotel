@@ -16,6 +16,8 @@ namespace iTechArt.Hotels.Api.Models
         [MaxLength(250)]
         public string Address { get; set; }
 
+        public int? MainImageId { get; set; }
+
         [MaxLength(3000)]
         public string Description { get; set; }
     }
