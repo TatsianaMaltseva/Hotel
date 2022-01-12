@@ -35,12 +35,12 @@ namespace iTechArt.Hotels.Api.Controllers
             AccountEntity account = GetAccountByEmail(request.Email);
             if (account == null)
             {
-                return Unauthorized();
+                return BadRequest("Such account does not exist");
             }
             if (!_hashPasswordsService
                 .CheckIfPasswordIsCorrect(account.Password, request.Password, Convert.FromBase64String(account.Salt)))
             {
-                return Unauthorized();
+                return BadRequest("Wrong password");
             }
             string token = _jwtService.GenerateJWT(account);
             return Ok(token);

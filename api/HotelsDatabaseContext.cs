@@ -58,12 +58,6 @@ namespace iTechArt.Hotels.Api
                 entity.Property(e => e.Description)
                     .HasMaxLength(3000);
             });
-
-            modelBuilder.Entity<ImageEntity>()
-                .HasOne(i => i.Room)
-                .WithMany(r => r.Images)
-                .HasForeignKey(i => i.RoomId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

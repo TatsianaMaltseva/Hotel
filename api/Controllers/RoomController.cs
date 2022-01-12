@@ -41,8 +41,10 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such room does not exist");
             }
             _hotelsDb.Rooms.Remove(room);
-            var roomImages = _hotelsDb.Images.Where(image => image.RoomId == roomId).AsQueryable();
+
+            var roomImages = _hotelsDb.Images.Where(image => image.RoomId == roomId);
             _hotelsDb.Images.RemoveRange(roomImages);
+
             await _hotelsDb.SaveChangesAsync();
             return NoContent();
         }
@@ -111,7 +113,6 @@ namespace iTechArt.Hotels.Api.Controllers
                 .FirstOrDefaultAsync();
             return Ok(room);
         }
-
 
         private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
             await _hotelsDb.Hotels
