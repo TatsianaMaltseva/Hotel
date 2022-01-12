@@ -4,19 +4,19 @@ namespace iTechArt.Hotels.Api.Models
 {
     public class HotelToAdd
     {
-        [MaxLength(HotelValidationParams.Name)]
+        [MaxLength(HotelParamsMaxLength.Name)]
         public string Name { get; set; }
 
-        [MaxLength(HotelValidationParams.Country)]
+        [MaxLength(HotelParamsMaxLength.Country)]
         public string Country { get; set; }
 
-        [MaxLength(HotelValidationParams.City)]
+        [MaxLength(HotelParamsMaxLength.City)]
         public string City { get; set; }
 
-        [MaxLength(HotelValidationParams.Address)]
+        [MaxLength(HotelParamsMaxLength.Address)]
         public string Address { get; set; }
 
-        [MaxLength(HotelValidationParams.Description)]
+        [MaxLength(HotelParamsMaxLength.Description)]
         public string Description { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace iTechArt.Hotels.Api
 {
-    public static class HotelValidationParams
+    public static class HotelParamsMaxLength
     {
         public const int Name = 150;
         public const int Country = 150;
