@@ -4,13 +4,13 @@ namespace iTechArt.Hotels.Api.Models
 {
     public class HotelFilterParameters
     {
-        [MaxLength(HotelParamsMaxLength.Name)]
+        [MaxLength(HotelParams.NameMaxLength)]
         public string Name { get; set; }
 
-        [MaxLength(HotelParamsMaxLength.Country)]
+        [MaxLength(HotelParams.CountryMaxLength)]
         public string Country { get; set; }
 
-        [MaxLength(HotelParamsMaxLength.City)]
+        [MaxLength(HotelParams.CityMaxLength)]
         public string City { get; set; }
     }
 }
