@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 
-import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
+import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
 

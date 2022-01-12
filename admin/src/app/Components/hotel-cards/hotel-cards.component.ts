@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 
-import { PageParameters } from 'src/app/Core/pageParameters';
+import { PageParameters } from 'src/app/Core/page-parameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
 import { ImageService } from 'src/app/image.service';

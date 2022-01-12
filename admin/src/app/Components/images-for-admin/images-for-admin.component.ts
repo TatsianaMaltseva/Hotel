@@ -18,8 +18,8 @@ export class ImagesForAdminComponent implements OnInit {
   public progress: number = 0;
   public images: Image[] = [];
   @Input() public hotelId?: number;
-  @Input() public roomId?: number;
-
+  @Input() public room?: Room;
+  public roomId?: number;
 
   public constructor(
     private readonly imageService: ImageService,
@@ -30,6 +30,7 @@ export class ImagesForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.roomId = this.room?.id;
     this.fetchImages();
   }
   
@@ -41,7 +42,7 @@ export class ImagesForAdminComponent implements OnInit {
       .createImagePath(
         this.hotelId, 
         image.id,
-        this.roomId
+        this.room?.id
       );
   }
 
@@ -54,14 +55,17 @@ export class ImagesForAdminComponent implements OnInit {
       return;
     }
     let changeMain$: Observable<string>;
-    if (this.roomId === undefined){
-      changeMain$ = this.hotelService.changeMainImage(this.hotelId, image);
+    if (this.room) {
+      changeMain$ = this.roomService.changeMainImage(this.hotelId, image, this.room.id);
     } else {
-      changeMain$ = this.roomService.changeMainImage(this.hotelId, image, this.roomId);
+      changeMain$ = this.hotelService.changeMainImage(this.hotelId, image);
     }
     changeMain$      
       .subscribe(
         () => {
+          if (this.room) {
+            this.room.mainImageId = image.id;
+          }
           this.openSnackBar('Main image was successfully changed');
         },
         (serverError: HttpErrorResponse) => {
@@ -75,9 +79,12 @@ export class ImagesForAdminComponent implements OnInit {
       return;
     }
     this.imageService
-      .deleteImage(this.hotelId, image.id, this.roomId)
+      .deleteImage(this.hotelId, image.id, this.room?.id)
       .subscribe(
         () => {
+          if (this.room && this.room.mainImageId == image.id) {
+            this.room.mainImageId = undefined;
+          }
           this.images = this.images.filter(img => img !== image);
           this.openSnackBar('Image was successfully deleted');
         },
@@ -92,7 +99,7 @@ export class ImagesForAdminComponent implements OnInit {
       return;
     }
     this.imageService
-      .getImages(this.hotelId, this.roomId)
+      .getImages(this.hotelId, this.room?.id)
       .subscribe(images => this.images = images);
   }
 

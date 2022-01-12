@@ -5,7 +5,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { AccountService } from 'src/app/account.service';
-import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/customValidators';
+import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/custom-validators';
 
 @Component({
   selector: 'app-create-admin',

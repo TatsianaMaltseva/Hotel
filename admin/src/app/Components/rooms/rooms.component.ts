@@ -80,10 +80,12 @@ export class RoomsComponent implements OnInit {
     if (this.hotelId === undefined) {
       return;
     }
-    this.hotelService.getRooms(this.hotelId).subscribe(
-      (rooms) => {
-        this.rooms = rooms;
-      }
-    );
+    this.hotelService
+      .getRooms(this.hotelId)
+      .subscribe(
+        (rooms) => {
+          this.rooms = rooms;
+        }
+      );
   }
 }

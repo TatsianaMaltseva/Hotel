@@ -27,7 +27,7 @@ import { NavbarComponent } from './Components/navbar/navbar.component';
 import { AuthorizationComponent } from './Components/authorization/authorization.component';
 import { AdminButtonsComponent } from './Components/admin-buttons/admin-buttons.component';
 import { CreateAdminComponent } from './Components/create-admin/create-admin.component';
-import { getToken } from './Core/getToken';
+import { getToken } from './Core/get-token';
 import { environment } from 'src/environments/environment';
 import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';

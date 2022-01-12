@@ -5,19 +5,31 @@
                 <mat-form-field>
                     <mat-label>Room name</mat-label>
                     <input matInput formControlName="name">
+                    <mat-error>
+                        Room name is required
+                    </mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>Sleeps amount</mat-label>
-                    <input matInput formControlName="sleeps">
+                    <mat-label>Number of slleps</mat-label>
+                    <input matInput formControlName="sleeps" type="number">
+                    <mat-error>
+                        Number of sleeps is required
+                    </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Price</mat-label>
-                    <input matInput formControlName="price">
+                    <input matInput formControlName="price" type="number">
                     <span matPrefix>US$</span>
+                    <mat-error>
+                        Price is required
+                    </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Number of rooms</mat-label>
-                    <input matInput formControlName="number">
+                    <input matInput formControlName="number" type="number">
+                    <mat-error>
+                        Number of rooms is required
+                    </mat-error>
                 </mat-form-field>
                 <img
                     *ngIf="roomForm.value.mainImageId"
@@ -37,6 +49,7 @@
                         <mat-icon>add_shopping_cart</mat-icon>facilities</button>
                     <button
                         mat-button
+                        [disabled]="roomForm.invalid"
                         (click)="editRoom(roomForm.value)"
                     >
                         <mat-icon>save</mat-icon>save changes
@@ -51,6 +64,7 @@
                 <mat-card-actions *ngIf=!roomExists(roomForm.value)>
                     <button
                         mat-button
+                        [disabled]="roomForm.invalid"
                         (click)="addRoom(roomForm.value)"
                     >
                         <mat-icon>save</mat-icon>add room

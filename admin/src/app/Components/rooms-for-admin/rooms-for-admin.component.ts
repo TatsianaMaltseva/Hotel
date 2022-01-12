@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
-import { ImageDialogData } from 'src/app/Core/image-dialog-data';
+import { ImageForAdminDialogData } from 'src/app/Core/image-dialog-admin-data';
+import { roomParamsMaxLength } from 'src/app/Core/validation-params';
 import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
@@ -26,12 +27,18 @@ export class RoomsForAdminComponent implements OnInit {
     const roomForm = this.formBuilder.group(
       {
         id: [],
-        name: [],
-        sleeps: [],
+        name: [
+          '',
+          [ 
+            Validators.required, 
+            Validators.maxLength(roomParamsMaxLength.name)
+          ]
+        ],
+        sleeps: ['', Validators.required],
         mainImageId: [],
         facilities: [],
-        price: [],
-        number: []
+        price: ['', Validators.required],
+        number: ['', Validators.required]
       }
     );
     return roomForm;
@@ -124,7 +131,7 @@ export class RoomsForAdminComponent implements OnInit {
         room.mainImageId,
         room.id
       );
-      return url;
+    return url;
   }
 
   public showImagesDialog(room: Room): void {
@@ -132,7 +139,7 @@ export class RoomsForAdminComponent implements OnInit {
       ImagesForAdminDialogComponent,
       {
         width: '85%',
-        data: { hotelId: this.hotelId, roomId: room.id } as ImageDialogData
+        data: { hotelId: this.hotelId, room: room } as ImageForAdminDialogData
       }
     );
   }

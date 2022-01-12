@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Params, Router } from '@angular/router';
 
-import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
+import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
 
 @Component({

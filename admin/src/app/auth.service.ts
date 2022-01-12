@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { ACCESS_TOKEN_KEY, getToken } from './Core/getToken';
+import { ACCESS_TOKEN_KEY, getToken } from './Core/get-token';
 
 export interface Token {
   email: string;

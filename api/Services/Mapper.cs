@@ -19,7 +19,7 @@ namespace iTechArt.Hotels.Api.Services
 
             CreateMap<HotelEntity, HotelToEdit>()
                 .ReverseMap()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember is not null));
 
             CreateMap<ImageEntity, Image>()
                 .ReverseMap();
@@ -32,7 +32,7 @@ namespace iTechArt.Hotels.Api.Services
 
             CreateMap<RoomEntity, RoomToEdit>()
                 .ReverseMap()
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember is not null and not 0 and not 0M));
 
             CreateMap<RoomEntity, RoomToAdd>()
                 .ReverseMap();

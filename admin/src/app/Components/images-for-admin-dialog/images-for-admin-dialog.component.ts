@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { ImageDialogData } from 'src/app/Core/image-dialog-data';
+import { ImageForAdminDialogData } from 'src/app/Core/image-dialog-admin-data';
+import { Room } from 'src/app/Dtos/room';
 
 @Component({
   selector: 'app-images-for-admin-dialog',
@@ -9,12 +10,11 @@ import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 })
 export class ImagesForAdminDialogComponent {
   public hotelId: number;
-  public roomId: number;
+  public room: Room;
   public constructor(
-    private readonly matDialogRef: MatDialogRef<ImagesForAdminDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ImageDialogData
+    @Inject(MAT_DIALOG_DATA) public data: ImageForAdminDialogData
   ) { 
-    this.roomId = data.roomId;
+    this.room = data.room;
     this.hotelId = data.hotelId;
   }
 }
