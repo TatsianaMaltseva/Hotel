@@ -71,9 +71,33 @@ export class RoomsForAdminComponent implements OnInit {
       );
   }
 
+  public roomExistsInDatabase(room: Room): boolean {
+    return Boolean(room.id);
+  }
+
   public addEmptyRoomCard(): void {
     const roomForm = this.emptyRoomForm;
     this.rooms.push(roomForm);
+  }
+
+  public deleteEmptyRoomCard(index: number): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
+    this.rooms.removeAt(index);
+  }
+
+  public addRoom(room: Room): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
+    this.roomService
+      .addRoom(this.hotelId, room)
+      .subscribe(
+        (id) => {
+          room.id = id;
+        }
+      );
   }
 
   public deleteRoom(index: number, room: Room): void {
@@ -88,17 +112,6 @@ export class RoomsForAdminComponent implements OnInit {
     );
   }
 
-  public roomExists(room: Room): boolean {
-    return Boolean(room.id);
-  }
-
-  public deleteRoomFromArray(index: number): void {
-    if (this.hotelId === undefined) {
-      return;
-    }
-    this.rooms.removeAt(index);
-  }
-
   public editRoom(room: Room): void {
     if (this.hotelId === undefined) {
       return;
@@ -106,19 +119,6 @@ export class RoomsForAdminComponent implements OnInit {
     this.roomService
       .editRoom(this.hotelId, room.id, room)
       .subscribe();
-  }
-
-  public addRoom(room: Room): void {
-    if (this.hotelId === undefined) {
-      return;
-    }
-    this.roomService
-      .addRoom(this.hotelId, room)
-      .subscribe(
-        (id) => {
-          room.id = id;
-        }
-      );
   }
 
   public createImagePath(room: Room): string {

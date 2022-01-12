@@ -40,7 +40,7 @@
                     [src]="createImagePath(roomForm.value)"
                     (click)="showImagesDialog(roomForm.value)"
                 />
-                <mat-card-actions *ngIf="roomExists(roomForm.value)">
+                <mat-card-actions *ngIf="roomExistsInDatabase(roomForm.value)">
                     <button mat-button (click)="showImagesDialog(roomForm.value)">
                         <mat-icon>add_photo_alternate</mat-icon>images
                     </button>
@@ -57,7 +57,7 @@
                         <mat-icon>delete</mat-icon>delete
                     </button>
                 </mat-card-actions>
-                <mat-card-actions *ngIf=!roomExists(roomForm.value)>
+                <mat-card-actions *ngIf=!roomExistsInDatabase(roomForm.value)>
                     <button
                         mat-button
                         [disabled]="roomForm.invalid"
@@ -65,7 +65,7 @@
                     >
                         <mat-icon>save</mat-icon>add room
                     </button>
-                    <button mat-button (click)="deleteRoomFromArray(i)">
+                    <button mat-button (click)="deleteEmptyRoomCard(i)">
                         <mat-icon>delete</mat-icon>delete
                     </button>
                 </mat-card-actions>

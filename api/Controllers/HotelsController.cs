@@ -5,6 +5,7 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -85,11 +86,11 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("names")]
         [HttpGet]
-        public async Task<IActionResult> GetHotelNames([FromQuery] string name, [FromQuery] int number = 2)
+        public async Task<string[]> GetHotelNames([FromQuery] string name, [FromQuery] int number = 2)
         {
             if (string.IsNullOrEmpty(name))
             {
-                return NoContent();
+                return Array.Empty<string>();
             }
             string[] names = await _hotelsDb.Hotels
                 .Where(h => h.Name.Contains(name))
@@ -98,7 +99,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Take(number)
                 .Select(h => h.Name)
                 .ToArrayAsync();
-            return Ok(names);
+            return names;
         }
 
         private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
