@@ -83,6 +83,24 @@ namespace iTechArt.Hotels.Api.Controllers
             return NoContent();
         }
 
+        [Route("names")]
+        [HttpGet]
+        public async Task<IActionResult> GetHotelNames([FromQuery] string name, [FromQuery] int number = 2)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return NoContent();
+            }
+            string[] names = await _hotelsDb.Hotels
+                .Where(h => h.Name.Contains(name))
+                .OrderBy(h => h.Name)
+                .Distinct()
+                .Take(number)
+                .Select(h => h.Name)
+                .ToArrayAsync();
+            return Ok(names);
+        }
+
         private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
             await _hotelsDb.Hotels
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
