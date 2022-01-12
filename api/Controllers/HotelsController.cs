@@ -73,20 +73,42 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHotelCards([FromQuery] PageParameters pageParameters)
+        public async Task<IActionResult> GetHotelCards(
+            [FromQuery] PageParameters pageParameters, 
+            [FromQuery] HotelFilterParameters filterParams
+        )
         {
-            HotelCard[] hotelCards = await _hotelsDb.Hotels
+            var filteredHotelCards = _hotelsDb.Hotels.AsQueryable();
+            if (!string.IsNullOrEmpty(filterParams.Name))
+            {
+                filteredHotelCards = filteredHotelCards.Where(h => h.Name.Contains(filterParams.Name));
+            }
+            var hotelCount = await filteredHotelCards.CountAsync();
+            HotelCard[] hotelCards = await filteredHotelCards
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
                 .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            return Ok(hotelCards);
+            return Ok(new { hotelCards, hotelCount });
         }
 
-        [Route("count")]
+        [Route("names")]
         [HttpGet]
-        public async Task<IActionResult> GetHotelsCount() =>
-            Ok(await _hotelsDb.Hotels.CountAsync());
+        public async Task<IActionResult> GetHotelNames([FromQuery] string name, [FromQuery] int number = 2)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return NoContent();
+            }
+            string[] names = await _hotelsDb.Hotels
+                .Where(h => h.Name.Contains(name))
+                .OrderBy(h => h.Name)
+                .Distinct()
+                .Take(number)
+                .Select(h => h.Name)
+                .ToArrayAsync();
+            return Ok(names);
+        }
 
         [Route("{hotelId}/images")]
         [HttpPost]

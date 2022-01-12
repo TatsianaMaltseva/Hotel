@@ -34,7 +34,7 @@ export class RegisterComponent {
     private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder
   ) {
-      this.registerForm = this.formBuilder.group(
+      this.registerForm = formBuilder.group(
         {
           email: [
             '', 

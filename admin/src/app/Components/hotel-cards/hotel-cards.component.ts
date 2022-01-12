@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 
 import { PageParameters } from 'src/app/Core/pageParameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
+import { HotelFilterService } from 'src/app/hotel-filter.service';
+import { HotelCardResponse } from 'src/app/Core/hotel-card-response';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -20,21 +22,31 @@ export class HotelCardsComponent implements OnInit {
   public constructor(
     private readonly hotelService: HotelService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly hotelFilterService: HotelFilterService
   ) {
   }
 
   public ngOnInit(): void {
     this.setPageParams();
     this.updateUrl();
-    this.fetchHotelsCount();
     this.fetchHotels();
+    this.router.events
+      .subscribe(
+        (event) => {
+          if (event instanceof NavigationEnd) {
+            this.setFilterParams();
+            this.fetchHotels();
+          }
+        } 
+      );
   }
 
   public updateUrl(): void {
+    const params = { ...this.pageParameters, ...this.hotelFilterService.filterParameters } as Params;
     void this.router.navigate(
       [],
-      { queryParams: this.pageParameters.getQueryParams() }
+      { queryParams: params }
     );
   }
 
@@ -44,25 +56,36 @@ export class HotelCardsComponent implements OnInit {
     this.fetchHotels();
   }
 
+  public fetchHotels(): void {
+    this.hotelService
+      .getHotelCards(this.pageParameters, this.hotelFilterService.filterParameters)
+      .subscribe(
+        (response: HotelCardResponse) => {
+            this.hotelCount = response.hotelCount;
+            this.hotels = response.hotelCards;
+          }
+        );
+  }
+
   private setPageParams(): void {
     this.route.queryParams
-      .subscribe(params => {
-        if (params.pageIndex !== undefined) {
-          this.pageParameters.updateParameters(params);
+      .subscribe(
+        (params) => {
+          if (params.pageIndex !== undefined) {
+            this.pageParameters.updateParameters(params);
+          }
         }
-      }
-    );
+      );
   }
 
-  private fetchHotelsCount(): void {
-    this.hotelService
-      .getHotelsCount()
-      .subscribe(number => this.hotelCount = number);
-  }
-
-  private fetchHotels(): void {
-    this.hotelService
-      .getHotelCards(this.pageParameters)
-      .subscribe(hotels => this.hotels = hotels);
+  private setFilterParams(): void {
+    this.route.queryParams
+      .subscribe(
+        (params) => {
+          if (params.name !== undefined) {
+            this.hotelFilterService.updateParameters(params);
+          }
+        }
+      );
   }
 }

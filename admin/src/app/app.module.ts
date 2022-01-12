@@ -15,6 +15,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -79,6 +80,7 @@ import { ImagesUploadButtonComponent } from './Components/images-upload-button/i
     MatGridListModule,
     MatPaginatorModule,
     MatMenuModule,
+    MatAutocompleteModule,
     MatProgressSpinnerModule,
     MatToolbarModule,
     JwtModule.forRoot({

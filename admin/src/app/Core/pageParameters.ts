@@ -1,4 +1,3 @@
-import { HttpParams } from '@angular/common/http';
 import { PageEvent } from '@angular/material/paginator';
 import { Params } from '@angular/router';
 
@@ -7,21 +6,6 @@ export class PageParameters {
     public pageSize: number,
     public pageIndex: number = 0
   ) {
-  }
-
-  public getHttpParams(): HttpParams {
-    const params = new HttpParams()
-      .set('pageIndex', this.pageIndex)
-      .set('pageSize', this.pageSize);
-    return params;
-  }
-
-  public getQueryParams(): Params {
-    const params = {
-      'pageIndex': this.pageIndex,
-      'pageSize': this.pageSize
-    };
-    return params;
   }
 
   public updateParameters(data: PageEvent | Params): void {

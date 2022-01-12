@@ -1,11 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/pageParameters';
-import { HotelCard } from './Dtos/hotelCard';
+import { HotelCardResponse } from './Core/hotel-card-response';
 import { Hotel } from './Dtos/hotel';
+import { HotelFilterParameters } from './Core/filterParameters';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +25,13 @@ export class HotelService {
     return this.http.get<Hotel>(`${this.apiUrl}api/hotels/${id}`);
   }
 
-  public getHotelCards(pageParameters: PageParameters): Observable<HotelCard[]> {
-    const httpParams = pageParameters.getHttpParams();
-    return this.http.get<HotelCard[]>(`${this.apiUrl}api/hotels`, { params: httpParams });
+  public getHotelCards(pageParameters: PageParameters, filterParameters: HotelFilterParameters): Observable<HotelCardResponse> {
+    const params = { ...pageParameters, ...filterParameters } as Params;
+    const httpParams = new HttpParams({ fromObject: params });
+    return this.http.get<HotelCardResponse>(
+      `${this.apiUrl}api/hotels`,
+      { params: httpParams }
+    );
   }
 
   public editHotel(hotelId: number, editedHotel: Hotel): Observable<any> {
@@ -33,9 +39,5 @@ export class HotelService {
       `${this.apiUrl}api/hotels/${hotelId}`,
       { ...editedHotel }
     );
-  }
-
-  public getHotelsCount(): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}api/hotels/count`);
   }
 }
