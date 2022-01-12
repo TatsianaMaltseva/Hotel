@@ -5,31 +5,35 @@
                 <mat-form-field>
                     <mat-label>Room name</mat-label>
                     <input matInput formControlName="name">
-                    <mat-error>
-                        Room name is required
-                    </mat-error>
+                    <mat-error>Room name is required</mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>Number of slleps</mat-label>
-                    <input matInput formControlName="sleeps" type="number">
-                    <mat-error>
-                        Number of sleeps is required
-                    </mat-error>
+                    <mat-label>Number of sleeps</mat-label>
+                    <input 
+                        matInput 
+                        formControlName="sleeps" 
+                        type="number"
+                    >
+                    <mat-error>Number of sleeps is required</mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Price</mat-label>
-                    <input matInput formControlName="price" type="number">
                     <span matPrefix>US$</span>
-                    <mat-error>
-                        Price is required
-                    </mat-error>
+                    <input
+                        matInput
+                        formControlName="price"
+                        type="number"
+                    >
+                    <mat-error>Price is required</mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Number of rooms</mat-label>
-                    <input matInput formControlName="number" type="number">
-                    <mat-error>
-                        Number of rooms is required
-                    </mat-error>
+                    <input 
+                        matInput 
+                        formControlName="number" 
+                        type="number"
+                    >
+                    <mat-error>Number of rooms is required</mat-error>
                 </mat-form-field>
                 <img
                     *ngIf="roomForm.value.mainImageId"
@@ -37,15 +41,10 @@
                     (click)="showImagesDialog(roomForm.value)"
                 />
                 <mat-card-actions *ngIf="roomExists(roomForm.value)">
-                    <button
-                        mat-button
-                        (click)="showImagesDialog(roomForm.value)"
-                    >
+                    <button mat-button (click)="showImagesDialog(roomForm.value)">
                         <mat-icon>add_photo_alternate</mat-icon>images
                     </button>
-                    <button
-                        mat-button
-                    >
+                    <button mat-button>
                         <mat-icon>add_shopping_cart</mat-icon>facilities</button>
                     <button
                         mat-button
@@ -54,11 +53,8 @@
                     >
                         <mat-icon>save</mat-icon>save changes
                     </button>
-                    <button
-                        mat-button
-                        (click)="deleteRoom(i, roomForm.value)">
-                        <mat-icon>delete</mat-icon> 
-                        delete
+                    <button mat-button (click)="deleteRoom(i, roomForm.value)">
+                        <mat-icon>delete</mat-icon>delete
                     </button>
                 </mat-card-actions>
                 <mat-card-actions *ngIf=!roomExists(roomForm.value)>
@@ -69,11 +65,8 @@
                     >
                         <mat-icon>save</mat-icon>add room
                     </button>
-                    <button
-                        mat-button
-                        (click)="deleteRoomFromArray(i)">
-                        <mat-icon>delete</mat-icon>
-                        delete
+                    <button mat-button (click)="deleteRoomFromArray(i)">
+                        <mat-icon>delete</mat-icon>delete
                     </button>
                 </mat-card-actions>
             </mat-card>
@@ -82,6 +75,5 @@
 </form>
 
 <button mat-button (click)="addEmptyRoomCard()">
-    <mat-icon>add_circle_outline</mat-icon>
-    Add new room
+    <mat-icon>add_circle_outline</mat-icon>add new room
 </button>

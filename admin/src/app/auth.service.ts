@@ -43,6 +43,14 @@ export class AuthService {
     return null;
   }
 
+  public get email(): string | null {
+    if (this.isLoggedIn) {
+      const decodedToken: Token = this.jwtHelper.decodeToken(getToken()!);
+      return decodedToken.email;
+    }
+    return null;
+  }
+
   public constructor(
     private readonly http: HttpClient,
     private readonly jwtHelper: JwtHelperService

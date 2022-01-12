@@ -18,7 +18,7 @@ export class ImageService {
   }
 
   public createImagePath(hotelId: number, imageId: number, roomId?: number): string {
-    if (roomId === undefined){
+    if (roomId === undefined) {
       return `${this.apiUrl}api/hotels/${hotelId}/images/${imageId}`;
     }
     return `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images/${imageId}`;
@@ -29,7 +29,7 @@ export class ImageService {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     let httpUrl = '';
-    if (roomId === undefined){
+    if (roomId === undefined) {
       httpUrl = `${this.apiUrl}api/hotels/${hotelId}/images`;
     } else {
       httpUrl = `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`;
@@ -40,8 +40,9 @@ export class ImageService {
       { reportProgress: true, observe: 'events' }
     );
   }
+
   public getImages(hotelId: number, roomId?: number): Observable<Image[]>{
-    if (roomId === undefined){
+    if (roomId === undefined) {
       return this.http.get<Image[]>(`${this.apiUrl}api/hotels/${hotelId}/images`);
     }
     return this.http.get<Image[]>(
@@ -50,7 +51,7 @@ export class ImageService {
   }
 
   public deleteImage(hotelId: number, imageId: number, roomId?: number): Observable<string>{
-    if (roomId === undefined){
+    if (roomId === undefined) {
       return this.http.delete<string>(`${this.apiUrl}api/hotels/${hotelId}/images/${imageId}`);
     }
     return this.http.delete<string>(

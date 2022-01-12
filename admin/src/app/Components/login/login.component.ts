@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -10,7 +11,7 @@ import { AuthService } from 'src/app/auth.service';
 })
 export class LoginComponent {
   public authForm: FormGroup;
-  public showWarning: boolean = false;
+  public serverErrorResponse: string = '';
   public hidePassword: boolean = true;
 
   @Output() public returnBackEvent = new EventEmitter<void>();
@@ -50,7 +51,9 @@ export class LoginComponent {
         () => { 
           this.returnBack();
         },
-        () => this.showWarning = true
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string;
+        }
       );
   }
 }

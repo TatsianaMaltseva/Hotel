@@ -7,8 +7,8 @@ import { roomParamsMaxLength } from 'src/app/Core/validation-params';
 import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
-import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
 import { RoomService } from '../room.service';
+import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
 
 @Component({
   selector: 'app-rooms-for-admin',

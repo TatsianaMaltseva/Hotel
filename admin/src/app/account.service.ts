@@ -23,6 +23,10 @@ export class AccountService {
   public get id(): number | null {
     return this.authService.id;
   }
+
+  public get email(): string | null {
+    return this.authService.email;
+  }
     
   public constructor(
     private readonly http: HttpClient,
