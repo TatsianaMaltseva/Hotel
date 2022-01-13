@@ -29,26 +29,27 @@ export class AuthService {
 
   public get role(): string | null {
     if (this.isLoggedIn) {
-      const decodedToken: Token = this.jwtHelper.decodeToken(getToken()!);
-      return decodedToken.role;
+      return this.decodedToken.role;
     }
     return null;
   }
 
   public get id(): number | null {
     if (this.isLoggedIn) {
-      const decodedToken: Token = this.jwtHelper.decodeToken(getToken()!);
-      return decodedToken.sub;
+      return this.decodedToken.sub;
     }
     return null;
   }
 
   public get email(): string | null {
     if (this.isLoggedIn) {
-      const decodedToken: Token = this.jwtHelper.decodeToken(getToken()!);
-      return decodedToken.email;
+      return this.decodedToken.email;
     }
     return null;
+  }
+
+  private get decodedToken(): Token {
+    return this.jwtHelper.decodeToken(getToken()!);
   }
 
   public constructor(

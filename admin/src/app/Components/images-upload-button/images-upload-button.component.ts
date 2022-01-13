@@ -8,11 +8,12 @@ import { ImageService } from 'src/app/image.service';
   templateUrl: './images-upload-button.component.html'
 })
 export class ImagesUploadButtonComponent {
-  public progress: number = 0;
   @Input() public hotelId?: number;
   @Input() public roomId?: number;
   @Output() public imageLoaded = new EventEmitter<number>();
 
+  public progress: number = 0;
+  
   public constructor(
     private readonly imageService: ImageService
   ) {

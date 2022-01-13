@@ -10,10 +10,11 @@ import { Image } from 'src/app/Dtos/image';
   styleUrls: ['./images.component.css']
 })
 export class ImagesComponent implements OnInit {
-  public progress: number = 0;
-  public images: Image[] = [];
   @Input() public hotelId?: number;
   @Input() public roomId?: number;
+  
+  public progress: number = 0;
+  public images: Image[] = [];
 
   public get isAdmin(): boolean {
     return this.accountService.isAdmin;

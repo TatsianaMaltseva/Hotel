@@ -15,8 +15,9 @@ import { ImageDialogData } from 'src/app/Core/image-dialog-data';
   styleUrls: ['./rooms.component.css']
 })
 export class RoomsComponent implements OnInit {
-  public roomsForm: FormGroup;
   @Input() public hotelId?: number;
+  
+  public roomsForm: FormGroup;
   public readonly tableColumns: string[] = [
     'image',
     'name', 
