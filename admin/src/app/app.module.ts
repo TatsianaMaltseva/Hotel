@@ -18,6 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectModule } from '@angular/material/select';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -40,7 +41,6 @@ import { ImagesComponent } from './Components/images/images.component';
 import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-admin.component';
 import { ImagesForAdminComponent } from './Components/images-for-admin/images-for-admin.component';
 import { ImagesUploadButtonComponent } from './Components/images-upload-button/images-upload-button.component';
-import { MatSelectModule } from '@angular/material/select';
 import { ImagesDialogComponent } from './Components/images-dialog/images-dialog.component';
 import { RoomsComponent } from './Components/rooms/rooms.component';
 import { ImagesForAdminDialogComponent } from './Components/images-for-admin-dialog/images-for-admin-dialog.component';

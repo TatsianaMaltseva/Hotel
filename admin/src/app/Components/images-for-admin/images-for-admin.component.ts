@@ -15,10 +15,11 @@ import { Room } from 'src/app/Dtos/room';
   styleUrls: ['./images-for-admin.component.css']
 })
 export class ImagesForAdminComponent implements OnInit {
-  public progress: number = 0;
-  public images: Image[] = [];
   @Input() public hotelId?: number;
   @Input() public room?: Room;
+
+  public progress: number = 0;
+  public images: Image[] = [];
   public roomId?: number;
 
   public constructor(
@@ -82,7 +83,7 @@ export class ImagesForAdminComponent implements OnInit {
       .deleteImage(this.hotelId, image.id, this.room?.id)
       .subscribe(
         () => {
-          if (this.room && this.room.mainImageId == image.id) {
+          if (this.room?.mainImageId === image.id) {
             this.room.mainImageId = undefined;
           }
           this.images = this.images.filter(img => img !== image);

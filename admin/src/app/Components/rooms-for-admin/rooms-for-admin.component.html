@@ -1,6 +1,6 @@
 <form [formGroup]="roomsForm">
     <ng-container formArrayName="rooms">
-        <ng-container *ngFor="let roomForm of rooms.controls; let i=index">    
+        <ng-container *ngFor="let roomForm of rooms.controls; let i = index">    
             <mat-card [formGroupName]="i">
                 <mat-form-field>
                     <mat-label>Room name</mat-label>

@@ -17,6 +17,7 @@ import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images
 })
 export class RoomsForAdminComponent implements OnInit {
   @Input() public hotelId?: number;
+
   public roomsForm: FormGroup;
 
   public get rooms(): FormArray {
