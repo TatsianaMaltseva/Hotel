@@ -14,7 +14,6 @@ namespace iTechArt.Hotels.Api
         public DbSet<HotelEntity> Hotels { get; set; }
         public DbSet<ImageEntity> Images { get; set; }
         public DbSet<RoomEntity> Rooms { get; set; }
-
         public DbSet<FacilityEntity> Facilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

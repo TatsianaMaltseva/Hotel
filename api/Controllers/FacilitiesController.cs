@@ -15,7 +15,7 @@ namespace iTechArt.Hotels.Api.Controllers
     public class FacilitiesController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
-        public readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public FacilitiesController(HotelsDatabaseContext hotelDb, IMapper mapper)
         {

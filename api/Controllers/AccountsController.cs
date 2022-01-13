@@ -38,7 +38,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> CreateAccount([FromBody] Account request)
         {
-            if (!!CheckIfEmailUnique(request.Email))
+            if (!CheckIfEmailUnique(request.Email))
             {
                 return BadRequest("User is already registered with this email");
             }
