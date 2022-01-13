@@ -1,0 +1,11 @@
+mat-card {
+    margin-left: 17%;
+    margin-right: 17%;
+    padding: 3%;
+    padding-left: 7%;
+    padding-right: 7%;
+}
+
+mat-form-field {
+    width: 70%;
+}

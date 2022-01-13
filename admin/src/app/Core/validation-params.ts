@@ -9,3 +9,7 @@ export const hotelParamsMaxLenght = {
 export const roomParamsMaxLength = {
     name: 150
 };
+
+export const facilityParamsMaxLength = {
+    name: 60
+};

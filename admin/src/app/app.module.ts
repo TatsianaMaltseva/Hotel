@@ -45,7 +45,7 @@ import { ImagesDialogComponent } from './Components/images-dialog/images-dialog.
 import { RoomsComponent } from './Components/rooms/rooms.component';
 import { ImagesForAdminDialogComponent } from './Components/images-for-admin-dialog/images-for-admin-dialog.component';
 import { RoomsForAdminComponent } from './Components/rooms-for-admin/rooms-for-admin.component';
-import { AddFacilitiesDialogComponent } from './Components/add-facilities-dialog/add-facilities-dialog.component';
+import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +70,7 @@ import { AddFacilitiesDialogComponent } from './Components/add-facilities-dialog
     ImagesDialogComponent,
     ImagesForAdminDialogComponent,
     RoomsForAdminComponent,
-    AddFacilitiesDialogComponent
+    AddFacilitiesComponent
   ],
   imports: [
     BrowserModule,

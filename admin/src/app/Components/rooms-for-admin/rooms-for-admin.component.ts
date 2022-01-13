@@ -66,7 +66,7 @@ export class RoomsForAdminComponent implements OnInit {
       .getRooms(this.hotelId)
       .subscribe(
         (rooms) => {
-          rooms.map(room => this.addRoomToForm(room));
+          rooms.forEach(room => this.addRoomToForm(room));
         }
       );
   }
@@ -104,12 +104,13 @@ export class RoomsForAdminComponent implements OnInit {
     if (this.hotelId === undefined) {
       return;
     }
-    this.roomService.deleteRoom(this.hotelId, room.id)
-    .subscribe(
-      () => {
-        this.rooms.removeAt(index);
-      }
-    );
+    this.roomService
+      .deleteRoom(this.hotelId, room.id)
+      .subscribe(
+        () => {
+          this.rooms.removeAt(index);
+        }
+      );
   }
 
   public editRoom(room: Room): void {
