@@ -36,6 +36,16 @@ namespace iTechArt.Hotels.Api.Services
 
             CreateMap<RoomEntity, RoomToAdd>()
                 .ReverseMap();
+
+            CreateMap<FacilityEntity, Facility>()
+                .ReverseMap();
+
+            CreateMap<FacilityEntity, FacilityToEdit>()
+                .ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember is not null));
+
+            CreateMap<FacilityEntity, FacilityToAdd>()
+                .ReverseMap();
         }
     }
 }

@@ -118,7 +118,7 @@ namespace iTechArt.Hotels.Api.Controllers
             await _hotelsDb.Hotels
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
 
-        private async Task<RoomEntity> GetRoomEntityAsync(int? roomId) =>
+        private async Task<RoomEntity> GetRoomEntityAsync(int roomId) =>
             await _hotelsDb.Rooms
                 .FirstOrDefaultAsync(room => room.Id == roomId);
     }

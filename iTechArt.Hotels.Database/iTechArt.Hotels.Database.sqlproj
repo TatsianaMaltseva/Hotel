@@ -62,5 +62,6 @@
     <Build Include="Hotels.sql" />
     <Build Include="Images.sql" />
     <Build Include="Rooms.sql" />
+    <Build Include="Facilities.sql" />
   </ItemGroup>
 </Project>
