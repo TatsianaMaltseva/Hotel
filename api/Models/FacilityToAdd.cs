@@ -7,5 +7,8 @@ namespace iTechArt.Hotels.Api.Models
         [Required]
         [MaxLength(ValidationParams.Facility.NameMaxLenght)]
         public string Name { get; set; }
+        [Required]
+        [MaxLength()]
+        public string Realm { get; set; }
     }
 }

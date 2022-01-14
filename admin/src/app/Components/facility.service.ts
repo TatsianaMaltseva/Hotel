@@ -17,9 +17,18 @@ export class FacilityService {
     this.apiUrl = environment.api;
   }
 
-  public getFacilies(): Observable<Facility[]> {
+  public getFacilities(): Observable<Facility[]> {
     return this.http.get<Facility[]>(
       `${this.apiUrl}api/facilities`
+    );
+  }
+
+  public getFacilitiesFull(hotelId: number, roomId?: number): Observable<Facility[]> {
+    if (roomId === undefined) {
+      return this.http.get<Facility[]>(`${this.apiUrl}api/hotels/${hotelId}/facilities`);
+    }
+    return this.http.get<Facility[]>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/facilities`
     );
   }
 

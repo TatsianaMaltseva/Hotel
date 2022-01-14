@@ -19,6 +19,7 @@
         public static class Facility
         {
             public const int NameMaxLenght = 60;
+            public const int RealmMaxLength = 30;
         }
     }
 }

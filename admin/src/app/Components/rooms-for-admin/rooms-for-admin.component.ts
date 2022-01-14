@@ -9,6 +9,8 @@ import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { RoomService } from '../room.service';
 import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
+import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
+import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 
 @Component({
   selector: 'app-rooms-for-admin',
@@ -142,6 +144,16 @@ export class RoomsForAdminComponent implements OnInit {
       {
         width: '85%',
         data: { hotelId: this.hotelId, room: room } as ImageForAdminDialogData
+      }
+    );
+  }
+
+  public openFacilitiesDialog(room: Room): void {
+    this.matDialog.open(
+      ChooseFacilitiesForAdminComponent,
+      {
+        width: '600px',
+        data: { hotelId: this.hotelId, roomId: room.id } as FacilititesDialogData
       }
     );
   }

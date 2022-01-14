@@ -19,6 +19,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -46,6 +47,7 @@ import { RoomsComponent } from './Components/rooms/rooms.component';
 import { ImagesForAdminDialogComponent } from './Components/images-for-admin-dialog/images-for-admin-dialog.component';
 import { RoomsForAdminComponent } from './Components/rooms-for-admin/rooms-for-admin.component';
 import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
+import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilities-for-admin/choose-facilities-for-admin.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +72,8 @@ import { AddFacilitiesComponent } from './Components/add-facilities/add-faciliti
     ImagesDialogComponent,
     ImagesForAdminDialogComponent,
     RoomsForAdminComponent,
-    AddFacilitiesComponent
+    AddFacilitiesComponent,
+    ChooseFacilitiesForAdminComponent
   ],
   imports: [
     BrowserModule,
@@ -96,6 +99,7 @@ import { AddFacilitiesComponent } from './Components/add-facilities/add-faciliti
     MatToolbarModule,
     MatTableModule,
     MatSelectModule,
+    MatCheckboxModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

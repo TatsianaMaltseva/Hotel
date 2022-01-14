@@ -51,7 +51,13 @@
                     [disabled]="changeHotelForm.invalid"
                     (click)="editHotel()"
                 >
-                    Save changes  
+                    <mat-icon>save</mat-icon>save changes  
+                </button>
+                <button
+                    mat-button
+                    (click)="openFacilitiesDialog()"
+                >
+                    <mat-icon>add_shopping_cart</mat-icon>facilities
                 </button>
             </mat-card-actions>
             <app-images-for-admin [hotelId]="hotelId"></app-images-for-admin>

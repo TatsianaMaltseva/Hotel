@@ -39,12 +39,12 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllFacilities()
+        public async Task<Facility[]> GetFacilities()
         {
             Facility[] facilities = await _hotelsDb.Facilities
                 .ProjectTo<Facility>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            return Ok(facilities);
+            return facilities;
         }
 
         [HttpPost]

@@ -12,6 +12,7 @@ import { FacilityService } from '../facility.service';
 })
 export class AddFacilitiesComponent implements OnInit {
   public facilitiesForm: FormGroup; 
+  public realmOptions = ['hotel', 'room'];
 
   public get facilities(): FormArray {
     return this.facilitiesForm.get('facilities') as FormArray;
@@ -27,7 +28,8 @@ export class AddFacilitiesComponent implements OnInit {
             Validators.required,
             Validators.maxLength(facilityParamsMaxLength.name)
           ]
-        ]
+        ],
+        realm: []
       }
     );
     return facilityGroup;
@@ -46,7 +48,7 @@ export class AddFacilitiesComponent implements OnInit {
 
   public ngOnInit(): void {
     this.facilityService
-      .getFacilies()
+      .getFacilities()
       .subscribe(
         (facilities) => {
           facilities.forEach(facility => this.addFacilityToForm(facility));
@@ -85,6 +87,12 @@ export class AddFacilitiesComponent implements OnInit {
           facility.id = id;
         }
       );
+  }
+
+  public editFacility(facility: Facility): void {
+    this.facilityService
+      .editFacility(facility.id, facility)
+      .subscribe();
   }
 
   private addFacilityToForm(facility: Facility): void {

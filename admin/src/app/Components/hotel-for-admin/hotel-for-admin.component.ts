@@ -1,12 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
+import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 
 @Component({
   selector: 'app-hotel-for-admin',
@@ -23,7 +26,8 @@ export class HotelForAdminComponent implements OnInit {
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
     private readonly formBuilder: FormBuilder,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly matDialog: MatDialog
   ) {
     this.changeHotelForm = formBuilder.group(
       {
@@ -58,6 +62,16 @@ export class HotelForAdminComponent implements OnInit {
 
   public getMaxLengthValue(controlName: string): number {
     return this.changeHotelForm.get(controlName)?.errors?.maxlength.requiredLength;
+  }
+
+  public openFacilitiesDialog(): void {
+    this.matDialog.open(
+      ChooseFacilitiesForAdminComponent,
+      {
+        width: '600px',
+        data: { hotelId: this.hotelId } as FacilititesDialogData
+      }
+    );
   }
 
   private openErrorSnackBar(errorMessage: string): void {

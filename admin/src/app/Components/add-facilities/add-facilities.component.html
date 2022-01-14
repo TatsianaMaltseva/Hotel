@@ -8,8 +8,17 @@
                     <input matInput formControlName="name">
                     <mat-error>Facility name is required</mat-error>
                 </mat-form-field>
+                _
+                <mat-form-field>
+                    <mat-select matInput formControlName="realm">
+                        <mat-option *ngFor="let realm of realmOptions" [value]="realm">
+                            {{ realm }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
                 <span *ngIf="facilityExistsInDatabase(facilityForm.value)">
-                    <button mat-button>
+                    <button mat-button (click)="editFacility(facilityForm.value)">
                         <mat-icon>save</mat-icon>save changes
                     </button>
                     <button mat-button (click)="deleteFacility(i, facilityForm.value)"> 
