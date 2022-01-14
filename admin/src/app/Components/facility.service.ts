@@ -32,9 +32,20 @@ export class FacilityService {
     );
   }
 
-  public setFacilityForHotel(hotelId: number, facilityId: number): Observable<string> {
-    return this.http.put<string>(`${this.apiUrl}api/hotels/${hotelId}/facilities/${facilityId}`, {});
+  public setFacility(hotelId: number, facilityId: number, roomId?: number): Observable<string> {
+    if (roomId === undefined) {
+      return this.http.put<string>(
+        `${this.apiUrl}api/hotels/${hotelId}/facilities/${facilityId}`,
+        {}
+      );
+    }
+    return this.http.put<string>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/facilities/${facilityId}`,
+      {}
+    );
   }
+
+
 
   public deleteFacilityForHotel(hotelId: number, facilityId: number): Observable<string> {
     return this.http.delete<string>(`${this.apiUrl}api/hotels/${hotelId}/facilities/${facilityId}`);

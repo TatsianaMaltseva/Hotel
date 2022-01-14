@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using iTechArt.Hotels.Api.Entities;
+using iTechArt.Hotels.Api.JoinEntities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
             if (!CheckIfHotelExists(hotelId))
             {
-                return BadRequest("Such hotel does not not exist");
+                return BadRequest("Such hotel does not exist");
             }
             if (facility == null)
             {
@@ -81,7 +82,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
             if (!CheckIfHotelExists(hotelId))
             {
-                return BadRequest("Such hotel does not not exist");
+                return BadRequest("Such hotel does not exist");
             }
             if (facility == null)
             {

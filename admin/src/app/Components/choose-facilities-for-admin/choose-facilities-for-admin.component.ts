@@ -59,14 +59,14 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
       );
   }
 
-  public changeFacilityForHotel(event: MatCheckboxChange, facility: Facility): void {
+  public changeFacilityStatus(event: MatCheckboxChange, facility: Facility): void {
     if (this.hotelId === undefined) {
       return;
     }
 
     if (event.checked) {
       this.facilityService
-        .setFacilityForHotel(this.hotelId, facility.id)
+        .setFacility(this.hotelId, facility.id, this.roomId)
         .subscribe();
     } else {
       this.facilityService

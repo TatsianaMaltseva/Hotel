@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using iTechArt.Hotels.Api.JoinEntities;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iTechArt.Hotels.Api.Entities
@@ -16,5 +17,7 @@ namespace iTechArt.Hotels.Api.Entities
         public HotelEntity Hotel { get; set; }
         public int? MainImageId { get; set; }
         public ICollection<ImageEntity> Images { get; set; }
+        public ICollection<FacilityEntity> Facilities { get; set; }
+        public List<FacilityRoom> FacilityRooms { get; set; } = new List<FacilityRoom>();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using iTechArt.Hotels.Api.Entities;
+using iTechArt.Hotels.Api.JoinEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace iTechArt.Hotels.Api
@@ -16,6 +17,7 @@ namespace iTechArt.Hotels.Api
         public DbSet<RoomEntity> Rooms { get; set; }
         public DbSet<FacilityEntity> Facilities { get; set; }
         public DbSet<FacilityHotel> FacilityHotel { get; set; }
+        public DbSet<FacilityRoom> FacilityRoom { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,6 +72,16 @@ namespace iTechArt.Hotels.Api
                 .HasOne(fh => fh.Hotel)
                 .WithMany(h => h.FacilityHotels)
                 .HasForeignKey(fh => fh.HotelId);
+
+            modelBuilder.Entity<FacilityRoom>()
+                .HasOne(fr => fr.Facility)
+                .WithMany(f => f.FacilityRooms)
+                .HasForeignKey(fr => fr.FacilityId);
+
+            modelBuilder.Entity<FacilityRoom>()
+                .HasOne(fr => fr.Room)
+                .WithMany(f => f.FacilityRooms)
+                .HasForeignKey(fr => fr.RoomId);
         }
     }
 }
