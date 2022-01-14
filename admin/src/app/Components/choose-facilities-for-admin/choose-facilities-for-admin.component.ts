@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
@@ -56,6 +57,22 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
           facilities.forEach(facility => this.addFacilityToForm(facility));
         }
       );
+  }
+
+  public changeFacilityForHotel(event: MatCheckboxChange, facility: Facility): void {
+    if (this.hotelId === undefined) {
+      return;
+    }
+
+    if (event.checked) {
+      this.facilityService
+        .setFacilityForHotel(this.hotelId, facility.id)
+        .subscribe();
+    } else {
+      this.facilityService
+        .deleteFacilityForHotel(this.hotelId, facility.id)
+        .subscribe();
+    }
   }
 
   private addFacilityToForm(facility: Facility): void {

@@ -2,7 +2,12 @@
     <ng-container formArrayName="facilities">
         <ng-container *ngFor="let facilityForm of facilities.controls; let i=index"> 
             <div [formGroupName]="i"> 
-                <mat-checkbox formControlName="checked">{{ facilityForm.value.name }}</mat-checkbox>
+                <mat-checkbox 
+                    formControlName="checked" 
+                    (change)="changeFacilityForHotel($event, facilityForm.value)"
+                >
+                    {{ facilityForm.value.name }}
+                </mat-checkbox>
             </div>
         </ng-container>
         {{ facilitiesForm.value | json }}

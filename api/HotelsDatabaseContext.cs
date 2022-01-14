@@ -15,6 +15,7 @@ namespace iTechArt.Hotels.Api
         public DbSet<ImageEntity> Images { get; set; }
         public DbSet<RoomEntity> Rooms { get; set; }
         public DbSet<FacilityEntity> Facilities { get; set; }
+        public DbSet<FacilityHotel> FacilityHotel { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,6 +60,16 @@ namespace iTechArt.Hotels.Api
                 entity.Property(e => e.Description)
                     .HasMaxLength(3000);
             });
+
+            modelBuilder.Entity<FacilityHotel>()
+                .HasOne(fh => fh.Facility)
+                .WithMany(f => f.FacilityHotels)
+                .HasForeignKey(fh => fh.FacilityId);
+
+            modelBuilder.Entity<FacilityHotel>()
+                .HasOne(fh => fh.Hotel)
+                .WithMany(h => h.FacilityHotels)
+                .HasForeignKey(fh => fh.HotelId);
         }
     }
 }
