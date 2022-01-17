@@ -16,8 +16,6 @@ namespace iTechArt.Hotels.Api.Entities
         public int HotelId { get; set; }
         public HotelEntity Hotel { get; set; }
         public int? MainImageId { get; set; }
-        public ICollection<ImageEntity> Images { get; set; }
-        public ICollection<FacilityEntity> Facilities { get; set; }
         public List<FacilityRoom> FacilityRooms { get; set; } = new List<FacilityRoom>();
     }
 }

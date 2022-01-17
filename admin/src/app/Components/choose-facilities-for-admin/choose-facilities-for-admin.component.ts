@@ -70,7 +70,7 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
         .subscribe();
     } else {
       this.facilityService
-        .deleteFacilityForHotel(this.hotelId, facility.id)
+        .deleteFacilityForHotel(this.hotelId, facility.id, this.roomId)
         .subscribe();
     }
   }

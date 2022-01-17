@@ -81,13 +81,39 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok();
         }
 
+        [Route("{hotelId}/rooms/{roomId}/facilities/{facilityId}")]
+        [HttpDelete]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> RemoveFacilityForRooms([FromRoute] int hotelId, [FromRoute] int roomId, [FromRoute] int facilityId)
+        {
+            FacilityEntity facility = await GetFacilityEntityAsync(facilityId);
+
+            if (!CheckIfHotelExists(hotelId))
+            {
+                return BadRequest("Such hotel does not exist");
+            }
+            if (!CheckIfRoomExists(roomId))
+            {
+                return BadRequest("Such room does not exist");
+            }
+            if (facility == null)
+            {
+                return BadRequest("Such facility does not exist");
+            }
+
+            FacilityRoom facilityRoom = await GetFacilityRoomAsync(roomId, facilityId);
+            facility.FacilityRooms.Remove(facilityRoom);
+            await _hotelsDb.SaveChangesAsync();
+            return Ok();
+        }
+
         private async Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
             await _hotelsDb.Facilities
                 .FirstOrDefaultAsync(facility => facility.Id == facilityId);
 
-        private async Task<FacilityHotel> GetFacilityHotelAsync(int hotelId, int facilityId) =>
-            await _hotelsDb.FacilityHotel
-                .FirstOrDefaultAsync(fh => fh.HotelId == hotelId && fh.FacilityId == facilityId);
+        private async Task<FacilityRoom> GetFacilityRoomAsync(int roomId, int facilityId) =>
+            await _hotelsDb.FacilityRoom
+                .FirstOrDefaultAsync(fh => fh.RoomId == roomId && fh.FacilityId == facilityId);
 
         private bool CheckIfHotelExists(int hotelId) =>
             _hotelsDb.Hotels.Any(hotel => hotel.Id == hotelId);

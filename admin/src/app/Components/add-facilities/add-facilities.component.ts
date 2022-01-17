@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -13,6 +14,7 @@ import { FacilityService } from '../facility.service';
 export class AddFacilitiesComponent implements OnInit {
   public facilitiesForm: FormGroup; 
   public realmOptions = ['hotel', 'room'];
+  public serverErrorResponse: string = '';
 
   public get facilities(): FormArray {
     return this.facilitiesForm.get('facilities') as FormArray;
@@ -29,7 +31,7 @@ export class AddFacilitiesComponent implements OnInit {
             Validators.maxLength(facilityParamsMaxLength.name)
           ]
         ],
-        realm: []
+        realm: ['', [Validators.required]]
       }
     );
     return facilityGroup;
@@ -85,6 +87,10 @@ export class AddFacilitiesComponent implements OnInit {
       .subscribe(
         (id) => {
           facility.id = id;
+          this.serverErrorResponse = '';
+        },
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string;
         }
       );
   }
