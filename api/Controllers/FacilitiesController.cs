@@ -5,8 +5,10 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -39,12 +41,20 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<Facility[]> GetFacilities()
+        [Authorize(Roles = Role.Admin)]
+        public async Task<Facility[]> GetFacilities([FromQuery] FacilityParams facilityParams)
         {
-            Facility[] facilities = await _hotelsDb.Facilities
+            if (facilityParams.RoomId != null)
+            {
+                return await GetCheckedRoomFacilities(facilityParams.RoomId ?? -1);
+            }
+            if (facilityParams.HotelId != null)
+            {
+                return await GetCheckedHotelFacilities(facilityParams.HotelId ?? -1);
+            }
+            return await _hotelsDb.Facilities
                 .ProjectTo<Facility>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            return facilities;
         }
 
         [HttpPost]
@@ -73,7 +83,7 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [Route("{facilityId}")]
-        [HttpPatch]
+        [HttpPut]
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> ChangeFacility([FromRoute] int facilityId, [FromBody] FacilityToEdit request)
         {
@@ -87,11 +97,73 @@ namespace iTechArt.Hotels.Api.Controllers
             return NoContent();
         }
 
+        private async Task<Facility[]> GetCheckedRoomFacilities(int roomId)
+        {
+            if (!CheckIfRoomExists(roomId))
+            {
+                return Array.Empty<Facility>();
+            }
+            Facility[] facilities = await _hotelsDb.Facilities
+                .Where(facility => facility.Realm == Realm.Room)
+                .ProjectTo<Facility>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
+            facilities = MarkAsCheckedForRoom(facilities, roomId);
+            return facilities;
+        }
+
+        private async Task<Facility[]> GetCheckedHotelFacilities(int hotelId)
+        {
+            if (!CheckIfHotelExists(hotelId))
+            {
+                return Array.Empty<Facility>();
+            }
+            Facility[] facilities = await _hotelsDb.Facilities
+                .Where(facility => facility.Realm == Realm.Hotel)
+                .ProjectTo<Facility>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
+            facilities = MarkAsCheckedForHotel(facilities, hotelId);
+            return facilities;
+        }
+
+        private Facility[] MarkAsCheckedForHotel(Facility[] facilities, int hotelId)
+        {
+            foreach (Facility facility in facilities)
+            {
+                if (_hotelsDb.FacilityHotel.Any(fh => fh.FacilityId == facility.Id && fh.HotelId == hotelId))
+                {
+                    facility.Checked = true;
+                }
+            }
+            return facilities;
+        }
+
+        private Facility[] MarkAsCheckedForRoom(Facility[] facilities, int roomId)
+        {
+            foreach (Facility facility in facilities)
+            {
+                if (_hotelsDb.FacilityRoom.Any(fh => fh.FacilityId == facility.Id && fh.RoomId == roomId))
+                {
+                    facility.Checked = true;
+                    facility.Price = _hotelsDb.FacilityRoom
+                        .Where(fh => fh.FacilityId == facility.Id && fh.RoomId == roomId)
+                        .First()
+                        .Price;
+                }
+            }
+            return facilities;
+        }
+
         private async Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
             await _hotelsDb.Facilities
                 .FirstOrDefaultAsync(facility => facility.Id == facilityId);
 
         private bool CheckIfFacilityUnique(string name) =>
             !_hotelsDb.Facilities.Any(facility => facility.Name == name);
+
+        private bool CheckIfHotelExists(int hotelId) =>
+            _hotelsDb.Hotels.Any(hotel => hotel.Id == hotelId);
+
+        private bool CheckIfRoomExists(int roomId) =>
+            _hotelsDb.Rooms.Any(room => room.Id == roomId);
     }
 }

@@ -8,8 +8,15 @@
                 >
                     {{ facilityForm.value.name }}
                 </mat-checkbox>
+                <mat-form-field *ngIf="roomId">
+                    <mat-label>Price</mat-label>
+                    <input 
+                        matInput
+                        formControlName="price"
+                        type="number"
+                    >
+                </mat-form-field>
             </div>
         </ng-container>
-        {{ facilitiesForm.value | json }}
     </ng-container>
 </div>

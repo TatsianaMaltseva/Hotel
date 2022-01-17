@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -23,25 +23,31 @@ export class FacilityService {
     );
   }
 
-  public getFacilitiesFull(hotelId: number, roomId?: number): Observable<Facility[]> {
-    if (roomId === undefined) {
-      return this.http.get<Facility[]>(`${this.apiUrl}api/hotels/${hotelId}/facilities`);
+  public getCheckedFacilities(hotelId?: number, roomId?: number): Observable<Facility[]> {
+    let httpParams = new HttpParams();
+    if (hotelId !== undefined) {
+      httpParams = httpParams.set('hotelId', `${hotelId}`);
+    }
+    if (roomId !== undefined) {
+      console.log(roomId);
+      httpParams = httpParams.set('roomId', `${roomId}`);
     }
     return this.http.get<Facility[]>(
-      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/facilities`
+      `${this.apiUrl}api/facilities`,
+      { params : httpParams }
     );
   }
 
-  public setFacility(hotelId: number, facilityId: number, roomId?: number): Observable<string> {
+  public setFacility(hotelId: number, facility: Facility, roomId?: number): Observable<string> {
     if (roomId === undefined) {
       return this.http.put<string>(
-        `${this.apiUrl}api/hotels/${hotelId}/facilities/${facilityId}`,
-        {}
+        `${this.apiUrl}api/hotels/${hotelId}/facilities`,
+        { ...facility}
       );
     }
     return this.http.put<string>(
-      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/facilities/${facilityId}`,
-      {}
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/facilities`,
+      { ...facility }
     );
   }
 
@@ -70,7 +76,7 @@ export class FacilityService {
   }
 
   public editFacility(facilityId: number, editedFacility: Facility): Observable<string> {
-    return this.http.patch<string>(
+    return this.http.put<string>(
       `${this.apiUrl}api/facilities/${facilityId}`,
       { ...editedFacility }
     );

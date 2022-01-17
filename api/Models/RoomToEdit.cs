@@ -6,7 +6,7 @@ namespace iTechArt.Hotels.Api.Models
     public class RoomToEdit
     {
         [Required]
-        [MaxLength(150)]
+        [MaxLength(ValidationParams.Room.NameMaxLength)]
         public string Name { get; set; }
 
         [Required]

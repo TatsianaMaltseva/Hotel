@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-
-namespace iTechArt.Hotels.Api.Models
+﻿namespace iTechArt.Hotels.Api.Models
 {
     public class Facility
     {
@@ -8,5 +6,6 @@ namespace iTechArt.Hotels.Api.Models
         public string Name { get; set; }
         public string Realm { get; set; }
         public bool Checked { get; set; } = false;
+        public decimal Price { get; set; } = 0;
     }
 }

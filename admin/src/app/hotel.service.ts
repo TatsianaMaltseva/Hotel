@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/page-parameters';
 import { HotelCardResponse } from './Core/hotel-card-response';
 import { Hotel } from './Dtos/hotel';
-import { Image } from './Dtos/image';
 import { Room } from './Dtos/room';
 import { HotelFilterParameters } from './Core/filter-parameters';
 

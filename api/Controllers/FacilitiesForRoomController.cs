@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.JoinEntities;
 using iTechArt.Hotels.Api.Models;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -16,47 +16,18 @@ namespace iTechArt.Hotels.Api.Controllers
     public class FacilitiesForRoomController: Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
-        private readonly IMapper _mapper;
 
-        public FacilitiesForRoomController(HotelsDatabaseContext hotelDb, IMapper mapper)
+        public FacilitiesForRoomController(HotelsDatabaseContext hotelDb)
         {
             _hotelsDb = hotelDb;
-            _mapper = mapper;
         }
 
         [Route("{hotelId}/rooms/{roomId}/facilities")]
-        [HttpGet]
-        [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> GetAllFacilities([FromRoute] int hotelId, [FromRoute] int roomId)
-        {
-            if (!CheckIfHotelExists(hotelId))
-            {
-                return BadRequest("Such hotel does not exist");
-            }
-            if (!CheckIfRoomExists(roomId))
-            {
-                return BadRequest("Such room does not exist");
-            }
-            Facility[] facilities = await _hotelsDb.Facilities
-                .Where(facility => facility.Realm == Realm.Room)
-                .ProjectTo<Facility>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
-            foreach (Facility facility in facilities)
-            {
-                if (_hotelsDb.FacilityRoom.Any(fh => fh.FacilityId == facility.Id && fh.RoomId == roomId))
-                {
-                    facility.Checked = true;
-                }
-            }
-            return Ok(facilities);
-        }
-
-        [Route("{hotelId}/rooms/{roomId}/facilities/{facilityId}")]
         [HttpPut]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> SetFacilityForRoom([FromRoute] int hotelId, [FromRoute] int roomId, [FromRoute] int facilityId)
+        public async Task<IActionResult> SetFacilityForRoom([FromRoute] int hotelId, [FromRoute] int roomId, [FromBody] Facility request)
         {
-            FacilityEntity facility = await GetFacilityEntityAsync(facilityId);
+            FacilityEntity facility = await GetFacilityEntityAsync(request.Id);
 
             if (!CheckIfHotelExists(hotelId))
             {
@@ -73,8 +44,9 @@ namespace iTechArt.Hotels.Api.Controllers
 
             FacilityRoom facilityRoom = new FacilityRoom
             {
+                FacilityId = request.Id,
                 RoomId = roomId,
-                FacilityId = facilityId
+                Price = request.Price
             };
             facility.FacilityRooms.Add(facilityRoom);
             await _hotelsDb.SaveChangesAsync();

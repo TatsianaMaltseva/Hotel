@@ -26,7 +26,8 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
       {
         id: [],
         name: [''],
-        checked: [false]
+        checked: [false],
+        price: []
       }
     );
     return facilityGroup;
@@ -51,7 +52,7 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
       return;
     }
     this.facilityService
-      .getFacilitiesFull(this.hotelId, this.roomId)
+      .getCheckedFacilities(this.hotelId, this.roomId)
       .subscribe(
         (facilities) => {
           facilities.forEach(facility => this.addFacilityToForm(facility));
@@ -66,7 +67,7 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
 
     if (event.checked) {
       this.facilityService
-        .setFacility(this.hotelId, facility.id, this.roomId)
+        .setFacility(this.hotelId, facility, this.roomId)
         .subscribe();
     } else {
       this.facilityService
