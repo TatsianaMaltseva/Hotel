@@ -22,6 +22,10 @@ export class HotelForAdminComponent implements OnInit {
   public loading = false;
   public isHotelLoaded = false;
 
+  public get hotel(): Hotel {
+    return this.changeHotelForm.value as Hotel;
+  }
+
   public constructor(
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
@@ -31,11 +35,13 @@ export class HotelForAdminComponent implements OnInit {
   ) {
     this.changeHotelForm = formBuilder.group(
       {
+        id: [],
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
         country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],
         city: ['', Validators.maxLength(hotelParamsMaxLenght.city)],
         address: ['', Validators.maxLength(hotelParamsMaxLenght.address)],
-        description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)]
+        description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
+        mainImageId: []
       }
     );
   }
@@ -52,11 +58,11 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public editHotel(): void {
-    if (this.hotelId === undefined) {
+    if (this.hotel === undefined) {
       return;
     }
     this.hotelService
-      .editHotel(this.hotelId, this.changeHotelForm.value as Hotel)
+      .editHotel(this.hotel.id, this.hotel)
       .subscribe();
   }
 

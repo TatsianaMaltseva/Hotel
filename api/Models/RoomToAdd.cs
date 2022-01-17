@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using DataAnnotationsExtensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace iTechArt.Hotels.Api.Models
 {
@@ -10,13 +10,15 @@ namespace iTechArt.Hotels.Api.Models
         public string Name { get; set; }
 
         [Required]
+        [Min(0)]
         public int Sleeps { get; set; }
 
         [Required]
+        [Min(0)]
         public int Number { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(19,4)")]
+        [Min(0)]
         public decimal Price { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using iTechArt.Hotels.Api.JoinEntities;
+using iTechArt.Hotels.Api.JoinEntities;
 using System.Collections.Generic;
 
 namespace iTechArt.Hotels.Api.Entities

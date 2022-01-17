@@ -37,7 +37,7 @@ export class HotelService {
   }
 
   public editHotel(hotelId: number, editedHotel: Hotel): Observable<string> {
-    return this.http.patch<string>(
+    return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}`,
       { ...editedHotel }
     );
@@ -46,13 +46,6 @@ export class HotelService {
   public getHotelsCount(filterParameters: HotelFilterParameters): Observable<number> {
     const httpParams = filterParameters as Params;
     return this.http.get<number>(`${this.apiUrl}api/hotels/count`, { params: httpParams });
-  }
-
-  public changeMainImage(hotelId: number, image: Image): Observable<string> {
-    return this.http.patch<string>(
-      `${this.apiUrl}api/hotels/${hotelId}`,
-      { mainImageId: image.id }
-    );
   }
 
   public getRooms(hotelId: number): Observable<Room[]> {

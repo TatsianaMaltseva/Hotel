@@ -6,7 +6,7 @@ import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
-import { RoomService } from '../room.service';
+import { RoomService } from '../../room.service';
 import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 
 @Component({

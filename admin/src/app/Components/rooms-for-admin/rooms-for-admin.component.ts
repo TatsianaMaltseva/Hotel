@@ -7,10 +7,11 @@ import { roomParamsMaxLength } from 'src/app/Core/validation-params';
 import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
-import { RoomService } from '../room.service';
+import { RoomService } from '../../room.service';
 import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
 import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
+import { Hotel } from 'src/app/Dtos/hotel';
 
 @Component({
   selector: 'app-rooms-for-admin',
@@ -18,8 +19,9 @@ import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
   styleUrls: ['./rooms-for-admin.component.css']
 })
 export class RoomsForAdminComponent implements OnInit {
-  @Input() public hotelId?: number;
+  @Input() public hotel?: Hotel;
 
+  public hotelId?: number;
   public roomsForm: FormGroup;
 
   public get rooms(): FormArray {
@@ -62,11 +64,12 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    if (this.hotelId === undefined) {
+    if (this.hotel === undefined) {
       return;
     }
+    this.hotelId = this.hotel.id;
     this.hotelService
-      .getRooms(this.hotelId)
+      .getRooms(this.hotel.id)
       .subscribe(
         (rooms) => {
           rooms.forEach(room => this.addRoomToForm(room));
@@ -84,18 +87,18 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public deleteEmptyRoomCard(index: number): void {
-    if (this.hotelId === undefined) {
+    if (this.hotel === undefined) {
       return;
     }
     this.rooms.removeAt(index);
   }
 
   public addRoom(room: Room): void {
-    if (this.hotelId === undefined) {
+    if (this.hotel === undefined) {
       return;
     }
     this.roomService
-      .addRoom(this.hotelId, room)
+      .addRoom(this.hotel.id, room)
       .subscribe(
         (id) => {
           room.id = id;
@@ -104,11 +107,11 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public deleteRoom(index: number, room: Room): void {
-    if (this.hotelId === undefined) {
+    if (this.hotel === undefined) {
       return;
     }
     this.roomService
-      .deleteRoom(this.hotelId, room.id)
+      .deleteRoom(this.hotel.id, room.id)
       .subscribe(
         () => {
           this.rooms.removeAt(index);
@@ -117,21 +120,21 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public editRoom(room: Room): void {
-    if (this.hotelId === undefined) {
+    if (this.hotel === undefined) {
       return;
     }
     this.roomService
-      .editRoom(this.hotelId, room.id, room)
+      .editRoom(this.hotel.id, room.id, room)
       .subscribe();
   }
 
   public createImagePath(room: Room): string {
-    if (this.hotelId === undefined || room.mainImageId === undefined) {
+    if (this.hotel === undefined || room.mainImageId === undefined) {
       return '';
     }
     let url = this.imageService
       .createImagePath(
-        this.hotelId, 
+        this.hotel.id, 
         room.mainImageId,
         room.id
       );
@@ -143,7 +146,7 @@ export class RoomsForAdminComponent implements OnInit {
       ImagesForAdminDialogComponent,
       {
         width: '85%',
-        data: { hotelId: this.hotelId, room: room } as ImageForAdminDialogData
+        data: { hotel: this.hotel, room: room } as ImageForAdminDialogData
       }
     );
   }
