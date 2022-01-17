@@ -1,6 +1,7 @@
+import { Hotel } from '../Dtos/hotel';
 import { Room } from '../Dtos/room';
 
 export interface ImageForAdminDialogData {
-    hotelId: number;
+    hotel: Hotel;
     room: Room;
 }

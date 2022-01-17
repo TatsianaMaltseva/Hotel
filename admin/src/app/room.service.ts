@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Image } from '../Dtos/image';
+import { Image } from './Dtos/image';
 import { environment } from 'src/environments/environment';
-import { Room } from '../Dtos/room';
+import { Room } from './Dtos/room';
 
 @Injectable({
   providedIn: 'root'
@@ -27,16 +27,9 @@ export class RoomService {
   }
 
   public editRoom(hotelId: number, roomId: number, editedRoom: Room): Observable<string> {
-    return this.http.patch<string>(
+    return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}`,
       { ...editedRoom }
-    );
-  }
-
-  public changeMainImage(hotelId: number, image: Image, roomId: number): Observable<string> {
-    return this.http.patch<string>(
-      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}`,
-      { mainImageId: image.id }
     );
   }
 

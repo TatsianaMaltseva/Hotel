@@ -38,21 +38,25 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AddHotelImage([FromRoute] int hotelId)
         {
-            if (await GetHotelEntityAsync(hotelId) == null)
+            if (!CheckIfHotelExists(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            var file = Request.Form.Files[0];
-            if (file.Length == 0)
+
+            string fileName = null;
+            try
+            {
+                var file = Request.Form.Files[0];
+                fileName = await SaveFileAsync(file);
+            }
+            catch
             {
                 return BadRequest("Something is wrong with file, probably file is empty");
             }
-            var fileName = await SaveFileAsync(file);
             ImageEntity image = new()
             {
                 Path = fileName,
                 HotelId = hotelId,
-                Hotel = await GetHotelEntityAsync(hotelId),
                 IsOuterLink = false,
             };
             await _hotelsDb.Images.AddAsync(image);
@@ -60,7 +64,7 @@ namespace iTechArt.Hotels.Api.Controllers
             return CreatedAtAction
             (
                 nameof(GetImage), 
-                new { hotelId = image.Hotel.Id, imageId = image.Id }, 
+                new { hotelId = image.HotelId, imageId = image.Id }, 
                 image.Id
             );
         }
@@ -70,12 +74,11 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AddRoomImage([FromRoute] int hotelId, [FromRoute] int roomId)
         {
-            if (await GetHotelEntityAsync(hotelId) == null)
+            if (!CheckIfHotelExists(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-
-            if (await GetRoomEntityAsync(roomId) == null)
+            if (!CheckIfRoomExists(roomId))
             {
                 return BadRequest("Such room does not exist");
             }
@@ -86,15 +89,12 @@ namespace iTechArt.Hotels.Api.Controllers
             }
 
             var fileName = await SaveFileAsync(file);
-            var room = await GetRoomEntityAsync(roomId);
             ImageEntity image = new()
             {
                 Path = fileName,
                 HotelId = hotelId,
-                Hotel = await GetHotelEntityAsync(hotelId),
                 IsOuterLink = false,
                 RoomId = roomId,
-                Room = room
             };
             await _hotelsDb.Images.AddAsync(image);
             await _hotelsDb.SaveChangesAsync();
@@ -102,7 +102,7 @@ namespace iTechArt.Hotels.Api.Controllers
             return CreatedAtAction
             (
                 nameof(GetImage), 
-                new { hotelId = image.Hotel.Id, roomId = image.RoomId, imageId = image.Id }, 
+                new { hotelId = image.HotelId, roomId = image.RoomId, imageId = image.Id }, 
                 image.Id
             );
         }
@@ -132,7 +132,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelImages([FromRoute] int hotelId)
         {
-            if (await GetHotelEntityAsync(hotelId) == null)
+            if (!CheckIfHotelExists(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -147,11 +147,11 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRoomImages([FromRoute] int hotelId, [FromRoute] int roomId)
         {
-            if (await GetHotelEntityAsync(hotelId) == null)
+            if (!CheckIfHotelExists(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            if (await GetRoomEntityAsync(roomId) == null)
+            if (!CheckIfRoomExists(roomId))
             {
                 return BadRequest("Such room does not exist");
             }
@@ -173,17 +173,9 @@ namespace iTechArt.Hotels.Api.Controllers
             return PhysicalFile(fullPath, $"image/{extension}");
         }
 
-        private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
-            await _hotelsDb.Hotels
-                .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
-
         private async Task<ImageEntity> GetImageEntityAsync(int imageId) =>
             await _hotelsDb.Images
                 .FirstOrDefaultAsync(image => image.Id == imageId);
-
-        private async Task<RoomEntity> GetRoomEntityAsync(int? roomId) =>
-            await _hotelsDb.Rooms
-                .FirstOrDefaultAsync(room => room.Id == roomId);
 
         private async Task<string> SaveFileAsync(IFormFile file)
         {
@@ -195,5 +187,11 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             return fileName;
         }
+
+        private bool CheckIfHotelExists(int hotelId) =>
+            _hotelsDb.Hotels.Any(hotel => hotel.Id == hotelId);
+
+        private bool CheckIfRoomExists(int roomId) =>
+            _hotelsDb.Rooms.Any(room => room.Id == roomId);
     }
 }

@@ -70,7 +70,7 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [Route("{hotelId}")]
-        [HttpPatch]
+        [HttpPut]
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> ChangeHotel([FromRoute] int hotelId, [FromBody] HotelToEdit request)
         {

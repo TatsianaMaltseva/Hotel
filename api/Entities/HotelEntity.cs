@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace iTechArt.Hotels.Api.Entities
+﻿namespace iTechArt.Hotels.Api.Entities
 {
     public class HotelEntity
     {
@@ -11,7 +9,5 @@ namespace iTechArt.Hotels.Api.Entities
         public string Address { get; set; }
         public string Description { get; set; }
         public int? MainImageId { get; set; }
-        public ICollection<ImageEntity> Images { get; set; }
-        public ICollection<RoomEntity> Rooms { get; set; }
     }
 }
