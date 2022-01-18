@@ -4,7 +4,6 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 using static iTechArt.Hotels.Api.Constants;
 
@@ -27,11 +26,11 @@ namespace iTechArt.Hotels.Api.Controllers
         public async Task<IActionResult> SetFacilityForHotel([FromRoute] int hotelId, [FromBody] Facility request)
         {
             FacilityEntity facility = await GetFacilityEntityAsync(request.Id);
-            if (!CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            if (!CheckIdFacilityExists(facility.Id))
+            if (!await CheckIdFacilityExistsAsync(facility.Id))
             {
                 return BadRequest("Such facility does not exist");
             }
@@ -53,7 +52,7 @@ namespace iTechArt.Hotels.Api.Controllers
         {
             FacilityEntity facility = await GetFacilityEntityAsync(facilityId);
 
-            if (!CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -68,19 +67,19 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok();
         }
 
-        private async Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
-            await _hotelsDb.Facilities
+        private Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
+            _hotelsDb.Facilities
                 .FirstOrDefaultAsync(facility => facility.Id == facilityId);
 
-        private async Task<FacilityHotel> GetFacilityHotelAsync(int hotelId, int facilityId) =>
-            await _hotelsDb.FacilityHotel
+        private Task<FacilityHotel> GetFacilityHotelAsync(int hotelId, int facilityId) =>
+            _hotelsDb.FacilityHotel
                 .FirstOrDefaultAsync(fh => fh.HotelId == hotelId && fh.FacilityId == facilityId);
 
-        private bool CheckIfHotelExists(int hotelId) =>
-            _hotelsDb.Hotels.Any(hotel => hotel.Id == hotelId);
+        private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
+            _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);
 
-        private bool CheckIdFacilityExists(int facilityId) =>
-            _hotelsDb.Facilities.Any(facility => facility.Id == facilityId);
+        private Task<bool> CheckIdFacilityExistsAsync(int facilityId) =>
+            _hotelsDb.Facilities.AnyAsync(facility => facility.Id == facilityId);
 
     }
 }

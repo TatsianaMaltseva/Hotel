@@ -1,7 +1,7 @@
 <div [formGroup]="facilitiesForm">
     <ng-container formArrayName="facilities">
         <ng-container *ngFor="let facilityForm of facilities.controls; let i=index"> 
-            <div [formGroupName]="i"> 
+            <div class="facility" [formGroupName]="i"> 
                 <mat-checkbox 
                     formControlName="checked" 
                     (change)="changeFacilityStatus($event, facilityForm.value)"
@@ -19,4 +19,10 @@
             </div>
         </ng-container>
     </ng-container>
+    <div *ngIf="roomId">
+        To change facility price<br>
+        -> remove check mark<br>
+        -> edit price<br>
+        -> add check mark
+    </div>
 </div>

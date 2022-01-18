@@ -62,7 +62,7 @@ namespace iTechArt.Hotels.Api.Controllers
         public async Task<IActionResult> AddFacility([FromBody] FacilityToAdd request)
         {
             FacilityEntity facility = _mapper.Map<FacilityEntity>(request);
-            if (!CheckIfFacilityUnique(facility.Name))
+            if (!await CheckIfFacilityUniqueAsync(facility.Name))
             {
                 return BadRequest($"Facility with {facility.Name} name already exists");
             }
@@ -99,7 +99,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private async Task<Facility[]> GetCheckedRoomFacilities(int roomId)
         {
-            if (!CheckIfRoomExists(roomId))
+            if (!await CheckIfRoomExists(roomId))
             {
                 return Array.Empty<Facility>();
             }
@@ -113,7 +113,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private async Task<Facility[]> GetCheckedHotelFacilities(int hotelId)
         {
-            if (!CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return Array.Empty<Facility>();
             }
@@ -153,17 +153,17 @@ namespace iTechArt.Hotels.Api.Controllers
             return facilities;
         }
 
-        private async Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
-            await _hotelsDb.Facilities
+        private Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
+             _hotelsDb.Facilities
                 .FirstOrDefaultAsync(facility => facility.Id == facilityId);
 
-        private bool CheckIfFacilityUnique(string name) =>
-            !_hotelsDb.Facilities.Any(facility => facility.Name == name);
+        private async Task<bool> CheckIfFacilityUniqueAsync(string name) =>
+            !await _hotelsDb.Facilities.AnyAsync(facility => facility.Name == name);
 
-        private bool CheckIfHotelExists(int hotelId) =>
-            _hotelsDb.Hotels.Any(hotel => hotel.Id == hotelId);
+        private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
+            _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);
 
-        private bool CheckIfRoomExists(int roomId) =>
-            _hotelsDb.Rooms.Any(room => room.Id == roomId);
+        private Task<bool> CheckIfRoomExists(int roomId) =>
+            _hotelsDb.Rooms.AnyAsync(room => room.Id == roomId);
     }
 }
