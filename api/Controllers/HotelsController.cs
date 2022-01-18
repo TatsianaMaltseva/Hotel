@@ -1,6 +1,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using iTechArt.Hotels.Api.Entities;
+using iTechArt.Hotels.Api.JoinEntities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,8 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return NotFound($"Hotel with {hotelId} id does not exist");
             }
+
+            hotel.Facilities = await GetHotelFacilitiesAsync(hotelId);
             return Ok(hotel);
         }
 
@@ -101,6 +104,22 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Select(h => h.Name)
                 .ToArrayAsync();
             return names;
+        }
+
+        private Task<Facility[]> GetHotelFacilitiesAsync(int hotelId)
+        {
+            return _hotelsDb.Facilities
+               .Join(
+                    _hotelsDb.FacilityHotel.Where(fh => fh.HotelId == hotelId),
+                    facility => facility.Id,
+                    facilityHotel => facilityHotel.FacilityId,
+                    (facility, facilityHotel) => new Facility
+                    {
+                        Id = facility.Id,
+                        Name = facility.Name
+                    }
+                )
+               .ToArrayAsync();
         }
 
         private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>

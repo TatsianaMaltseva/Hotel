@@ -81,7 +81,30 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(r => r.HotelId == hotelId)
                 .ProjectTo<Room>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
+            foreach (Room room in rooms)
+            {
+                room.Facilities = await GetRoomFacilitiesAsync(room.Id);
+            }
             return Ok(rooms);
+        }
+
+        private Task<Facility[]> GetRoomFacilitiesAsync(int roomId)
+        {
+            return _hotelsDb.Facilities
+                .Join(
+                    _hotelsDb.FacilityRoom.Where(fh => fh.RoomId == roomId),
+                    facility => facility.Id,
+                    facilityRoom => facilityRoom.FacilityId,
+                    (facility, facilityRoom) => new Facility
+                    {
+                        Id = facility.Id,
+                        Name = facility.Name,
+                        Price = facilityRoom.Price
+                    }
+                )
+                .OrderBy(facility => facility.Price)
+                .ToArrayAsync();
+
         }
 
         [Route("{hotelId}/rooms")]

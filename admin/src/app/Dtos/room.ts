@@ -1,9 +1,11 @@
+import { Facility } from './facility';
+
 export interface Room {
   id: number;
   name: string;
   sleeps: number;
   number: number;
   price: number;
-  facilities?: string;
+  facilities: Facility[];
   mainImageId?: number;
 }

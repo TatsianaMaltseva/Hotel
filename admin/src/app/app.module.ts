@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
@@ -100,6 +101,7 @@ import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilitie
     MatTableModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatChipsModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

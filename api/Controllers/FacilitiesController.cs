@@ -121,15 +121,15 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(facility => facility.Realm == Realm.Hotel)
                 .ProjectTo<Facility>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            facilities = MarkAsCheckedForHotel(facilities, hotelId);
+            facilities = await MarkAsCheckedForHotelAsync(facilities, hotelId);
             return facilities;
         }
 
-        private Facility[] MarkAsCheckedForHotel(Facility[] facilities, int hotelId)
+        private async Task<Facility[]> MarkAsCheckedForHotelAsync(Facility[] facilities, int hotelId)
         {
             foreach (Facility facility in facilities)
             {
-                if (_hotelsDb.FacilityHotel.Any(fh => fh.FacilityId == facility.Id && fh.HotelId == hotelId))
+                if (await _hotelsDb.FacilityHotel.AnyAsync(fh => fh.FacilityId == facility.Id && fh.HotelId == hotelId))
                 {
                     facility.Checked = true;
                 }

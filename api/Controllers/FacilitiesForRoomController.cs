@@ -40,7 +40,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such facility does not exist");
             }
 
-            FacilityRoom facilityRoom = new FacilityRoom
+            FacilityRoom facilityRoom = new ()
             {
                 FacilityId = request.Id,
                 RoomId = roomId,

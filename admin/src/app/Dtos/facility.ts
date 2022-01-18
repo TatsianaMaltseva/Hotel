@@ -3,4 +3,5 @@ export interface Facility {
     name: string;
     realm: 'hotel' | 'room';
     price?: number;
+    checked: boolean;
 }

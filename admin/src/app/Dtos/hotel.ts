@@ -1,3 +1,5 @@
+import { Facility } from './facility';
+
 export interface Hotel {
   id: number;
   name: string;
@@ -6,4 +8,5 @@ export interface Hotel {
   address: string;
   description?: string;
   mainImageId?: number;
+  facilities: Facility[];
 }

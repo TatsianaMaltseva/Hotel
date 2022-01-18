@@ -9,5 +9,6 @@
         public string Address { get; set; }
         public string Description { get; set; }
         public string MainImageId { get; set; }
+        public Facility[] Facilities { get; set; }
     }
 }

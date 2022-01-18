@@ -29,7 +29,6 @@ export class FacilityService {
       httpParams = httpParams.set('hotelId', `${hotelId}`);
     }
     if (roomId !== undefined) {
-      console.log(roomId);
       httpParams = httpParams.set('roomId', `${roomId}`);
     }
     return this.http.get<Facility[]>(
