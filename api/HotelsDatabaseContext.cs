@@ -16,8 +16,8 @@ namespace iTechArt.Hotels.Api
         public DbSet<ImageEntity> Images { get; set; }
         public DbSet<RoomEntity> Rooms { get; set; }
         public DbSet<FacilityEntity> Facilities { get; set; }
-        public DbSet<FacilityHotel> FacilityHotel { get; set; }
-        public DbSet<FacilityRoom> FacilityRoom { get; set; }
+        public DbSet<FacilityHotelEntity> FacilityHotel { get; set; }
+        public DbSet<FacilityRoomEntity> FacilityRoom { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,22 +63,22 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(3000);
             });
 
-            modelBuilder.Entity<FacilityHotel>()
+            modelBuilder.Entity<FacilityHotelEntity>()
                 .HasOne(fh => fh.Facility)
                 .WithMany(f => f.FacilityHotels)
                 .HasForeignKey(fh => fh.FacilityId);
 
-            modelBuilder.Entity<FacilityHotel>()
+            modelBuilder.Entity<FacilityHotelEntity>()
                 .HasOne(fh => fh.Hotel)
                 .WithMany(h => h.FacilityHotels)
                 .HasForeignKey(fh => fh.HotelId);
 
-            modelBuilder.Entity<FacilityRoom>()
+            modelBuilder.Entity<FacilityRoomEntity>()
                 .HasOne(fr => fr.Facility)
                 .WithMany(f => f.FacilityRooms)
                 .HasForeignKey(fr => fr.FacilityId);
 
-            modelBuilder.Entity<FacilityRoom>()
+            modelBuilder.Entity<FacilityRoomEntity>()
                 .HasOne(fr => fr.Room)
                 .WithMany(f => f.FacilityRooms)
                 .HasForeignKey(fr => fr.RoomId);

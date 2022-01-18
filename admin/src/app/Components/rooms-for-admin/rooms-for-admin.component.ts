@@ -3,15 +3,15 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ImageForAdminDialogData } from 'src/app/Core/image-dialog-admin-data';
+import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
+import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
+import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 import { roomParamsMaxLength } from 'src/app/Core/validation-params';
-import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { RoomService } from '../../room.service';
-import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
-import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
-import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { Hotel } from 'src/app/Dtos/hotel';
+import { Room } from 'src/app/Dtos/room';
 
 @Component({
   selector: 'app-rooms-for-admin',

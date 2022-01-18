@@ -26,6 +26,7 @@ namespace iTechArt.Hotels.Api.Controllers
         public async Task<IActionResult> SetFacilityForHotel([FromRoute] int hotelId, [FromBody] Facility request)
         {
             FacilityEntity facility = await GetFacilityEntityAsync(request.Id);
+
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
@@ -35,7 +36,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such facility does not exist");
             }
 
-            FacilityHotel facilityHotel = new ()
+            FacilityHotelEntity facilityHotel = new ()
             {
                 HotelId = hotelId,
                 FacilityId = facility.Id
@@ -61,7 +62,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such facility does not exist");
             }
 
-            FacilityHotel facilityHotel = await GetFacilityHotelAsync(hotelId, facilityId);
+            FacilityHotelEntity facilityHotel = await GetFacilityHotelAsync(hotelId, facilityId);
             facility.FacilityHotels.Remove(facilityHotel);
             await _hotelsDb.SaveChangesAsync();
             return Ok();
@@ -71,7 +72,7 @@ namespace iTechArt.Hotels.Api.Controllers
             _hotelsDb.Facilities
                 .FirstOrDefaultAsync(facility => facility.Id == facilityId);
 
-        private Task<FacilityHotel> GetFacilityHotelAsync(int hotelId, int facilityId) =>
+        private Task<FacilityHotelEntity> GetFacilityHotelAsync(int hotelId, int facilityId) =>
             _hotelsDb.FacilityHotel
                 .FirstOrDefaultAsync(fh => fh.HotelId == hotelId && fh.FacilityId == facilityId);
 

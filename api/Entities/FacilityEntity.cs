@@ -8,7 +8,7 @@ namespace iTechArt.Hotels.Api.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Realm { get; set; }
-        public List<FacilityHotel> FacilityHotels { get; set; } = new List<FacilityHotel>();
-        public List<FacilityRoom> FacilityRooms { get; set; } = new List<FacilityRoom>();
+        public List<FacilityHotelEntity> FacilityHotels { get; set; } = new List<FacilityHotelEntity>();
+        public List<FacilityRoomEntity> FacilityRooms { get; set; } = new List<FacilityRoomEntity>();
     }
 }

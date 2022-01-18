@@ -1,7 +1,7 @@
 <mat-card [formGroup]="facilitiesForm">
     <mat-card-title>Facilities</mat-card-title>
     <ng-container formArrayName="facilities">
-        <ng-container *ngFor="let facilityForm of facilities.controls; let i=index">    
+        <ng-container *ngFor="let facilityForm of facilities.controls; let i = index">    
             <div [formGroupName]="i">
                 <mat-form-field>
                     <mat-label>Facility name</mat-label>
@@ -21,7 +21,6 @@
                     </mat-select>
                     <mat-error>Realm is required</mat-error>
                 </mat-form-field>
-
                 <span *ngIf="facilityExistsInDatabase(facilityForm.value)">
                     <button 
                         mat-button

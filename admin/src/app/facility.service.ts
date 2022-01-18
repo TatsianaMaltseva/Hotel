@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Facility } from '../Dtos/facility';
+import { Facility } from './Dtos/facility';
 
 @Injectable({
   providedIn: 'root'
@@ -18,17 +18,15 @@ export class FacilityService {
   }
 
   public getFacilities(): Observable<Facility[]> {
-    return this.http.get<Facility[]>(
-      `${this.apiUrl}api/facilities`
-    );
+    return this.http.get<Facility[]>(`${this.apiUrl}api/facilities`);
   }
 
   public getCheckedFacilities(hotelId?: number, roomId?: number): Observable<Facility[]> {
     let httpParams = new HttpParams();
-    if (hotelId !== undefined) {
+    if (hotelId) {
       httpParams = httpParams.set('hotelId', `${hotelId}`);
     }
-    if (roomId !== undefined) {
+    if (roomId) {
       httpParams = httpParams.set('roomId', `${roomId}`);
     }
     return this.http.get<Facility[]>(
@@ -38,10 +36,10 @@ export class FacilityService {
   }
 
   public setFacility(hotelId: number, facility: Facility, roomId?: number): Observable<string> {
-    if (roomId === undefined) {
+    if (!roomId) {
       return this.http.put<string>(
         `${this.apiUrl}api/hotels/${hotelId}/facilities`,
-        { ...facility}
+        { ...facility }
       );
     }
     return this.http.put<string>(
@@ -51,7 +49,7 @@ export class FacilityService {
   }
 
   public deleteFacilityForHotel(hotelId: number, facilityId: number, roomId?: number): Observable<string> {
-    if (roomId === undefined) {
+    if (!roomId) {
       return this.http.delete<string>(
         `${this.apiUrl}api/hotels/${hotelId}/facilities/${facilityId}`
       );

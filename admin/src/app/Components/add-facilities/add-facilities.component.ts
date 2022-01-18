@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { facilityParamsMaxLength } from 'src/app/Core/validation-params';
-import { Facility } from 'src/app/Dtos/facility';
-import { FacilityService } from '../facility.service';
+import { Facility, realmOptions } from 'src/app/Dtos/facility';
+import { FacilityService } from '../../facility.service';
 
 @Component({
   selector: 'app-add-facilities',
@@ -13,7 +13,7 @@ import { FacilityService } from '../facility.service';
 })
 export class AddFacilitiesComponent implements OnInit {
   public facilitiesForm: FormGroup; 
-  public realmOptions = ['hotel', 'room'];
+  public realmOptions = realmOptions;
   public serverErrorResponse: string = '';
 
   public get facilities(): FormArray {
@@ -59,7 +59,7 @@ export class AddFacilitiesComponent implements OnInit {
   }
 
   public facilityExistsInDatabase(facility: Facility): boolean {
-    return Boolean(facility.id);
+    return !!facility.id;
   }
 
   public addEmptyFacilityCard(): void {

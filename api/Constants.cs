@@ -7,6 +7,7 @@
             public const string Admin = "admin";
             public const string Client = "client";
         }
+
         public static class Realm
         {
             public const string Hotel = "hotel";

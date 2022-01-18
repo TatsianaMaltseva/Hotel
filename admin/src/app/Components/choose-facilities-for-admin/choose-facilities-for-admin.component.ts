@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { Facility } from 'src/app/Dtos/facility';
-import { FacilityService } from '../facility.service';
+import { FacilityService } from '../../facility.service';
 
 @Component({
   selector: 'app-choose-facilities-for-admin',
@@ -25,8 +25,8 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
     const facilityGroup =  this.formBuilder.group(
       {
         id: [],
-        name: [''],
-        checked: [false],
+        name: [],
+        checked: [],
         price: []
       }
     );
@@ -48,7 +48,7 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    if (this.hotelId === undefined) {
+    if (!this.hotelId) {
       return;
     }
     this.facilityService
@@ -61,7 +61,7 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
   }
 
   public changeFacilityStatus(event: MatCheckboxChange, facility: Facility): void {
-    if (this.hotelId === undefined) {
+    if (!this.hotelId) {
       return;
     }
 

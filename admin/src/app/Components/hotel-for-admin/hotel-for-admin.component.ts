@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 
+import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { Hotel, HotelToEdit } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
@@ -47,7 +47,7 @@ export class HotelForAdminComponent implements OnInit {
 
   public ngOnInit(): void {
     const id: string | null = this.route.snapshot.paramMap.get('id');
-    if (id === null || !this.isValidId(id)) {
+    if (!id || !this.isValidId(id)) {
       this.openErrorSnackBar('Hotel id is not valid');
     } else {
       this.loading = true;

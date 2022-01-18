@@ -12,6 +12,6 @@ namespace iTechArt.Hotels.Api.Entities
         public string Address { get; set; }
         public string Description { get; set; }
         public int? MainImageId { get; set; }
-        public List<FacilityHotel> FacilityHotels { get; set; } = new List<FacilityHotel>();
+        public List<FacilityHotelEntity> FacilityHotels { get; set; } = new List<FacilityHotelEntity>();
     }
 }

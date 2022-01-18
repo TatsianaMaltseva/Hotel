@@ -2,7 +2,7 @@
 
 namespace iTechArt.Hotels.Api.JoinEntities
 {
-    public class FacilityHotel
+    public class FacilityHotelEntity
     {
         public int Id { get; set; }
         public int HotelId { get; set; }

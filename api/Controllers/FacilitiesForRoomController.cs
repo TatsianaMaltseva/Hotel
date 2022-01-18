@@ -40,7 +40,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such facility does not exist");
             }
 
-            FacilityRoom facilityRoom = new ()
+            FacilityRoomEntity facilityRoom = new ()
             {
                 FacilityId = request.Id,
                 RoomId = roomId,
@@ -71,7 +71,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such facility does not exist");
             }
 
-            FacilityRoom facilityRoom = await GetFacilityRoomAsync(roomId, facilityId);
+            FacilityRoomEntity facilityRoom = await GetFacilityRoomAsync(roomId, facilityId);
             facility.FacilityRooms.Remove(facilityRoom);
             await _hotelsDb.SaveChangesAsync();
             return Ok();
@@ -81,7 +81,7 @@ namespace iTechArt.Hotels.Api.Controllers
             _hotelsDb.Facilities
                 .FirstOrDefaultAsync(facility => facility.Id == facilityId);
 
-        private Task<FacilityRoom> GetFacilityRoomAsync(int roomId, int facilityId) =>
+        private Task<FacilityRoomEntity> GetFacilityRoomAsync(int roomId, int facilityId) =>
             _hotelsDb.FacilityRoom
                 .FirstOrDefaultAsync(fh => fh.RoomId == roomId && fh.FacilityId == facilityId);
 

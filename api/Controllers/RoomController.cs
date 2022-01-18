@@ -104,7 +104,6 @@ namespace iTechArt.Hotels.Api.Controllers
                 )
                 .OrderBy(facility => facility.Price)
                 .ToArrayAsync();
-
         }
 
         [Route("{hotelId}/rooms")]

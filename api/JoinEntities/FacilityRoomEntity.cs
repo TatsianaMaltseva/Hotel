@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iTechArt.Hotels.Api.JoinEntities
 {
-    public class FacilityRoom
+    public class FacilityRoomEntity
     {
         public int Id { get; set; }
         public int RoomId { get; set; }
