@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 
-import { hotelParamsMaxLenght } from 'src/app/Core/hotelValidationParams';
-import { Hotel } from 'src/app/Dtos/hotel';
+import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
+import { Hotel, HotelToEdit } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
 
 @Component({
@@ -19,6 +19,10 @@ export class HotelForAdminComponent implements OnInit {
   public loading = false;
   public isHotelLoaded = false;
 
+  public get hotel(): Hotel {
+    return { id: this.hotelId, ...this.changeHotelForm.value } as Hotel;
+  }
+
   public constructor(
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
@@ -31,7 +35,8 @@ export class HotelForAdminComponent implements OnInit {
         country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],
         city: ['', Validators.maxLength(hotelParamsMaxLenght.city)],
         address: ['', Validators.maxLength(hotelParamsMaxLenght.address)],
-        description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)]
+        description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
+        mainImageId: []
       }
     );
   }
@@ -48,11 +53,11 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public editHotel(): void {
-    if (this.hotelId === undefined) {
+    if (!this.hotelId) {
       return;
     }
     this.hotelService
-      .editHotel(this.hotelId, this.changeHotelForm.value as Hotel)
+      .editHotel(this.hotelId, this.changeHotelForm.value as HotelToEdit)
       .subscribe();
   }
 
@@ -79,7 +84,8 @@ export class HotelForAdminComponent implements OnInit {
       .getHotel(hotelId)
       .subscribe(
         (hotel) => {
-          this.changeHotelForm.patchValue(hotel);
+          const { id, ...data } = hotel;
+          this.changeHotelForm.patchValue(data);
           this.isHotelLoaded = true;
         },
         (serverError: HttpErrorResponse) => {

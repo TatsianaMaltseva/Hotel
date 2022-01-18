@@ -2,7 +2,7 @@
 <form *ngIf="isHotelLoaded" [formGroup]="changeHotelForm">
     <mat-card>
         <mat-card-title>Edit hotel information</mat-card-title>
-        <mat-card-subtitle>Click "Save changes" button at the bottom of the page to apply changes</mat-card-subtitle>
+        <mat-card-subtitle>Click "Save changes" to apply changes</mat-card-subtitle>
         <mat-card-content >
             <mat-form-field class="input-field">
                 <mat-label>Name</mat-label>
@@ -32,7 +32,6 @@
                     Address value should have less than {{ getMaxLengthValue('address') }} symbols
                 </mat-error>
             </mat-form-field>
-            <app-images-for-admin [hotelId]="hotelId"></app-images-for-admin>
             <mat-form-field class="input-field">
                 <mat-label>Description</mat-label>
                 <textarea 
@@ -45,7 +44,7 @@
                 <mat-error>
                     Description value should have less than {{ getMaxLengthValue('description') }} symbols
                 </mat-error>
-              </mat-form-field>
+            </mat-form-field>
             <mat-card-actions>
                 <button
                     mat-button
@@ -55,6 +54,8 @@
                     Save changes  
                 </button>
             </mat-card-actions>
+            <app-images-for-admin [hotel]="hotel"></app-images-for-admin>
+            <app-rooms-for-admin [hotel]="hotel"></app-rooms-for-admin>
         </mat-card-content>
     </mat-card>
 </form>

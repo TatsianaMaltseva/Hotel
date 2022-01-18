@@ -10,9 +10,11 @@ import { Image } from 'src/app/Dtos/image';
   styleUrls: ['./images.component.css']
 })
 export class ImagesComponent implements OnInit {
+  @Input() public hotelId?: number;
+  @Input() public roomId?: number;
+  
   public progress: number = 0;
   public images: Image[] = [];
-  @Input() public hotelId?: number;
 
   public get isAdmin(): boolean {
     return this.accountService.isAdmin;
@@ -28,11 +30,16 @@ export class ImagesComponent implements OnInit {
     this.fetchImages();
   }
 
-  public createImgPath(image: Image): string {
+  public createImagePath(image: Image): string {
     if (this.hotelId === undefined) {
       return '';
     }
-    return this.imageService.createImagePath(this.hotelId, image);
+    return this.imageService
+      .createImagePath(
+        this.hotelId, 
+        image.id,
+        this.roomId
+      );
   }
 
   private fetchImages(): void {
@@ -40,7 +47,7 @@ export class ImagesComponent implements OnInit {
       return;
     }
     this.imageService
-      .getImages(this.hotelId)
+      .getImages(this.hotelId, this.roomId)
       .subscribe(images => this.images = images);
   }
 }

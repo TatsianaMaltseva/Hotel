@@ -40,7 +40,7 @@
     >
         Log in
     </button>
-    <mat-error *ngIf="showWarning">
-        Wrong credentials
+    <mat-error>
+        {{ serverErrorResponse }}
     </mat-error>
 </form>

@@ -1,0 +1,16 @@
+img {
+    width: 170px;
+    height: 110px;
+}
+
+mat-card { 
+    margin: 25px; 
+    padding: 15px;
+    padding-left: 10%;
+    border-radius: 15px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}

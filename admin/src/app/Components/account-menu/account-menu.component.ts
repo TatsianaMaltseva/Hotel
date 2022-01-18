@@ -12,6 +12,10 @@ export class AccountMenuComponent {
     return this.accountService.isClient;
   }
 
+  public get email(): string | null {
+    return this.accountService.email;
+  }
+
   public constructor(
     private readonly accountService: AccountService
   ) { 

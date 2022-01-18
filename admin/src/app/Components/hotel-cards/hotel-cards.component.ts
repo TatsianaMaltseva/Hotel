@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 
-import { PageParameters } from 'src/app/Core/pageParameters';
+import { PageParameters } from 'src/app/Core/page-parameters';
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
-import { HotelFilterService } from 'src/app/hotel-filter.service';
+import { ImageService } from 'src/app/image.service';
 import { HotelCardResponse } from 'src/app/Core/hotel-card-response';
+import { HotelFilterService } from 'src/app/hotel-filter.service';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -23,6 +24,7 @@ export class HotelCardsComponent implements OnInit {
     private readonly hotelService: HotelService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly imageService: ImageService,
     private readonly hotelFilterService: HotelFilterService
   ) {
   }
@@ -65,6 +67,10 @@ export class HotelCardsComponent implements OnInit {
             this.hotels = response.hotelCards;
           }
         );
+  }
+
+  public createImagePath(hotelId: number, image: number): string {
+    return this.imageService.createImagePath(hotelId, image );
   }
 
   private setPageParams(): void {

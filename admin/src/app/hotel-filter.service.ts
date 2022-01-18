@@ -4,7 +4,7 @@ import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { HotelFilterParameters } from './Core/filterParameters';
+import { HotelFilterParameters } from './Core/filter-parameters';
 
 @Injectable({
     providedIn: 'root'

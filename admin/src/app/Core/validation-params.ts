@@ -5,3 +5,7 @@ export const hotelParamsMaxLenght = {
     address : 250,
     desciprion : 3000
 };
+
+export const roomParamsMaxLength = {
+    name: 150
+};

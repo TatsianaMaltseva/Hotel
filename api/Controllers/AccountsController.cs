@@ -38,7 +38,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> CreateAccount([FromBody] Account request)
         {
-            if (!CheckIfEmailUnique(request.Email))
+            if (!await CheckIfEmailUniqueAsync(request.Email))
             {
                 return BadRequest("User is already registered with this email");
             }
@@ -52,13 +52,13 @@ namespace iTechArt.Hotels.Api.Controllers
             };
             await _hotelsDb.AddAsync(account);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAccountEmail), new { id = account.Id }, null);
+            return CreatedAtAction(nameof(GetAccount), new { id = account.Id }, null);
         }
 
         [Route("{id}")]
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAccountEmail([FromRoute] int Id)
+        public async Task<IActionResult> GetAccount([FromRoute] int Id)
         {
             Account account = await _hotelsDb.Accounts
                 .Where(account => account.Id == Id)
@@ -99,8 +99,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(account => account.Id == id)
                 .FirstOrDefaultAsync();
 
-        private bool CheckIfEmailUnique(string email) =>
-            !_hotelsDb.Accounts.Any(u => u.Email == email);
+        private async Task<bool> CheckIfEmailUniqueAsync(string email) =>
+            !await _hotelsDb.Accounts.AnyAsync(u => u.Email == email);
 
         private string GenerateJWT(AccountEntity account) =>
             _jwtService.GenerateJWT(account);

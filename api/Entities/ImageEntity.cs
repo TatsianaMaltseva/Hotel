@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iTechArt.Hotels.Api.Entities
 {
@@ -15,6 +16,6 @@ namespace iTechArt.Hotels.Api.Entities
 
         public int HotelId { get; set; }
 
-        public HotelEntity Hotel { get; set; }
+        public int? RoomId { get; set; }
     }
 }

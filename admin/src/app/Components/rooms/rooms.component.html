@@ -1,0 +1,54 @@
+<form [formGroup]="roomsForm">
+    <table mat-table [dataSource]="rooms">
+        <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: tableColumns" mat-row></tr>
+        <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let room">
+                <div class="img__wrap">
+                    <img 
+                        *ngIf="room.mainImageId"
+                        class="img__img" 
+                        [src]="createImagePath(room)"
+                    />
+                    <p class="img__description" (click)="showImagesDialog(room)">
+                        Click to see other images
+                    </p>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Room type</th>
+            <td mat-cell *matCellDef="let room">{{ room.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="sleeps">
+            <th mat-header-cell *matHeaderCellDef>Sleeps</th>
+            <td mat-cell *matCellDef="let room">{{ room.sleeps }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="facilities">
+            <th mat-header-cell *matHeaderCellDef>Additional facilities</th>
+            <td mat-cell *matCellDef="let room">{{ room.facilities }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price</th>
+            <td mat-cell *matCellDef="let room">US${{ room.price }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="reserve">
+            <th mat-header-cell *matHeaderCellDef>Reserve</th>
+            <td mat-cell *matCellDef="let room">
+                <mat-form-field>
+                    <mat-select matInput formControlName="roomsReservedNumber">
+                    <mat-option *ngFor="let roomsToReserveNumber of getNumberArray(room)" [value]="roomsToReserveNumber">
+                        {{ roomsToReserveNumber }}
+                    </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td>
+        </ng-container>
+    </table>
+</form>

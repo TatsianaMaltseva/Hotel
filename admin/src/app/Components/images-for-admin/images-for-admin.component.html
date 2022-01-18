@@ -8,6 +8,7 @@
                 <button
                     mat-button
                     type="button"
+                    (click)="deleteImage(image)"
                 >
                     Remove
                 </button>
@@ -16,6 +17,7 @@
                 <button 
                     mat-button
                     type="button"
+                    (click)="changeMainImage(image)"
                 >
                     Make main
                 </button>
@@ -24,6 +26,7 @@
     </div>
 </div>
 <app-images-upload-button 
-    [hotelId]="hotelId" 
+    [hotelId]="hotel?.id" 
+    [roomId]="room?.id"
     (imageLoaded)="addImage($event)"
 ></app-images-upload-button>

@@ -4,10 +4,11 @@ import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { PageParameters } from 'src/app/Core/pageParameters';
+import { PageParameters } from 'src/app/Core/page-parameters';
 import { HotelCardResponse } from './Core/hotel-card-response';
-import { Hotel } from './Dtos/hotel';
-import { HotelFilterParameters } from './Core/filterParameters';
+import { Hotel, HotelToEdit } from './Dtos/hotel';
+import { Room } from './Dtos/room';
+import { HotelFilterParameters } from './Core/filter-parameters';
 
 @Injectable({
   providedIn: 'root'
@@ -34,10 +35,21 @@ export class HotelService {
     );
   }
 
-  public editHotel(hotelId: number, editedHotel: Hotel): Observable<any> {
-    return this.http.put(
+  public editHotel(hotelId: number, editedHotel: HotelToEdit): Observable<string> {
+    return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}`,
       { ...editedHotel }
+    );
+  }
+
+  public getHotelsCount(filterParameters: HotelFilterParameters): Observable<number> {
+    const httpParams = filterParameters as Params;
+    return this.http.get<number>(`${this.apiUrl}api/hotels/count`, { params: httpParams });
+  }
+
+  public getRooms(hotelId: number): Observable<Room[]> {
+    return this.http.get<Room[]>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms`
     );
   }
 }

@@ -5,7 +5,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AccountService } from 'src/app/account.service';
-import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/customValidators';
+import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/custom-validators';
 
 @Component({
   selector: 'app-change-password',
@@ -66,9 +66,9 @@ export class ChangePasswordComponent{
   private openSuccessSnackBar(message: string): void {
     this.snackBar.open(
       `${message}`,
-      'Confirm',
+      'Close',
       { 
-        duration: 5000
+        duration: 15000
       }
     );
   }

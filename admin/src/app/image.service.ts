@@ -17,22 +17,45 @@ export class ImageService {
     this.apiUrl = environment.api;
   }
 
-  public postImage(files: FileList | null, hotelId: number): Observable<any> {
+  public createImagePath(hotelId: number, imageId: number, roomId?: number): string {
+    if (roomId === undefined) {
+      return `${this.apiUrl}api/hotels/${hotelId}/images/${imageId}`;
+    }
+    return `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images/${imageId}`;
+  }
+
+  public postImage(files: FileList | null, hotelId: number, roomId?: number): Observable<any> {
     const fileToUpload = files?.[0] as File;
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
+    let httpUrl = '';
+    if (!roomId) {
+      httpUrl = `${this.apiUrl}api/hotels/${hotelId}/images`;
+    } else {
+      httpUrl = `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`;
+    }
     return this.http.post(
-      `${this.apiUrl}api/hotels/${hotelId}/images`, 
+      httpUrl,
       formData,
       { reportProgress: true, observe: 'events' }
     );
   }
 
-  public getImages(hotelId: number): Observable<Image[]>{
-    return this.http.get<Image[]>(`${this.apiUrl}api/hotels/${hotelId}/images`);
+  public getImages(hotelId: number, roomId?: number): Observable<Image[]>{
+    if (roomId === undefined) {
+      return this.http.get<Image[]>(`${this.apiUrl}api/hotels/${hotelId}/images`);
+    }
+    return this.http.get<Image[]>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`
+    );
   }
 
-  public createImagePath(hotelId: number, image: Image): string {
-    return `${this.apiUrl}api/hotels/${hotelId}/images/${image.id}`;
+  public deleteImage(hotelId: number, imageId: number, roomId?: number): Observable<string>{
+    if (roomId === undefined) {
+      return this.http.delete<string>(`${this.apiUrl}api/hotels/${hotelId}/images/${imageId}`);
+    }
+    return this.http.delete<string>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images/${imageId}`
+    );
   }
 }

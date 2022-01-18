@@ -33,7 +33,7 @@ export class HotelComponent implements OnInit{
   public ngOnInit(): void {
     const id: string | null = this.route.snapshot.paramMap.get('id');
     if (id === null || !this.isValidId(id)) {
-      this.openErrorSnackBar('Hotel id is not valid');
+      this.openSnackBar('Hotel id is not valid');
     } else {
       this.loading = true;
       this.hotelId = +id;
@@ -41,9 +41,9 @@ export class HotelComponent implements OnInit{
     }
   }
 
-  private openErrorSnackBar(errorMessage: string): void {
+  private openSnackBar(message: string): void {
     this.snackBar.open(
-      `${errorMessage}`,
+      `${message}`,
       'Close',
       {
         duration: 15000
@@ -64,7 +64,7 @@ export class HotelComponent implements OnInit{
           this.isHotelLoaded = true;
         },
         (serverError: HttpErrorResponse) => {
-          this.openErrorSnackBar(serverError.error as string);
+          this.openSnackBar(serverError.error as string);
         }
       )
       .add(
