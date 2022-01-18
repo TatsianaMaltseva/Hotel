@@ -6,8 +6,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/page-parameters';
 import { HotelCardResponse } from './Core/hotel-card-response';
-import { Hotel } from './Dtos/hotel';
-import { Image } from './Dtos/image';
+import { Hotel, HotelToEdit } from './Dtos/hotel';
 import { Room } from './Dtos/room';
 import { HotelFilterParameters } from './Core/filter-parameters';
 
@@ -36,7 +35,7 @@ export class HotelService {
     );
   }
 
-  public editHotel(hotelId: number, editedHotel: Hotel): Observable<string> {
+  public editHotel(hotelId: number, editedHotel: HotelToEdit): Observable<string> {
     return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}`,
       { ...editedHotel }

@@ -7,3 +7,5 @@ export interface Hotel {
   description?: string;
   mainImageId?: number;
 }
+
+export type HotelToEdit = Omit<Hotel, 'id'>;

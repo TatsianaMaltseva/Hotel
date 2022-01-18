@@ -62,7 +62,7 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return;
     }
     this.hotelId = this.hotel.id;
@@ -85,14 +85,14 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public deleteEmptyRoomCard(index: number): void {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return;
     }
     this.rooms.removeAt(index);
   }
 
   public addRoom(room: Room): void {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return;
     }
     this.roomService
@@ -105,7 +105,7 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public deleteRoom(index: number, room: Room): void {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return;
     }
     this.roomService
@@ -118,7 +118,7 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public editRoom(room: Room): void {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return;
     }
     this.roomService
@@ -127,7 +127,7 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public createImagePath(room: Room): string {
-    if (this.hotel === undefined || room.mainImageId === undefined) {
+    if (!this.hotel || !room.mainImageId) {
       return '';
     }
     let url = this.imageService
