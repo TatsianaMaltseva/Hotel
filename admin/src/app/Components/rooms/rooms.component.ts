@@ -64,7 +64,7 @@ export class RoomsComponent implements OnInit {
         room.mainImageId,
         room.id
       );
-      return url;
+    return url;
   }
 
   public showImagesDialog(room: Room): void {

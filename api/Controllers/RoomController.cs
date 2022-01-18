@@ -31,7 +31,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> DeleteRoom([FromRoute] int hotelId, [FromRoute] int roomId)
         {
-            if (!CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -54,7 +54,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> ChangeRoom([FromRoute] int hotelId, [FromRoute] int roomId, [FromBody] RoomToEdit request)
         {
-            if (!CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -72,7 +72,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRooms([FromRoute] int hotelId)
         {
-            if (!CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -88,7 +88,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AddRoom([FromRoute] int hotelId, [FromBody] RoomToAdd request)
         {
-            if (!CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -103,7 +103,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRoom([FromRoute] int hotelId, [FromRoute] int roomId)
         {
-            if (!CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -114,11 +114,11 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(room);
         }
 
-        private async Task<RoomEntity> GetRoomEntityAsync(int? roomId) =>
-            await _hotelsDb.Rooms
+        private Task<RoomEntity> GetRoomEntityAsync(int? roomId) =>
+            _hotelsDb.Rooms
                 .FirstOrDefaultAsync(room => room.Id == roomId);
 
-        private bool CheckIfHotelExists(int hotelId) =>
-            _hotelsDb.Hotels.Any(hotel => hotel.Id == hotelId);
+        private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
+            _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);
     }
 }

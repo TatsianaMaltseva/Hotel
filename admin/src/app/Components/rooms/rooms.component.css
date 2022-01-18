@@ -7,18 +7,12 @@ img {
     height: 100px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    border: 0;
-}
-  
 .img__wrap {
     position: relative;
     width: 180px;
     height: 100px;
 }
-  
+
 .img__description {
     position: absolute;
     visibility: hidden;
@@ -28,8 +22,9 @@ img {
     opacity: 0;
     transition: opacity .2s, visibility .2s;
     font-size: 30px;
+    margin: 0;
 }
-  
+
 .img__wrap:hover .img__description {
     visibility: visible;
     opacity: 1;

@@ -30,9 +30,9 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("login")]
         [HttpPost]
-        public IActionResult Login([FromBody] Login request)
+        public async Task<IActionResult> Login([FromBody] Login request)
         {
-            AccountEntity account = GetAccountByEmail(request.Email);
+            AccountEntity account = await GetAccountByEmailAsync(request.Email);
             if (account == null)
             {
                 return BadRequest("Wrong credentials");
@@ -50,7 +50,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] Account request)
         {
-            if (!CheckIfEmailUnique(request.Email))
+            if (!await CheckIfEmailUnique(request.Email))
             {
                 return BadRequest("User is already registered with this email");
             }
@@ -68,15 +68,15 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(token);
         }
 
-        private AccountEntity GetAccountByEmail(string email) =>
-            _hotelsDb.Accounts.SingleOrDefault(u => u.Email == email);
+        private Task<AccountEntity> GetAccountByEmailAsync(string email) =>
+            _hotelsDb.Accounts.SingleOrDefaultAsync(u => u.Email == email);
 
-        private bool CheckIfEmailUnique(string email) =>
-            !_hotelsDb.Accounts.Any(u => u.Email == email);
+        private async Task<bool> CheckIfEmailUnique(string email) =>
+            !await _hotelsDb.Accounts.AnyAsync(u => u.Email == email);
 
         [Route("{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetAccountEmail([FromRoute] int Id)
+        public async Task<IActionResult> GetAccountEmailAsync([FromRoute] int Id)
         {
             string email = await _hotelsDb.Accounts
                 .Where(account => account.Id == Id)
