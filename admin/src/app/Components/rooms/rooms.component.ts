@@ -62,10 +62,6 @@ export class RoomsComponent implements OnInit {
       .map(f => f.checked = event.checked);
   }
 
-  public getNumberArray(room: Room): number[] {
-    return this.roomService.getNumberArray(room);
-  }
-
   public createImagePath(room: Room): string {
     if (this.hotelId === undefined || room.mainImageId === undefined) {
       return '';
@@ -76,7 +72,7 @@ export class RoomsComponent implements OnInit {
         room.mainImageId,
         room.id
       );
-      return url;
+    return url;
   }
 
   public showImagesDialog(room: Room): void {
@@ -87,6 +83,10 @@ export class RoomsComponent implements OnInit {
         data: { hotelId: this.hotelId, roomId: room.id } as ImageDialogData
       }
     );
+  }
+
+  public getNumberArray(room: Room): number[] {
+    return [ ...Array(room.number).keys() ].map(n => n + 1);
   }
 
   private fetchRooms(): void {

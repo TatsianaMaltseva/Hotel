@@ -19,9 +19,6 @@ export class ImagesForAdminComponent implements OnInit {
   @Input() public hotel?: Hotel;
   @Input() public room?: Room;
 
-  public hotelId?: number;
-  public roomId?: number;
-
   public progress: number = 0;
   public images: Image[] = [];
 
@@ -34,13 +31,11 @@ export class ImagesForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.hotelId = this.hotel?.id;
-    this.roomId = this.room?.id;
     this.fetchImages();
   }
   
   public createImagePath(image: Image): string {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return '';
     }
     return this.imageService
@@ -56,7 +51,7 @@ export class ImagesForAdminComponent implements OnInit {
   }
 
   public changeMainImage(image: Image): void {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return;
     }
     let changeMain$: Observable<string>;
@@ -79,7 +74,7 @@ export class ImagesForAdminComponent implements OnInit {
   }
 
   public deleteImage(image: Image): void {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return;
     }
     this.imageService
@@ -99,7 +94,7 @@ export class ImagesForAdminComponent implements OnInit {
   }
 
   private fetchImages(): void {
-    if (this.hotel === undefined) {
+    if (!this.hotel) {
       return;
     }
     this.imageService

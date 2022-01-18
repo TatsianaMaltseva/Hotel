@@ -10,3 +10,5 @@ export interface Hotel {
   mainImageId?: number;
   facilities: Facility[];
 }
+
+export type HotelToEdit = Omit<Hotel, 'id'>;

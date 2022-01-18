@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
-import { Hotel } from 'src/app/Dtos/hotel';
+import { Hotel, HotelToEdit } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
 import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 
@@ -23,7 +23,7 @@ export class HotelForAdminComponent implements OnInit {
   public isHotelLoaded = false;
 
   public get hotel(): Hotel {
-    return this.changeHotelForm.value as Hotel;
+    return { id: this.hotelId, ...this.changeHotelForm.value } as Hotel;
   }
 
   public constructor(
@@ -35,7 +35,6 @@ export class HotelForAdminComponent implements OnInit {
   ) {
     this.changeHotelForm = formBuilder.group(
       {
-        id: [],
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
         country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],
         city: ['', Validators.maxLength(hotelParamsMaxLenght.city)],
@@ -58,11 +57,11 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public editHotel(): void {
-    if (this.hotel === undefined) {
+    if (!this.hotelId) {
       return;
     }
     this.hotelService
-      .editHotel(this.hotel.id, this.hotel)
+      .editHotel(this.hotelId, this.changeHotelForm.value as HotelToEdit)
       .subscribe();
   }
 
@@ -99,7 +98,8 @@ export class HotelForAdminComponent implements OnInit {
       .getHotel(hotelId)
       .subscribe(
         (hotel) => {
-          this.changeHotelForm.patchValue(hotel);
+          const { id, ...data } = hotel;
+          this.changeHotelForm.patchValue(data);
           this.isHotelLoaded = true;
         },
         (serverError: HttpErrorResponse) => {

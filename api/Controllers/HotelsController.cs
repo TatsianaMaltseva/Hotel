@@ -1,7 +1,6 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using iTechArt.Hotels.Api.Entities;
-using iTechArt.Hotels.Api.JoinEntities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -122,8 +121,8 @@ namespace iTechArt.Hotels.Api.Controllers
                .ToArrayAsync();
         }
 
-        private async Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
-            await _hotelsDb.Hotels
+        private Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
+             _hotelsDb.Hotels
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
     }
 }

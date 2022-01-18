@@ -29,7 +29,7 @@ export class ImageService {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     let httpUrl = '';
-    if (roomId === undefined) {
+    if (!roomId) {
       httpUrl = `${this.apiUrl}api/hotels/${hotelId}/images`;
     } else {
       httpUrl = `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`;
