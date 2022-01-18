@@ -76,7 +76,7 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public roomExistsInDatabase(room: Room): boolean {
-    return Boolean(room.id);
+    return !!room.id;
   }
 
   public addEmptyRoomCard(): void {

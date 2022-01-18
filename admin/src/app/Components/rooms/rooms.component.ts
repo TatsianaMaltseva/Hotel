@@ -50,10 +50,6 @@ export class RoomsComponent implements OnInit {
     this.fetchRooms();
   }
 
-  public getNumberArray(room: Room): number[] {
-    return this.roomService.getNumberArray(room);
-  }
-
   public createImagePath(room: Room): string {
     if (this.hotelId === undefined || room.mainImageId === undefined) {
       return '';
@@ -75,6 +71,10 @@ export class RoomsComponent implements OnInit {
         data: { hotelId: this.hotelId, roomId: room.id } as ImageDialogData
       }
     );
+  }
+
+  public getNumberArray(room: Room): number[] {
+    return [ ...Array(room.number).keys() ].map(n => n + 1);
   }
 
   private fetchRooms(): void {
