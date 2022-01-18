@@ -38,7 +38,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AddHotelImage([FromRoute] int hotelId)
         {
-            if (!await CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -74,11 +74,11 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AddRoomImage([FromRoute] int hotelId, [FromRoute] int roomId)
         {
-            if (!await CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            if (!await CheckIfRoomExists(roomId))
+            if (!await CheckIfRoomExistsAsync(roomId))
             {
                 return BadRequest("Such room does not exist");
             }
@@ -132,7 +132,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotelImages([FromRoute] int hotelId)
         {
-            if (!await CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
@@ -147,11 +147,11 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRoomImages([FromRoute] int hotelId, [FromRoute] int roomId)
         {
-            if (!await CheckIfHotelExists(hotelId))
+            if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            if (!await CheckIfRoomExists(roomId))
+            if (!await CheckIfRoomExistsAsync(roomId))
             {
                 return BadRequest("Such room does not exist");
             }
@@ -188,10 +188,10 @@ namespace iTechArt.Hotels.Api.Controllers
             return fileName;
         }
 
-        private Task<bool> CheckIfHotelExists(int hotelId) =>
+        private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
             _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);
 
-        private Task<bool> CheckIfRoomExists(int roomId) =>
+        private Task<bool> CheckIfRoomExistsAsync(int roomId) =>
             _hotelsDb.Rooms.AnyAsync(room => room.Id == roomId);
     }
 }
