@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Facility } from './Dtos/facility';
+import { Facility, realm } from './Dtos/facility';
 
 @Injectable({
   providedIn: 'root'
@@ -35,27 +35,18 @@ export class FacilityService {
     );
   }
 
-  public setFacility(hotelId: number, facility: Facility, roomId?: number): Observable<string> {
+  public changeHotelFacilities(hotelId: number, facilities: Facility[], roomId?: number): Observable<string> {
     if (!roomId) {
+      facilities.map(f => f.realm = realm.hotel);
       return this.http.put<string>(
         `${this.apiUrl}api/hotels/${hotelId}/facilities`,
-        { ...facility }
+        facilities
       );
     }
+    facilities.map(f => f.realm = realm.room);
     return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/facilities`,
-      { ...facility }
-    );
-  }
-
-  public deleteFacilityForHotel(hotelId: number, facilityId: number, roomId?: number): Observable<string> {
-    if (!roomId) {
-      return this.http.delete<string>(
-        `${this.apiUrl}api/hotels/${hotelId}/facilities/${facilityId}`
-      );
-    }
-    return this.http.delete<string>(
-      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/facilities/${facilityId}`
+      facilities
     );
   }
 

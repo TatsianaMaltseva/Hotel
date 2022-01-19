@@ -1,4 +1,5 @@
 import { Facility } from './facility';
+import { Hotel } from './hotel';
 
 export interface Room {
   id: number;
@@ -9,3 +10,5 @@ export interface Room {
   facilities: Facility[];
   mainImageId?: number;
 }
+
+export type RoomToReserve = Omit<Hotel, 'id'>;

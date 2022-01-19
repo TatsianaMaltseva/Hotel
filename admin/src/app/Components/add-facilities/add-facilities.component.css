@@ -9,3 +9,7 @@ mat-card {
 mat-form-field {
     width: 30%;
 }
+
+.buttons {
+    float: right;
+}

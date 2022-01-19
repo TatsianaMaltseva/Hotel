@@ -1,9 +1,12 @@
-﻿using iTechArt.Hotels.Api.Entities;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.JoinEntities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using static iTechArt.Hotels.Api.Constants;
 
@@ -23,64 +26,42 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{hotelId}/facilities")]
         [HttpPut]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> SetFacilityForHotel([FromRoute] int hotelId, [FromBody] Facility request)
+        public async Task<IActionResult> SetFacilitiesForHotel([FromRoute] int hotelId, [FromBody] Facility[] facilities)
         {
-            FacilityEntity facility = await GetFacilityEntityAsync(request.Id);
+            HotelEntity hotel = await GetHotelEntityAsync(hotelId);
 
-            if (!await CheckIfHotelExistsAsync(hotelId))
+            if (hotel == null)
             {
                 return BadRequest("Such hotel does not exist");
             }
-            if (!await CheckIdFacilityExistsAsync(facility.Id))
+
+            FacilityHotelEntity[] facilityHotels = await GetFacilityHotelsAsync(hotelId);
+
+            foreach (FacilityHotelEntity facilityHotel in facilityHotels)
             {
-                return BadRequest("Such facility does not exist");
+                hotel.FacilityHotels.Remove(facilityHotel);
             }
 
-            FacilityHotelEntity facilityHotel = new ()
+            foreach (Facility facility in facilities)
             {
-                HotelId = hotelId,
-                FacilityId = facility.Id
-            };
-            facility.FacilityHotels.Add(facilityHotel);
+                FacilityHotelEntity facilityHotel = new()
+                {
+                    HotelId = hotelId,
+                    FacilityId = facility.Id
+                };
+                hotel.FacilityHotels.Add(facilityHotel);
+            }
             await _hotelsDb.SaveChangesAsync();
-            return Ok();
+            return Ok(facilities);
         }
 
-        [Route("{hotelId}/facilities/{facilityId}")]
-        [HttpDelete]
-        [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> RemoveFacilityForHotel([FromRoute] int hotelId, [FromRoute] int facilityId)
-        {
-            FacilityEntity facility = await GetFacilityEntityAsync(facilityId);
+        private Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
+            _hotelsDb.Hotels
+                .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
 
-            if (!await CheckIfHotelExistsAsync(hotelId))
-            {
-                return BadRequest("Such hotel does not exist");
-            }
-            if (facility == null)
-            {
-                return BadRequest("Such facility does not exist");
-            }
-
-            FacilityHotelEntity facilityHotel = await GetFacilityHotelAsync(hotelId, facilityId);
-            facility.FacilityHotels.Remove(facilityHotel);
-            await _hotelsDb.SaveChangesAsync();
-            return Ok();
-        }
-
-        private Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
-            _hotelsDb.Facilities
-                .FirstOrDefaultAsync(facility => facility.Id == facilityId);
-
-        private Task<FacilityHotelEntity> GetFacilityHotelAsync(int hotelId, int facilityId) =>
+        private Task<FacilityHotelEntity[]> GetFacilityHotelsAsync(int hotelId) =>
             _hotelsDb.FacilityHotel
-                .FirstOrDefaultAsync(fh => fh.HotelId == hotelId && fh.FacilityId == facilityId);
-
-        private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
-            _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);
-
-        private Task<bool> CheckIdFacilityExistsAsync(int facilityId) =>
-            _hotelsDb.Facilities.AnyAsync(facility => facility.Id == facilityId);
-
+                .Where(fh => fh.HotelId == hotelId)
+                .ToArrayAsync();
     }
 }

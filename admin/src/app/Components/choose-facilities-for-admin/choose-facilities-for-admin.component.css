@@ -6,4 +6,9 @@ input::-webkit-inner-spin-button {
 .facility {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.name {
+  padding-top: 15px;
 }

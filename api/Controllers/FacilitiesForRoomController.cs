@@ -4,6 +4,7 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using static iTechArt.Hotels.Api.Constants;
 
@@ -23,72 +24,51 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{hotelId}/rooms/{roomId}/facilities")]
         [HttpPut]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> SetFacilityForRoom([FromRoute] int hotelId, [FromRoute] int roomId, [FromBody] Facility request)
+        public async Task<IActionResult> SetFacilitiesForRoom([FromRoute] int hotelId, [FromRoute] int roomId, [FromBody] Facility[] facilities)
         {
-            FacilityEntity facility = await GetFacilityEntityAsync(request.Id);
-
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            if (!await CheckIfRoomExistsAsync(roomId))
+
+            RoomEntity room = await GetRoomEntityAsync(roomId);
+
+            if (room == null)
             {
                 return BadRequest("Such room does not exist");
             }
-            if (facility == null)
+
+            FacilityRoomEntity[] facilityRooms = await GetFacilityRoomsAsync(roomId);
+
+            foreach (FacilityRoomEntity facilityRoom in facilityRooms)
             {
-                return BadRequest("Such facility does not exist");
+                room.FacilityRooms.Remove(facilityRoom);
             }
 
-            FacilityRoomEntity facilityRoom = new ()
+            foreach (Facility facility in facilities)
             {
-                FacilityId = request.Id,
-                RoomId = roomId,
-                Price = request.Price
-            };
-            facility.FacilityRooms.Add(facilityRoom);
+                FacilityRoomEntity facilityRoom = new()
+                {
+                    FacilityId = facility.Id,
+                    RoomId = roomId,
+                    Price = facility.Price
+                };
+                room.FacilityRooms.Add(facilityRoom);
+            }
             await _hotelsDb.SaveChangesAsync();
             return Ok();
         }
 
-        [Route("{hotelId}/rooms/{roomId}/facilities/{facilityId}")]
-        [HttpDelete]
-        [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> RemoveFacilityForRooms([FromRoute] int hotelId, [FromRoute] int roomId, [FromRoute] int facilityId)
-        {
-            FacilityEntity facility = await GetFacilityEntityAsync(facilityId);
+        private Task<RoomEntity> GetRoomEntityAsync(int roomId) =>
+            _hotelsDb.Rooms
+                .FirstOrDefaultAsync(room => room.Id == roomId);
 
-            if (!await CheckIfHotelExistsAsync(hotelId))
-            {
-                return BadRequest("Such hotel does not exist");
-            }
-            if (!await CheckIfRoomExistsAsync(roomId))
-            {
-                return BadRequest("Such room does not exist");
-            }
-            if (facility == null)
-            {
-                return BadRequest("Such facility does not exist");
-            }
-
-            FacilityRoomEntity facilityRoom = await GetFacilityRoomAsync(roomId, facilityId);
-            facility.FacilityRooms.Remove(facilityRoom);
-            await _hotelsDb.SaveChangesAsync();
-            return Ok();
-        }
-
-        private Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
-            _hotelsDb.Facilities
-                .FirstOrDefaultAsync(facility => facility.Id == facilityId);
-
-        private Task<FacilityRoomEntity> GetFacilityRoomAsync(int roomId, int facilityId) =>
+        private Task<FacilityRoomEntity[]> GetFacilityRoomsAsync(int roomId) =>
             _hotelsDb.FacilityRoom
-                .FirstOrDefaultAsync(fh => fh.RoomId == roomId && fh.FacilityId == facilityId);
+                .Where(fh => fh.RoomId == roomId)
+                .ToArrayAsync();
 
         private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
             _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);
-
-        private Task<bool> CheckIfRoomExistsAsync(int roomId) =>
-            _hotelsDb.Rooms.AnyAsync(room => room.Id == roomId);
     }
 }

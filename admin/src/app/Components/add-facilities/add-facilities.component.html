@@ -21,7 +21,8 @@
                     </mat-select>
                     <mat-error>Realm is required</mat-error>
                 </mat-form-field>
-                <span *ngIf="facilityExistsInDatabase(facilityForm.value)">
+                <span *ngIf="facilityExistsInDatabase(facilityForm.value)" class="buttons">
+                    <span>id{{ facilityForm.value.id }}</span>
                     <button 
                         mat-button
                         (click)="editFacility(facilityForm.value)"
@@ -33,7 +34,7 @@
                         <mat-icon>delete</mat-icon>delete
                     </button>
                 </span>
-                <span *ngIf="!facilityExistsInDatabase(facilityForm.value)">
+                <span *ngIf="!facilityExistsInDatabase(facilityForm.value)" class="buttons">
                     <button 
                         mat-button
                         (click)="addFacility(facilityForm.value)"

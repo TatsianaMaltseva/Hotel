@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { facilityParamsMaxLength } from 'src/app/Core/validation-params';
-import { Facility, realmOptions } from 'src/app/Dtos/facility';
+import { Facility, realm } from 'src/app/Dtos/facility';
 import { FacilityService } from '../../facility.service';
 
 @Component({
@@ -13,8 +13,8 @@ import { FacilityService } from '../../facility.service';
 })
 export class AddFacilitiesComponent implements OnInit {
   public facilitiesForm: FormGroup; 
-  public realmOptions = realmOptions;
   public serverErrorResponse: string = '';
+  public readonly realmOptions = [ realm.hotel, realm.room ];
 
   public get facilities(): FormArray {
     return this.facilitiesForm.get('facilities') as FormArray;

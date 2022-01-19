@@ -3,27 +3,24 @@
         <ng-container *ngFor="let facilityForm of facilities.controls; let i=index"> 
             <div class="facility" [formGroupName]="i"> 
                 <mat-checkbox 
-                    formControlName="checked" 
-                    (change)="changeFacilityStatus($event, facilityForm.value)"
+                    class='name'
+                    formControlName="checked"
                 >
-                    {{ facilityForm.value.name }}
+                    {{ facilityForm.value.name }} (id{{facilityForm.value.id}})
                 </mat-checkbox>
-                <mat-form-field *ngIf="roomId">
-                    <mat-label>Price</mat-label>
+                <mat-form-field *ngIf="roomId" class="price">
                     <span matPrefix>US$</span>
                     <input 
                         matInput
+                        class="price"
                         formControlName="price"
                         type="number"
                     >
                 </mat-form-field>
             </div>
         </ng-container>
+        <button mat-button (click)="changeFacilitiesStatus()">
+            <mat-icon>save</mat-icon>save changes
+        </button>
     </ng-container>
-    <div *ngIf="roomId">
-        To change facility price<br>
-        -> remove check mark<br>
-        -> edit price<br>
-        -> add check mark
-    </div>
 </div>

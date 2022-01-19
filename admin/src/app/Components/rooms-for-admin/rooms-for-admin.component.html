@@ -35,6 +35,7 @@
                     >
                     <mat-error>Number of rooms is required</mat-error>
                 </mat-form-field>
+                id{{ roomForm.value.id }}
                 <img
                     *ngIf="roomForm.value.mainImageId"
                     [src]="createImagePath(roomForm.value)"

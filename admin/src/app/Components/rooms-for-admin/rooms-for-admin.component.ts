@@ -20,7 +20,7 @@ import { Room } from 'src/app/Dtos/room';
 })
 export class RoomsForAdminComponent implements OnInit {
   @Input() public hotel?: Hotel;
-
+  
   public hotelId?: number;
   public roomsForm: FormGroup;
 
@@ -41,7 +41,6 @@ export class RoomsForAdminComponent implements OnInit {
         ],
         sleeps: ['', Validators.required],
         mainImageId: [],
-        facilities: [],
         price: ['', Validators.required],
         number: ['', Validators.required]
       }
@@ -72,7 +71,9 @@ export class RoomsForAdminComponent implements OnInit {
       .getRooms(this.hotel.id)
       .subscribe(
         (rooms) => {
-          rooms.forEach(room => this.addRoomToForm(room));
+          rooms.forEach(room => {
+            this.addRoomToForm(room);
+          });
         }
       );
   }

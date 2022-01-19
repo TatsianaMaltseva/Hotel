@@ -60,20 +60,16 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
       );
   }
 
-  public changeFacilityStatus(event: MatCheckboxChange, facility: Facility): void {
+  public changeFacilitiesStatus(): void {
     if (!this.hotelId) {
       return;
     }
 
-    if (event.checked) {
-      this.facilityService
-        .setFacility(this.hotelId, facility, this.roomId)
-        .subscribe();
-    } else {
-      this.facilityService
-        .deleteFacilityForHotel(this.hotelId, facility.id, this.roomId)
-        .subscribe();
-    }
+    const checkedFacilitites = (this.facilities.value as Facility[])
+      .filter(facility => facility.checked);
+    this.facilityService
+      .changeHotelFacilities(this.hotelId, checkedFacilitites, this.roomId)
+      .subscribe();
   }
 
   private addFacilityToForm(facility: Facility): void {

@@ -6,4 +6,7 @@ export interface Facility {
     checked: boolean;
 }
 
-export const realmOptions = ['hotel', 'room'];
+export const realm = {
+    hotel: 'hotel',
+    room: 'room'
+};
