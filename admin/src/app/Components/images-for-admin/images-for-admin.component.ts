@@ -84,7 +84,7 @@ export class ImagesForAdminComponent implements OnInit {
           if (this.room?.mainImageId === image.id) {
             this.room.mainImageId = undefined;
           }
-          this.images = this.images.filter(img => img !== image);
+          this.images = this.images.filter(img => img.id !== image.id);
           this.openSnackBar('Image was successfully deleted');
         },
         (serverError: HttpErrorResponse) => {

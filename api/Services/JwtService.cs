@@ -30,7 +30,6 @@ namespace iTechArt.Hotels.Api.Services
                 new Claim(ClaimTypes.Name, account.Id.ToString()),
                 new Claim("role", account.Role.ToString())
             };
-
             var token = new JwtSecurityToken(
                 authParams.Issuer,
                 authParams.Audience,

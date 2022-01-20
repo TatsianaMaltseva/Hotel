@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,6 +49,8 @@ import { ImagesForAdminDialogComponent } from './Components/images-for-admin-dia
 import { RoomsForAdminComponent } from './Components/rooms-for-admin/rooms-for-admin.component';
 import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
 import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilities-for-admin/choose-facilities-for-admin.component';
+import { OrderComponent } from './Components/order/order.component';
+import { AuthInterceptor } from './Components/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -74,7 +76,8 @@ import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilitie
     ImagesForAdminDialogComponent,
     RoomsForAdminComponent,
     AddFacilitiesComponent,
-    ChooseFacilitiesForAdminComponent
+    ChooseFacilitiesForAdminComponent,
+    OrderComponent
   ],
   imports: [
     BrowserModule,
@@ -109,6 +112,14 @@ import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilitie
       }
     })
 ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ]
 })
+
 export class AppModule { }

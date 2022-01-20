@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
@@ -9,6 +8,8 @@ import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
 import { ImageDialogData } from 'src/app/Core/image-dialog-data';
+import { OrderComponent } from '../order/order.component';
+import { AccountService } from 'src/app/account.service';
 
 @Component({
   selector: 'app-rooms',
@@ -17,8 +18,7 @@ import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 })
 export class RoomsComponent implements OnInit {
   @Input() public hotelId?: number;
-  
-  public roomsForm: FormGroup;
+
   public readonly tableColumns: string[] = [
     'image',
     'name', 
@@ -29,21 +29,16 @@ export class RoomsComponent implements OnInit {
   ];
   public rooms: Room[] = [];
 
-  public get roomsReservedNumber(): AbstractControl | null {
-    return this.roomsForm.get('roomsReservedNumber');
+  public get isClient(): boolean {
+    return this.accountService.isClient;
   }
 
   public constructor(
-    private readonly formBuilder: FormBuilder,
     private readonly imageService: ImageService,
     private readonly matDialog: MatDialog,
-    private readonly hotelService: HotelService
+    private readonly hotelService: HotelService,
+    private readonly accountService: AccountService
   ) { 
-    this.roomsForm = formBuilder.group(
-      {
-        roomsReservedNumber: ['']
-      }
-    );
   }
 
   public ngOnInit(): void {
@@ -83,8 +78,14 @@ export class RoomsComponent implements OnInit {
     );
   }
 
-  public getNumberArray(room: Room): number[] {
-    return [ ...Array(room.number).keys() ].map(n => n + 1);
+  public showReserveDialog(room: Room): void {
+    this.matDialog.open(
+      OrderComponent,
+      {
+        width: '300px',
+        data: room
+      }
+    );
   }
 
   private fetchRooms(): void {

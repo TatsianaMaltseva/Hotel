@@ -1,4 +1,3 @@
-<form [formGroup]="roomsForm">
     <table mat-table [dataSource]="rooms">
         <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
         <tr *matRowDef="let row; columns: tableColumns" mat-row></tr>
@@ -49,16 +48,15 @@
         </ng-container>
 
         <ng-container matColumnDef="reserve">
-            <th mat-header-cell *matHeaderCellDef>Reserve</th>
+            <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let room">
-                <mat-form-field>
-                    <mat-select matInput formControlName="roomsReservedNumber">
-                        <mat-option *ngFor="let roomsToReserveNumber of getNumberArray(room)" [value]="roomsToReserveNumber">
-                            {{ roomsToReserveNumber }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <button
+                    *ngIf="isClient"
+                    mat-button
+                    (click)="showReserveDialog(room)"
+                >
+                    Reserve
+                </button>
             </td>
         </ng-container>
     </table>
-</form>
