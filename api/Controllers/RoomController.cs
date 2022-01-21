@@ -72,7 +72,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{hotelId}/rooms")]
         [HttpGet]
         public async Task<IActionResult> GetRooms([FromRoute] int hotelId, [FromQuery] OrderDateParams orderDateParams) //params do not map
-       {
+        {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");

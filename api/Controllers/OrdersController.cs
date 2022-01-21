@@ -1,10 +1,14 @@
-﻿using iTechArt.Hotels.Api.Entities;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.JoinEntities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using static iTechArt.Hotels.Api.Constants;
 
@@ -15,10 +19,12 @@ namespace iTechArt.Hotels.Api.Controllers
     public class OrdersController : Controller
     {
         private readonly HotelsDatabaseContext _hotelsDb;
+        private readonly IMapper _mapper;
 
-        public OrdersController(HotelsDatabaseContext hotelDb)
+        public OrdersController(HotelsDatabaseContext hotelDb, IMapper mapper)
         {
             _hotelsDb = hotelDb;
+            _mapper = mapper;
         }
 
         [Route("orders/calculate-price")]
@@ -78,7 +84,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("orders/{orderId}")]
         [HttpGet]
-        [Authorize(Roles = Role.Client)]
+        //[Authorize(Roles = Role.Client)]
         public async Task<IActionResult> GetOrder([FromRoute] int orderId)
         {
             OrderEntity orderEntity = await GetOrderEntity(orderId);
@@ -89,7 +95,16 @@ namespace iTechArt.Hotels.Api.Controllers
             RoomEntity roomEntity = await GetRoomEntityAsync(orderEntity.RoomId);
             HotelEntity hotelEntity = await GetHotelEntityAsync(roomEntity.HotelId);
 
-            Order order = new ()
+            FacilityOrderEntity[] facilityOrderEntities = await GetFacilityOrderEntities(orderId);
+
+            List<Facility> facilities = new();
+
+            foreach (FacilityOrderEntity facilityOrder in facilityOrderEntities)
+            {
+                facilities.Add(await GetFacility(facilityOrder.FacilityId));
+            }
+
+            Order order = new()
             {
                 HotelName = hotelEntity.Name,
                 Country = hotelEntity.Country,
@@ -99,7 +114,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 Sleeps = roomEntity.Sleeps,
                 Price = orderEntity.Price,
                 CheckInDate = orderEntity.CheckInDate,
-                CheckOutDate = orderEntity.CheckOutDate
+                CheckOutDate = orderEntity.CheckOutDate,
+                Facilities = facilities
             };
             return Ok(order);
         }
@@ -115,6 +131,17 @@ namespace iTechArt.Hotels.Api.Controllers
         private Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
             _hotelsDb.Hotels
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
+
+        private Task<FacilityOrderEntity[]> GetFacilityOrderEntities(int orderId) =>
+            _hotelsDb.FacilityOrder
+                .Where(fo => fo.OrderId == orderId)
+                .ToArrayAsync();
+
+        private Task<Facility> GetFacility(int facilityId) =>
+            _hotelsDb.Facilities
+                .Where(f => f.Id == facilityId)
+                .ProjectTo<Facility>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
 
         private Task<OrderEntity> GetOrderEntity(int orderId) =>
             _hotelsDb.Orders

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace iTechArt.Hotels.Api.Models
 {
@@ -11,7 +12,7 @@ namespace iTechArt.Hotels.Api.Models
         public string RoomName { get; set; }
         public int Sleeps { get; set; }
         public decimal Price { get; set; }
-        public Facility[] Facilities { get; set; }
+        public List<Facility> Facilities { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
     }
