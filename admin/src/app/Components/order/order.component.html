@@ -1,21 +1,15 @@
-<mat-card-title>{{ room.name }}</mat-card-title>
-<p>Room price: US${{ room.price }}</p>
+<mat-card-title>{{ order.room.name }}</mat-card-title>
+<p>Room price: US${{ order.room.price }}</p>
 <p>Selected facilities:</p>
-<div *ngFor="let facility of room.facilities">
+<div *ngFor="let facility of order.room.facilities">
     <p *ngIf="facility.checked">
         {{ facility.name }} 
-        <span *ngIf="facility.price">- US${{facility.price}}</span>
+        <span *ngIf="facility.price">- US${{ facility.price }}</span>
         <span *ngIf="!facility.price">- free</span>
     </p>
 </div>
-<p>Sleeps: {{ room.sleeps }}</p>
-<mat-card-title *ngIf="totalPrice">
-    Total price US${{ totalPrice }}
+<p>Sleeps: {{ order.room.sleeps }}</p>
+<mat-card-title *ngIf="order.price">
+    Total price US${{ order.price }}
 </mat-card-title>
 <button mat-button (click)="reserveRoom()">Confirm order</button>
-
-    <!-- <mat-grid-tile colspan="3" rowspan="1">
-        <mat-card-actions>
-            <button mat-flat-button [routerLink]="['/hotels', hotel.id]">Look</button>
-        </mat-card-actions>
-    </mat-grid-tile> -->

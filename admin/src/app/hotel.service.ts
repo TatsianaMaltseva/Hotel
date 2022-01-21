@@ -9,6 +9,12 @@ import { HotelCardResponse } from './Core/hotel-card-response';
 import { Hotel, HotelToEdit } from './Dtos/hotel';
 import { Room } from './Dtos/room';
 import { HotelFilterParameters } from './Core/filter-parameters';
+import { OrderDateParams } from './Core/order-date-params';
+
+export interface OrderDate {
+  startDate: Date;
+  endDate: Date;
+} 
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +56,14 @@ export class HotelService {
   public getRooms(hotelId: number): Observable<Room[]> {
     return this.http.get<Room[]>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms`
+    );
+  }
+
+  public getRoomsWithDate(hotelId: number, date: OrderDateParams): Observable<Room[]> {
+    const params = new HttpParams({ fromObject: date.dateParams as Params });
+    return this.http.get<Room[]>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms`,
+      { params: params }
     );
   }
 }

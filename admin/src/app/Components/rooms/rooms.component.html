@@ -1,62 +1,96 @@
-    <table mat-table [dataSource]="rooms">
-        <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
-        <tr *matRowDef="let row; columns: tableColumns" mat-row></tr>
-        <ng-container matColumnDef="image">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let room">
-                <div class="img__wrap">
-                    <img 
-                        *ngIf="room.mainImageId"
-                        class="img__img" 
-                        [src]="createImagePath(room)"
-                    />
-                    <p class="img__description" (click)="showImagesDialog(room)">
-                        Click to see other images
-                    </p>
-                </div>
-            </td>
-        </ng-container>
+<mat-form-field>
+    <mat-label>Enter a date range</mat-label>
+    <mat-date-range-input 
+        [formGroup]="dateForm" 
+        [rangePicker]="picker" 
+        [min]="minDate"
+    >
+        <input 
+            matStartDate 
+            readonly 
+            formControlName="checkInDate" 
+            placeholder="check in"
+        >
+        <input 
+            matEndDate 
+            readonly 
+            formControlName="checkOutDate" 
+            placeholder="check out"
+        >
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+    <mat-error>Select date to move in and move out to see which rooms are available</mat-error>
+</mat-form-field> 
+<button 
+    mat-button 
+    (click)="fetchRooms()" 
+    [disabled]="dateForm.invalid"
+>
+    Check availability
+</button>
 
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Room type</th>
-            <td mat-cell *matCellDef="let room">{{ room.name }}</td>
-        </ng-container>
+<table mat-table [dataSource]="rooms">
+    <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: tableColumns" mat-row></tr>
+    <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let room">
+            <div class="img__wrap">
+                <img 
+                    *ngIf="room.mainImageId"
+                    class="img__img" 
+                    [src]="createImagePath(room)"
+                />
+                <p class="img__description" (click)="showImagesDialog(room)">
+                    Click to see other images
+                </p>
+            </div>
+        </td>
+    </ng-container>
 
-        <ng-container matColumnDef="sleeps">
-            <th mat-header-cell *matHeaderCellDef>Sleeps</th>
-            <td mat-cell *matCellDef="let room">{{ room.sleeps }}</td>
-        </ng-container>
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Room type</th>
+        <td mat-cell *matCellDef="let room">{{ room.name }}</td>
+    </ng-container>
 
-        <ng-container matColumnDef="facilities">
-            <th mat-header-cell *matHeaderCellDef>Additional facilities</th>
-            <td mat-cell *matCellDef="let room">
-                <mat-checkbox
-                    *ngFor="let facility of room.facilities"
-                    class="facilities"
-                    (change)="changeFacilityStatus($event, room, facility)"
-                >
-                    {{ facility.name }} 
-                    <span *ngIf="facility.price">- US${{facility.price}}</span>
-                    <span *ngIf="!facility.price">- free</span>
-                </mat-checkbox>
-            </td>
-        </ng-container>
+    <ng-container matColumnDef="sleeps">
+        <th mat-header-cell *matHeaderCellDef>Sleeps</th>
+        <td mat-cell *matCellDef="let room">{{ room.sleeps }}</td>
+    </ng-container>
 
-        <ng-container matColumnDef="price">
-            <th mat-header-cell *matHeaderCellDef>Price</th>
-            <td mat-cell *matCellDef="let room">US${{ room.price }}</td>
-        </ng-container>
+    <ng-container matColumnDef="facilities">
+        <th mat-header-cell *matHeaderCellDef>Additional facilities</th>
+        <td mat-cell *matCellDef="let room">
+            <mat-checkbox
+                *ngFor="let facility of room.facilities"
+                class="facilities"
+                (change)="changeFacilityStatus($event, room, facility)"
+            >
+                {{ facility.name }} 
+                <span *ngIf="facility.price">- US${{facility.price}}</span>
+                <span *ngIf="!facility.price">- free</span>
+            </mat-checkbox>
+        </td>
+    </ng-container>
 
-        <ng-container matColumnDef="reserve">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let room">
-                <button
-                    *ngIf="isClient"
-                    mat-button
-                    (click)="showReserveDialog(room)"
-                >
-                    Reserve
-                </button>
-            </td>
-        </ng-container>
-    </table>
+    <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let room">US${{ room.price }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="reserve">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let room">
+            <button
+                *ngIf="isClient"
+                mat-button
+                (click)="showReserveDialog(room)"
+                [disabled]="dateForm.invalid"
+            >
+                Reserve
+                <mat-icon *ngIf="dateForm.invalid" matTooltip="Select check in and check out dates to reserve room">help_outline</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+</table>

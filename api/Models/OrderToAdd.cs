@@ -1,5 +1,4 @@
-﻿using DataAnnotationsExtensions;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace iTechArt.Hotels.Api.Models
 {
@@ -7,5 +6,8 @@ namespace iTechArt.Hotels.Api.Models
     {
         [Required]
         public Room Room { get; set; }
+
+        [Required]
+        public OrderDateParams OrderDateParams { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Room } from 'src/app/Dtos/room';
 import { Facility } from 'src/app/Dtos/facility';
@@ -10,6 +11,9 @@ import { ImagesDialogComponent } from '../images-dialog/images-dialog.component'
 import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 import { OrderComponent } from '../order/order.component';
 import { AccountService } from 'src/app/account.service';
+import { OrderDateParams } from 'src/app/Core/order-date-params';
+import { Observable } from 'rxjs';
+import { Order } from 'src/app/Dtos/order';
 
 @Component({
   selector: 'app-rooms',
@@ -19,6 +23,7 @@ import { AccountService } from 'src/app/account.service';
 export class RoomsComponent implements OnInit {
   @Input() public hotelId?: number;
 
+  public dateForm: FormGroup;
   public readonly tableColumns: string[] = [
     'image',
     'name', 
@@ -28,17 +33,31 @@ export class RoomsComponent implements OnInit {
     'reserve'
   ];
   public rooms: Room[] = [];
+  public minDate = new Date();
 
   public get isClient(): boolean {
     return this.accountService.isClient;
+  }
+
+  public get checkInDate(): AbstractControl | null {
+    return this.dateForm.get('checkInDate');
+  }
+
+  public get checkOutDate(): AbstractControl | null {
+    return this.dateForm.get('checkOutDate');
   }
 
   public constructor(
     private readonly imageService: ImageService,
     private readonly matDialog: MatDialog,
     private readonly hotelService: HotelService,
-    private readonly accountService: AccountService
+    private readonly accountService: AccountService,
+    private readonly formBuilder: FormBuilder
   ) { 
+    this.dateForm = formBuilder. group({
+      checkInDate: ['', [Validators.required]],
+      checkOutDate: ['', [Validators.required]]
+    });
   }
 
   public ngOnInit(): void {
@@ -79,21 +98,34 @@ export class RoomsComponent implements OnInit {
   }
 
   public showReserveDialog(room: Room): void {
+    const orderDateParams = new OrderDateParams(
+      this.checkInDate?.value, 
+      this.checkOutDate?.value
+    ).dateParams;
     this.matDialog.open(
       OrderComponent,
       {
         width: '300px',
-        data: room
+        data: { room, orderDateParams } as Order 
       }
     );
   }
 
-  private fetchRooms(): void {
+  public fetchRooms(): void {
     if (this.hotelId === undefined) {
       return;
     }
-    this.hotelService
-      .getRooms(this.hotelId)
+    let getRooms$: Observable<Room[]>;
+    if (this.checkInDate?.value && this.checkOutDate?.value) {
+      const date = new OrderDateParams(
+        this.checkInDate?.value, 
+        this.checkOutDate?.value
+      );
+      getRooms$ = this.hotelService.getRoomsWithDate(this.hotelId, date);
+    } else {
+      getRooms$ = this.hotelService.getRooms(this.hotelId);
+    }
+    getRooms$
       .subscribe(
         (rooms) => {
           this.rooms = rooms;

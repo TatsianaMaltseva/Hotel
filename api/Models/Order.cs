@@ -1,4 +1,6 @@
-﻿namespace iTechArt.Hotels.Api.Models
+﻿using System;
+
+namespace iTechArt.Hotels.Api.Models
 {
     public class Order
     {
@@ -8,7 +10,9 @@
         public string Address { get; set; }
         public string RoomName { get; set; }
         public int Sleeps { get; set; }
-        public int Price { get; set; }
+        public decimal Price { get; set; }
         public Facility[] Facilities { get; set; }
+        public DateTime CheckInDate { get; set; }
+        public DateTime CheckOutDate { get; set; }
     }
 }
