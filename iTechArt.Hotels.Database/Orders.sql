@@ -7,5 +7,5 @@
     [CheckOutDate] DATE NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC),
     FOREIGN KEY ([AccountId]) REFERENCES [dbo].[Accounts]([Id]) ON DELETE CASCADE,
-    FOREIGN KEY ([RoomId]) REFERENCES [dbo].[Rooms]([Id]) 
+    FOREIGN KEY ([RoomId]) REFERENCES [dbo].[Rooms]([Id])
 )

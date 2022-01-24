@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
-import { Hotel, HotelToEdit } from 'src/app/Dtos/hotel';
+import { Hotel, HotelToAdd, HotelToEdit } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
 import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 
@@ -18,12 +18,13 @@ import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admi
 })
 export class HotelForAdminComponent implements OnInit {
   public hotelId?: number;
-  public changeHotelForm: FormGroup;
+  public hotelForm: FormGroup;
   public loading = false;
   public isHotelLoaded = false;
+  public isHotelExistInDataBase = false;
 
   public get hotel(): Hotel {
-    return { id: this.hotelId, ...this.changeHotelForm.value } as Hotel;
+    return { id: this.hotelId, ...this.hotelForm.value } as Hotel;
   }
 
   public constructor(
@@ -31,14 +32,39 @@ export class HotelForAdminComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar,
-    private readonly matDialog: MatDialog
+    private readonly matDialog: MatDialog,
+    private readonly router: Router
   ) {
-    this.changeHotelForm = formBuilder.group(
+    this.hotelForm = formBuilder.group(
       {
-        name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
-        country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],
-        city: ['', Validators.maxLength(hotelParamsMaxLenght.city)],
-        address: ['', Validators.maxLength(hotelParamsMaxLenght.address)],
+        name: [
+          '', 
+          [
+            Validators.required,
+            Validators.maxLength(hotelParamsMaxLenght.name)
+          ]
+        ],
+        country: [
+          '', 
+          [
+            Validators.required,
+            Validators.maxLength(hotelParamsMaxLenght.country)
+          ]
+        ],
+        city: [
+          '', 
+          [
+            Validators.required,
+            Validators.maxLength(hotelParamsMaxLenght.city)
+          ]
+        ],
+        address: [
+          '', 
+          [
+            Validators.required,
+            Validators.maxLength(hotelParamsMaxLenght.address)
+          ]
+        ],
         description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
         mainImageId: []
       }
@@ -46,6 +72,11 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    if (this.route.routeConfig?.path?.includes('add-new')) {
+      this.isHotelExistInDataBase = false;
+      this.isHotelLoaded = true;
+      return;
+    }
     const id: string | null = this.route.snapshot.paramMap.get('id');
     if (!id || !this.isValidId(id)) {
       this.openErrorSnackBar('Hotel id is not valid');
@@ -56,17 +87,25 @@ export class HotelForAdminComponent implements OnInit {
     }
   }
 
+  public checkIfHasRequiredError(controlName: string): boolean | undefined {
+    return this.hotelForm.get(controlName)?.hasError('required');
+  }
+
+  public checkIfHasMaxErrorError(controlName: string): boolean | undefined {
+    return this.hotelForm.get(controlName)?.hasError('maxlength');
+  }
+
   public editHotel(): void {
     if (!this.hotelId) {
       return;
     }
     this.hotelService
-      .editHotel(this.hotelId, this.changeHotelForm.value as HotelToEdit)
+      .editHotel(this.hotelId, this.hotelForm.value as HotelToEdit)
       .subscribe();
   }
 
   public getMaxLengthValue(controlName: string): number {
-    return this.changeHotelForm.get(controlName)?.errors?.maxlength.requiredLength;
+    return this.hotelForm.get(controlName)?.errors?.maxlength.requiredLength;
   }
 
   public openFacilitiesDialog(): void {
@@ -77,6 +116,16 @@ export class HotelForAdminComponent implements OnInit {
         data: { hotelId: this.hotelId } as FacilititesDialogData
       }
     );
+  }
+
+  public addHotel(): void {
+    this.hotelService
+      .addHotel(this.hotelForm.value as HotelToAdd)
+      .subscribe(
+        (hotelId: number) => {
+          this.router.navigate(['hotels', hotelId, 'edit']);
+        }
+      );
   }
 
   private openErrorSnackBar(errorMessage: string): void {
@@ -99,7 +148,8 @@ export class HotelForAdminComponent implements OnInit {
       .subscribe(
         (hotel) => {
           const { id, ...data } = hotel;
-          this.changeHotelForm.patchValue(data);
+          this.hotelForm.patchValue(data);
+          this.isHotelExistInDataBase = true;
           this.isHotelLoaded = true;
         },
         (serverError: HttpErrorResponse) => {

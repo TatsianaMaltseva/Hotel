@@ -20,6 +20,7 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
+        private readonly string dateFormat = "dd MMMM yyyy";
 
         public OrdersController(HotelsDatabaseContext hotelDb, IMapper mapper)
         {
@@ -50,7 +51,6 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Client)]
         public async Task<IActionResult> AddOrder([FromBody] OrderToAdd order)
         {
-            //check if there is at least one room that is not booked for this dates
             if (!await CheckIfRoomExists(order.Room.Id))
             {
                 return BadRequest("Such room does not exist");
@@ -84,13 +84,17 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("orders/{orderId}")]
         [HttpGet]
-        //[Authorize(Roles = Role.Client)]
+        [Authorize(Roles = Role.Client)]
         public async Task<IActionResult> GetOrder([FromRoute] int orderId)
         {
             OrderEntity orderEntity = await GetOrderEntity(orderId);
             if (orderEntity == null)
             {
                 return BadRequest("Such order does not exist");
+            }
+            if (Convert.ToInt32(User.Identity.Name) != orderEntity.Id)
+            {
+                return BadRequest("Wrong credentials");
             }
             RoomEntity roomEntity = await GetRoomEntityAsync(orderEntity.RoomId);
             HotelEntity hotelEntity = await GetHotelEntityAsync(roomEntity.HotelId);
@@ -113,11 +117,53 @@ namespace iTechArt.Hotels.Api.Controllers
                 RoomName = roomEntity.Name,
                 Sleeps = roomEntity.Sleeps,
                 Price = orderEntity.Price,
-                CheckInDate = orderEntity.CheckInDate,
-                CheckOutDate = orderEntity.CheckOutDate,
+                CheckInDate = orderEntity.CheckInDate.ToString(dateFormat),
+                CheckOutDate = orderEntity.CheckOutDate.ToString(dateFormat),
                 Facilities = facilities
             };
             return Ok(order);
+        }
+
+        [Route("orders")]
+        [HttpGet]
+        [Authorize(Roles = Role.Client)]
+        public async Task<IActionResult> GetOrders()
+        {
+            List<OrderEntity> orderEntities = await _hotelsDb.Orders
+                .Where(order => order.AccountId == Convert.ToInt32(User.Identity.Name))
+                .ToListAsync();
+
+            List<Order> ordersToReturn = new List<Order>();
+            foreach (OrderEntity orderEntity in orderEntities)
+            {
+                RoomEntity roomEntity = await GetRoomEntityAsync(orderEntity.RoomId);
+                HotelEntity hotelEntity = await GetHotelEntityAsync(roomEntity.HotelId);
+                FacilityOrderEntity[] facilityOrderEntities = await GetFacilityOrderEntities(orderEntity.Id);
+
+                List<Facility> facilities = new();
+
+                foreach (FacilityOrderEntity facilityOrder in facilityOrderEntities)
+                {
+                    facilities.Add(await GetFacility(facilityOrder.FacilityId));
+                }
+
+                Order order = new()
+                {
+                    HotelName = hotelEntity.Name,
+                    Country = hotelEntity.Country,
+                    City = hotelEntity.City,
+                    Address = hotelEntity.Address,
+                    RoomName = roomEntity.Name,
+                    Sleeps = roomEntity.Sleeps,
+                    Price = orderEntity.Price,
+                    CheckInDate = orderEntity.CheckInDate.ToString(dateFormat),
+                    CheckOutDate = orderEntity.CheckOutDate.ToString(dateFormat),
+                    Facilities = facilities
+                };
+
+                ordersToReturn.Add(order);
+            }
+            return Ok(ordersToReturn);
         }
 
         private Task<RoomEntity> GetRoomEntityAsync(int roomId) =>

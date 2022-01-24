@@ -1,0 +1,29 @@
+<div class="wrapper">
+    <app-hotels-filter></app-hotels-filter>
+    <div class="cards">
+        <mat-card class="card" *ngFor="let order of orders">
+            <mat-grid-list cols="6" rowHeight="60px">
+                <mat-grid-tile colspan="6" rowspan="1">
+                    <mat-card-title>{{ order.country }} - {{ order.city }} - {{ order.hotelName }} - {{ order.roomName }}</mat-card-title>
+                </mat-grid-tile>
+                <mat-grid-tile *ngIf="order.facilities.length" colspan="6">
+                    <mat-chip-list *ngFor="let facility of order.facilities">
+                        <mat-chip>{{facility.name}}</mat-chip>
+                    </mat-chip-list>
+                </mat-grid-tile>
+                <mat-grid-tile colspan="6" rowspan="1">
+                    {{ order.checkInDate }} - {{ order.checkOutDate }}
+                </mat-grid-tile>
+                <mat-grid-tile colspan="3" rowspan="1">
+                    Address: {{ order.address }}
+                </mat-grid-tile>
+                <mat-grid-tile colspan="1" rowspan="1">
+                    Sleeps: {{ order.sleeps }}
+                </mat-grid-tile>
+                <mat-grid-tile colspan="2" rowspan="1">
+                    Price: US${{ order.price }}
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-card>
+    </div>
+</div>

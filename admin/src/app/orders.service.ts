@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Order } from './Dtos/order';
-import { Room } from './Dtos/room';
+import { Order, OrderToShow } from './Dtos/order';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +28,12 @@ export class OrderService {
     return this.http.post<string>(
       `${this.apiUrl}api/orders`,
       order
+    );
+  }
+  
+  public getOrders(): Observable<OrderToShow[]> {
+    return this.http.get<OrderToShow[]>(
+      `${this.apiUrl}api/orders`
     );
   }
 }

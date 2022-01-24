@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AccountService } from 'src/app/account.service';
 import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/custom-validators';
+import { AccountParams } from 'src/app/Core/validation-params';
 
 @Component({
   selector: 'app-change-password',
@@ -17,6 +18,7 @@ export class ChangePasswordComponent{
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
   public passwordsStateMatcher = new ConfirmValidParentMatcher('notSame');
+  public passwordMinLength = AccountParams.passwordMinLength;
 
   public get oldPassword(): AbstractControl | null {
     return this.changePasswordForm.get('oldPassword');
@@ -38,7 +40,13 @@ export class ChangePasswordComponent{
   ) {
       this.changePasswordForm = formBuilder.group(
         {
-          oldPassword: ['', Validators.required],
+          oldPassword: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(this.passwordMinLength)
+            ]
+          ],
           newPassword: ['', Validators.required],
           confirmNewPassword: ['']
         },

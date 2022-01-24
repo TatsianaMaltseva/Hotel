@@ -6,6 +6,7 @@ import { ChangePasswordComponent } from './Components/change-password/change-pas
 import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.component';
 import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-admin.component';
 import { HotelComponent } from './Components/hotel/hotel.component';
+import { OrdersListComponent } from './Components/orders-list/orders-list.component';
 import { roles } from './Core/roles';
 import { AuthGuard } from './Guards/auth.guard';
 import { RoleGuard } from './Guards/role.guard';
@@ -13,6 +14,14 @@ import { RoleGuard } from './Guards/role.guard';
 const routes: Routes = [
   { path: '', redirectTo: '/hotels', pathMatch: 'full' },
   { path: 'hotels', component: HotelCardsComponent },
+  { 
+    path: 'hotels/add-new', 
+    canActivate: [RoleGuard],
+    data: {
+      roles: [roles.admin]
+    },
+    component: HotelForAdminComponent 
+  },
   { path: 'hotels/:id', component: HotelComponent },
   { 
     path: 'hotels/:id/edit', 
@@ -34,7 +43,8 @@ const routes: Routes = [
       roles: [roles.admin]
     },
     component: AddFacilitiesComponent
-  }
+  },
+  { path: 'orders', component: OrdersListComponent }
 ];
 
 @NgModule({

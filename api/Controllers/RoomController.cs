@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using static iTechArt.Hotels.Api.Constants;
+using System.Collections.Generic;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -71,20 +72,34 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms")]
         [HttpGet]
-        public async Task<IActionResult> GetRooms([FromRoute] int hotelId, [FromQuery] OrderDateParams orderDateParams) //params do not map
+        public async Task<IActionResult> GetRooms([FromRoute] int hotelId, [FromQuery] OrderDateParams orderDateParams)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            Room[] rooms = await _hotelsDb.Rooms
+            List<Room> rooms = await _hotelsDb.Rooms
                 .Where(r => r.HotelId == hotelId)
                 .ProjectTo<Room>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
+                .ToListAsync();
+
             foreach (Room room in rooms)
             {
+                OrderEntity[] orders = await _hotelsDb.Orders
+                    .Where(order => order.RoomId == room.Id)
+                    .ToArrayAsync();
+                foreach (OrderEntity order in orders)
+                {
+                    if (!(orderDateParams.CheckInDate < order.CheckInDate
+                        || orderDateParams.CheckInDate > order.CheckOutDate))
+                    {
+                        room.Number -= 1;
+                    }
+                }
                 room.Facilities = await GetRoomFacilitiesAsync(room.Id);
             }
+
+            rooms.RemoveAll(room => room.Number <= 0);
             return Ok(rooms);
         }
 

@@ -12,3 +12,5 @@ export interface Hotel {
 }
 
 export type HotelToEdit = Omit<Hotel, 'id'>;
+
+export type HotelToAdd = Omit<Hotel, 'id' | 'mainImageId' | 'facilities'>;

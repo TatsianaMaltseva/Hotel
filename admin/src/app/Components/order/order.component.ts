@@ -26,7 +26,11 @@ export class OrderComponent implements OnInit {
   public reserveRoom(): void {
     this.orderService
       .reserveRoom(this.order)
-      .subscribe();
+      .subscribe(
+        () => {
+          this.order.room.number -= 1;
+        }
+      );
   }
 
   private calculateOrderPrice(): void {

@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from 'src/app/auth.service';
 import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/custom-validators';
+import { AccountParams } from 'src/app/Core/validation-params';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,8 @@ export class RegisterComponent {
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
   public passwordsStateMatcher = new ConfirmValidParentMatcher('notSame');
-  
+  public passwordMinLength =  AccountParams.passwordMinLength;
+
   @Output() public returnBackEvent = new EventEmitter<void>();
 
   public get email(): AbstractControl | null {
@@ -43,7 +45,13 @@ export class RegisterComponent {
               Validators.email
             ]
           ],
-          password: ['', Validators.required],
+          password: [
+            '', 
+            [
+              Validators.required,
+              Validators.minLength(this.passwordMinLength)
+            ]
+          ],
           confirmPassword: ['']
         },
         { 

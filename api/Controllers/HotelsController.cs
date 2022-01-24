@@ -69,7 +69,7 @@ namespace iTechArt.Hotels.Api.Controllers
             HotelEntity hotel = _mapper.Map<HotelEntity>(request);
             await _hotelsDb.AddAsync(hotel);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetHotel), new { hotelId = hotel.Id }, null);
+            return CreatedAtAction(nameof(GetHotel), new { hotelId = hotel.Id }, hotel.Id);
         }
 
         [Route("{hotelId}")]

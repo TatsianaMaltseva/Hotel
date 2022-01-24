@@ -54,6 +54,7 @@ import { AddFacilitiesComponent } from './Components/add-facilities/add-faciliti
 import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilities-for-admin/choose-facilities-for-admin.component';
 import { OrderComponent } from './Components/order/order.component';
 import { AuthInterceptor } from './Components/auth.interceptor';
+import { OrdersListComponent } from './Components/orders-list/orders-list.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { AuthInterceptor } from './Components/auth.interceptor';
     RoomsForAdminComponent,
     AddFacilitiesComponent,
     ChooseFacilitiesForAdminComponent,
-    OrderComponent
+    OrderComponent,
+    OrdersListComponent
   ],
   imports: [
     BrowserModule,

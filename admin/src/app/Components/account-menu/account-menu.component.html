@@ -3,5 +3,11 @@
     <button mat-menu-item>
         <a routerLink="/change-password">Change password</a>
     </button>
-    <button *ngIf="isClient" mat-menu-item>My orders</button>
+    <button 
+        *ngIf="isClient"
+        mat-menu-item
+        routerLink="/orders"
+    >
+        My orders
+    </button>
 </mat-menu>

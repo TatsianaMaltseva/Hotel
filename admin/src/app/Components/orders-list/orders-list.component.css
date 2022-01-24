@@ -6,7 +6,7 @@
 }
 
 app-hotels-filter {
-    width: 26%;
+    width: 24%;
     margin-right: 5px;
 }
 
@@ -14,22 +14,6 @@ app-hotels-filter {
     margin: 2%;
 }
 
-img {
-    min-height: 250px;
-    min-width: 250px;
-}
-
 .cards {
     width: 70%;
-}
-
-button {
-    background-color: #B814D8;
-    color: white;
-    margin-left: 40%;
-}
-
-mat-paginator {
-    margin-top: 2%;
-    margin-right: 34%;
 }

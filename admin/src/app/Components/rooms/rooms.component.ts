@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 import { Room } from 'src/app/Dtos/room';
 import { Facility } from 'src/app/Dtos/facility';
@@ -12,7 +13,6 @@ import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 import { OrderComponent } from '../order/order.component';
 import { AccountService } from 'src/app/account.service';
 import { OrderDateParams } from 'src/app/Core/order-date-params';
-import { Observable } from 'rxjs';
 import { Order } from 'src/app/Dtos/order';
 
 @Component({
@@ -30,6 +30,7 @@ export class RoomsComponent implements OnInit {
     'sleeps', 
     'facilities', 
     'price', 
+    'number',
     'reserve'
   ];
   public rooms: Room[] = [];

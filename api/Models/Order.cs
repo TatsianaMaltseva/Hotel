@@ -13,7 +13,7 @@ namespace iTechArt.Hotels.Api.Models
         public int Sleeps { get; set; }
         public decimal Price { get; set; }
         public List<Facility> Facilities { get; set; }
-        public DateTime CheckInDate { get; set; }
-        public DateTime CheckOutDate { get; set; }
+        public string CheckInDate { get; set; }
+        public string CheckOutDate { get; set; }
     }
 }

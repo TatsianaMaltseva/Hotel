@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PageParameters } from 'src/app/Core/page-parameters';
 import { HotelCardResponse } from './Core/hotel-card-response';
-import { Hotel, HotelToEdit } from './Dtos/hotel';
+import { Hotel, HotelToAdd, HotelToEdit } from './Dtos/hotel';
 import { Room } from './Dtos/room';
 import { HotelFilterParameters } from './Core/filter-parameters';
 import { OrderDateParams } from './Core/order-date-params';
@@ -28,8 +28,8 @@ export class HotelService {
     this.apiUrl = environment.api;
   }
 
-  public getHotel(id: number): Observable<Hotel> {
-    return this.http.get<Hotel>(`${this.apiUrl}api/hotels/${id}`);
+  public getHotel(hotelId: number): Observable<Hotel> {
+    return this.http.get<Hotel>(`${this.apiUrl}api/hotels/${hotelId}`);
   }
 
   public getHotelCards(pageParameters: PageParameters, filterParameters: HotelFilterParameters): Observable<HotelCardResponse> {
@@ -60,10 +60,17 @@ export class HotelService {
   }
 
   public getRoomsWithDate(hotelId: number, date: OrderDateParams): Observable<Room[]> {
-    const params = new HttpParams({ fromObject: date.dateParams as Params });
+    const params = new HttpParams({ fromObject: date.dateParamsFormatted as Params });
     return this.http.get<Room[]>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms`,
       { params: params }
+    );
+  }
+
+  public addHotel(hotel: HotelToAdd): Observable<number> {
+    return this.http.post<number>(
+      `${this.apiUrl}api/hotels`,
+      { ...hotel }
     );
   }
 }

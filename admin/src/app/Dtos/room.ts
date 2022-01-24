@@ -6,6 +6,7 @@ export interface Room {
   name: string;
   sleeps: number;
   price: number;
+  number: number;
   facilities: Facility[];
   mainImageId?: number;
 }
