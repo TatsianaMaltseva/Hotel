@@ -27,7 +27,9 @@ export class HotelFilterService{
     this.apiUrl = environment.api;
   }
 
-  public updateParameters(data: Params | any): void {
+  public updateParameters(
+    //checkInDate: string, checkOutDate: string, 
+    data: Params | any): void {
     this.name = data.name;
   }
 

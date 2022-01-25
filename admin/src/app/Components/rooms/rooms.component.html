@@ -1,35 +1,4 @@
-<mat-form-field>
-    <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input 
-        [formGroup]="dateForm" 
-        [rangePicker]="picker" 
-        [min]="minDate"
-    >
-        <input 
-            matStartDate 
-            readonly 
-            formControlName="checkInDate" 
-            placeholder="check in"
-        >
-        <input 
-            matEndDate 
-            readonly 
-            formControlName="checkOutDate" 
-            placeholder="check out"
-        >
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
-    <mat-error>Select date to move in and move out to see which rooms are available</mat-error>
-</mat-form-field> 
-<button 
-    mat-button 
-    (click)="fetchRooms()" 
-    [disabled]="dateForm.invalid"
->
-    Check availability
-</button>
-
+<p> Rooms available from {{ checkInDate }} to {{ checkOutDate }}</p>
 <table mat-table [dataSource]="rooms">
     <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
     <tr *matRowDef="let row; columns: tableColumns" mat-row></tr>
@@ -91,10 +60,8 @@
                 *ngIf="isClient"
                 mat-button
                 (click)="showReserveDialog(room)"
-                [disabled]="dateForm.invalid"
             >
                 Reserve
-                <mat-icon *ngIf="dateForm.invalid" matTooltip="Select check in and check out dates to reserve room">help_outline</mat-icon>
             </button>
         </td>
     </ng-container>

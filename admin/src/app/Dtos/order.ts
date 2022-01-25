@@ -18,5 +18,5 @@ export interface OrderToShow {
     price: number;
     facilities: Facility[];
     checkInDate: string;
-    checkOutDate: string;
+    checkOutDate: string; // as OderDateParams
 }

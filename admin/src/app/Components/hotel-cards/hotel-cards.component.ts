@@ -8,6 +8,7 @@ import { HotelCard } from 'src/app/Dtos/hotelCard';
 import { ImageService } from 'src/app/image.service';
 import { HotelCardResponse } from 'src/app/Core/hotel-card-response';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
+import { DateService } from '../../date.service';
 
 @Component({
   selector: 'app-hotel-cards',
@@ -20,12 +21,17 @@ export class HotelCardsComponent implements OnInit {
   public hotelCount: number = 0;
   public readonly pageParameters = new PageParameters(2);
 
+  public get isDateEntered(): boolean {
+    return !!(this.dateService.checkInDate && this.dateService.checkOutDate);
+  }
+
   public constructor(
     private readonly hotelService: HotelService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly imageService: ImageService,
-    private readonly hotelFilterService: HotelFilterService
+    private readonly hotelFilterService: HotelFilterService,
+    private readonly dateService: DateService
   ) {
   }
 

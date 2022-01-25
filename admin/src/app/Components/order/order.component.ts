@@ -1,8 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Order } from 'src/app/Dtos/order';
+import { Room } from 'src/app/Dtos/room';
 import { OrderService } from 'src/app/orders.service';
+import { DateService } from '../../date.service';
 
 @Component({
   selector: 'app-order',
@@ -13,10 +15,19 @@ export class OrderComponent implements OnInit {
   public order: Order;
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: Order,
-    private readonly orderService: OrderService
+    @Inject(MAT_DIALOG_DATA) public room: Room,
+    private readonly orderService: OrderService,
+    private readonly dateService: DateService,
+    private readonly dialogRef: MatDialogRef<OrderComponent>
   ) { 
-    this.order = data;
+    console.log(room);
+    this.order = {
+      room: room,
+      orderDateParams: {
+        checkInDate: this.dateService.checkInDate,
+        checkOutDate: this.dateService.checkOutDate
+      }
+    };
   }
 
   public ngOnInit(): void {
@@ -29,6 +40,7 @@ export class OrderComponent implements OnInit {
       .subscribe(
         () => {
           this.order.room.number -= 1;
+          this.dialogRef.close();
         }
       );
   }

@@ -1,4 +1,29 @@
 <aside>
+    <mat-form-field>
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input 
+            [formGroup]="dateForm" 
+            [rangePicker]="picker" 
+            [min]="today"
+        >
+            <input 
+                matStartDate 
+                readonly 
+                formControlName="checkInDate" 
+                placeholder="check in"
+            >
+            <input 
+                matEndDate 
+                readonly 
+                formControlName="checkOutDate" 
+                placeholder="check out"
+            >
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-error>Select date to move in and move out to see which rooms are available</mat-error>
+    </mat-form-field> 
+
     <mat-form-field [formGroup]="filterForm">
         <mat-label>Hotel name</mat-label>
         <input
@@ -16,13 +41,15 @@
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>
+    <p></p>
     <mat-card-actions>
         <button 
             mat-button
-            [disabled]="filterForm.invalid"
+            [disabled]="dateForm.invalid"
             (click)="updateUrl()"
         >
             Find hotels
+            <mat-icon *ngIf="dateForm.invalid" matTooltip="Select check in and check out dates to reserve room">help_outline</mat-icon>
         </button>
     </mat-card-actions>
 </aside>
