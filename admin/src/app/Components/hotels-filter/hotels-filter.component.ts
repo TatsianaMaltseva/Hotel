@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Params, Router } from '@angular/router';
-import * as dayjs from 'dayjs';
 
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
@@ -14,7 +13,6 @@ import { DateService } from '../../date.service';
 export class HotelsFilterComponent implements OnInit {
   public names: string[] = [];
   public filterForm: FormGroup;
-  public dateForm: FormGroup;
   public today = new Date();
 
   public get name(): AbstractControl | null {
@@ -29,12 +27,7 @@ export class HotelsFilterComponent implements OnInit {
   ) {
     this.filterForm = formBuilder.group(
       {
-        name: ['', Validators.maxLength(hotelParamsMaxLenght.name)]
-      }
-    );
-
-    this.dateForm = formBuilder.group(
-      {
+        name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
         checkInDate: ['', [Validators.required]],
         checkOutDate: ['', [Validators.required]]
       }
@@ -54,18 +47,13 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public updateUrl(): void {
-    const format = 'YYYY-MM-DD';
-    const checkInValue = this.dateForm.get('checkInDate')?.value;
-    const checkOutValue = this.dateForm.get('checkOutDate')?.value;
-    const checkInDate = dayjs(new Date(checkInValue)).format(format);
-    const checkOutDate = dayjs(new Date(checkOutValue)).format(format);
+    const checkInDate = this.filterForm.get('checkInDate')?.value;
+    const checkOutDate = this.filterForm.get('checkOutDate')?.value;
 
-    this.hotelFilterService.updateParameters( 
-      //checkInDate, checkOutDate, 
-      this.filterForm.value);
+    this.hotelFilterService.updateParameters(this.filterForm.value);
 
     this.dateService.updateDateParams(checkInDate, checkOutDate);
-    const params =  { checkInDate, checkOutDate, ...this.hotelFilterService.filterParameters } as Params;
+    const params =  { ...this.hotelFilterService.filterParameters } as Params;
     
     void this.router.navigate(
       [],

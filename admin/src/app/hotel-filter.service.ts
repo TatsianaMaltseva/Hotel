@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
+import * as dayjs from 'dayjs';
 
 import { environment } from 'src/environments/environment';
 import { HotelFilterParameters } from './Core/filter-parameters';
@@ -11,12 +12,16 @@ import { HotelFilterParameters } from './Core/filter-parameters';
 })
 export class HotelFilterService{
   public name: string = '';
+  public checkInDate: string = '';
+  public checkOutDate: string = '';
   private readonly autocompleteVariantNumber = 2;
   private readonly apiUrl: string;
 
   public get filterParameters(): HotelFilterParameters {
     const filter: HotelFilterParameters = {
-      name: this.name
+      name: this.name,
+      checkInDate: this.checkInDate,
+      checkOutDate: this.checkOutDate
     };
     return filter;
   }
@@ -27,10 +32,11 @@ export class HotelFilterService{
     this.apiUrl = environment.api;
   }
 
-  public updateParameters(
-    //checkInDate: string, checkOutDate: string, 
-    data: Params | any): void {
+  public updateParameters(data: Params | any): void {
+    const format = 'YYYY-MM-DD';
     this.name = data.name;
+    this.checkInDate = dayjs(new Date(data.checkInDate)).format(format);
+    this.checkOutDate = dayjs(new Date(data.checkOutDate)).format(format);
   }
 
   public getHotelNames(enteredName: string): Observable<string[]> {

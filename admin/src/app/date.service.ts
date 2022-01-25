@@ -1,3 +1,4 @@
+import * as dayjs from 'dayjs';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -6,9 +7,10 @@ import { Injectable } from '@angular/core';
 export class DateService {
   public checkInDate: string = '';
   public checkOutDate: string = '';
+  private readonly format = 'YYYY-MM-DD';
 
-  public updateDateParams(checkInDate: string, checkOutDate: string): void {
-    this.checkInDate = checkInDate;
-    this.checkOutDate = checkOutDate;
+  public updateDateParams(checkInValue: string, checkOutValue: string): void {
+    this.checkInDate = dayjs(new Date(checkInValue)).format(this.format);
+    this.checkOutDate = dayjs(new Date(checkOutValue)).format(this.format);
   }
 }

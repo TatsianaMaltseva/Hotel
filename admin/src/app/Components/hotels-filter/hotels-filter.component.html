@@ -2,7 +2,7 @@
     <mat-form-field>
         <mat-label>Enter a date range</mat-label>
         <mat-date-range-input 
-            [formGroup]="dateForm" 
+            [formGroup]="filterForm" 
             [rangePicker]="picker" 
             [min]="today"
         >
@@ -45,11 +45,11 @@
     <mat-card-actions>
         <button 
             mat-button
-            [disabled]="dateForm.invalid"
+            [disabled]="filterForm.invalid"
             (click)="updateUrl()"
         >
             Find hotels
-            <mat-icon *ngIf="dateForm.invalid" matTooltip="Select check in and check out dates to reserve room">help_outline</mat-icon>
+            <mat-icon *ngIf="filterForm.invalid" matTooltip="Select check in and check out dates to reserve room">help_outline</mat-icon>
         </button>
     </mat-card-actions>
 </aside>
