@@ -11,7 +11,8 @@ import { ImagesDialogComponent } from '../images-dialog/images-dialog.component'
 import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 import { OrderComponent } from '../order/order.component';
 import { AccountService } from 'src/app/account.service';
-import { DateService } from '../../date.service';
+import { HotelFilterService } from 'src/app/hotel-filter.service';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-rooms',
@@ -36,6 +37,10 @@ export class RoomsComponent implements OnInit {
   public rooms: Room[] = [];
   public minDate = new Date();
 
+  public get IsLoggedIn(): boolean {
+    return this.authService.isLoggedIn;
+  }
+
   public get isClient(): boolean {
     return this.accountService.isClient;
   }
@@ -46,7 +51,8 @@ export class RoomsComponent implements OnInit {
     private readonly hotelService: HotelService,
     private readonly accountService: AccountService,
     private readonly formBuilder: FormBuilder,
-    private readonly dateService: DateService
+    private readonly hotelFilterService: HotelFilterService,
+    private readonly authService: AuthService
   ) { 
     this.dateForm = formBuilder. group(
       {
@@ -57,8 +63,8 @@ export class RoomsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.checkInDate = this.dateService.checkInDate;
-    this.checkOutDate = this.dateService.checkOutDate;
+    this.checkInDate = this.hotelFilterService.checkInDate;
+    this.checkOutDate = this.hotelFilterService.checkOutDate;
     this.fetchRooms();
   }
 
@@ -104,9 +110,11 @@ export class RoomsComponent implements OnInit {
       }
     );
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.rooms = this.rooms.filter(room => room.number > 0);
-      }
+    dialogRef
+      .afterClosed()
+      .subscribe(() => {
+          this.rooms = this.rooms.filter(room => room.number > 0);
+        }
     );
   }
 

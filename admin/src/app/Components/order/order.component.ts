@@ -3,8 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Order } from 'src/app/Dtos/order';
 import { Room } from 'src/app/Dtos/room';
+import { HotelFilterService } from 'src/app/hotel-filter.service';
 import { OrderService } from 'src/app/orders.service';
-import { DateService } from '../../date.service';
 
 @Component({
   selector: 'app-order',
@@ -17,15 +17,15 @@ export class OrderComponent implements OnInit {
   public constructor(
     @Inject(MAT_DIALOG_DATA) public room: Room,
     private readonly orderService: OrderService,
-    private readonly dateService: DateService,
+    private readonly hotelFilterService: HotelFilterService,
     private readonly dialogRef: MatDialogRef<OrderComponent>
   ) { 
     console.log(room);
     this.order = {
       room: room,
       orderDateParams: {
-        checkInDate: this.dateService.checkInDate,
-        checkOutDate: this.dateService.checkOutDate
+        checkInDate: this.hotelFilterService.checkInDate,
+        checkOutDate: this.hotelFilterService.checkOutDate
       }
     };
   }

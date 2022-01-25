@@ -4,7 +4,6 @@ import { Params, Router } from '@angular/router';
 
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
-import { DateService } from '../../date.service';
 
 @Component({
   selector: 'app-hotels-filter',
@@ -22,8 +21,7 @@ export class HotelsFilterComponent implements OnInit {
   public constructor(
     private readonly hotelFilterService: HotelFilterService,
     private readonly formBuilder: FormBuilder,
-    private readonly router: Router,
-    private readonly dateService: DateService
+    private readonly router: Router
   ) {
     this.filterForm = formBuilder.group(
       {
@@ -47,14 +45,8 @@ export class HotelsFilterComponent implements OnInit {
   }
 
   public updateUrl(): void {
-    const checkInDate = this.filterForm.get('checkInDate')?.value;
-    const checkOutDate = this.filterForm.get('checkOutDate')?.value;
-
     this.hotelFilterService.updateParameters(this.filterForm.value);
-
-    this.dateService.updateDateParams(checkInDate, checkOutDate);
-    const params =  { ...this.hotelFilterService.filterParameters } as Params;
-    
+    const params = this.hotelFilterService.filterParameters  as Params;
     void this.router.navigate(
       [],
       {

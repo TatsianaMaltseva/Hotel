@@ -57,11 +57,12 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let room">
             <button
-                *ngIf="isClient"
                 mat-button
                 (click)="showReserveDialog(room)"
+                [disabled]="!isClient"
             >
                 Reserve
+                <mat-icon *ngIf="!isClient" matTooltip="Log in as client to make button active">help_outline</mat-icon>
             </button>
         </td>
     </ng-container>

@@ -10,7 +10,7 @@ import { Hotel, HotelToAdd, HotelToEdit } from './Dtos/hotel';
 import { Room } from './Dtos/room';
 import { HotelFilterParameters } from './Core/filter-parameters';
 import { OrderDateParams } from './Core/order-date-params';
-import { DateService } from './date.service';
+import { HotelFilterService } from './hotel-filter.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class HotelService {
 
   public constructor(
     private readonly http: HttpClient,
-    private readonly dateService: DateService
+    private readonly hotelFilterService: HotelFilterService
   ) {
     this.apiUrl = environment.api;
   }
@@ -52,8 +52,8 @@ export class HotelService {
 
   public getRooms(hotelId: number): Observable<Room[]> {
     const orderDateParams = {
-      checkInDate: this.dateService.checkInDate,
-      checkOutDate: this.dateService.checkOutDate
+      checkInDate: this.hotelFilterService.checkInDate,
+      checkOutDate: this.hotelFilterService.checkOutDate
     } as OrderDateParams;
     const params = new HttpParams({ fromObject: orderDateParams as Params });
     return this.http.get<Room[]>(
