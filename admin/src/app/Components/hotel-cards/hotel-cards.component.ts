@@ -21,7 +21,7 @@ export class HotelCardsComponent implements OnInit {
   public readonly pageParameters = new PageParameters(2);
 
   public get isDateEntered(): boolean {
-    return !!(this.hotelFilterService.checkInDate && this.hotelFilterService.checkOutDate);
+    return this.hotelFilterService.isDateEntered;
   }
 
   public constructor(

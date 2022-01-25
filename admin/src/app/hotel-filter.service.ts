@@ -26,6 +26,10 @@ export class HotelFilterService{
     return filter;
   }
 
+  public get isDateEntered(): boolean {
+    return this.checkInDate !== '' && this.checkOutDate !== '';
+  }
+
   public constructor(
     private readonly http: HttpClient
   ) {

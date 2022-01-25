@@ -19,8 +19,7 @@ export class OrderComponent implements OnInit {
     private readonly orderService: OrderService,
     private readonly hotelFilterService: HotelFilterService,
     private readonly dialogRef: MatDialogRef<OrderComponent>
-  ) { 
-    console.log(room);
+  ) {
     this.order = {
       room: room,
       orderDateParams: {

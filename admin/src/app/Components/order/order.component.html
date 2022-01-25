@@ -1,4 +1,5 @@
 <mat-card-title>{{ order.room.name }}</mat-card-title>
+<p>Reserve from {{ order.orderDateParams.checkInDate }} to {{ order.orderDateParams.checkOutDate }}</p>
 <p>Room price: US${{ order.room.price }}</p>
 <p>Selected facilities:</p>
 <div *ngFor="let facility of order.room.facilities">

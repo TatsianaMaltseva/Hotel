@@ -105,7 +105,7 @@ export class RoomsComponent implements OnInit {
     const dialogRef = this.matDialog.open(
       OrderComponent,
       {
-        width: '300px',
+        width: '400px',
         data: room 
       }
     );
