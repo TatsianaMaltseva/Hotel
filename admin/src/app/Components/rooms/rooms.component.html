@@ -59,10 +59,10 @@
             <button
                 mat-button
                 (click)="showReserveDialog(room)"
-                [disabled]="!isClient"
+                [disabled]="!IsClient"
             >
                 Reserve
-                <mat-icon *ngIf="!isClient" matTooltip="Log in as client to make button active">help_outline</mat-icon>
+                <mat-icon *ngIf="!IsClient" matTooltip="Log in to make button active">help_outline</mat-icon>
             </button>
         </td>
     </ng-container>

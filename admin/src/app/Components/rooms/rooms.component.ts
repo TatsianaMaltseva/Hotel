@@ -37,11 +37,7 @@ export class RoomsComponent implements OnInit {
   public rooms: Room[] = [];
   public minDate = new Date();
 
-  public get IsLoggedIn(): boolean {
-    return this.authService.isLoggedIn;
-  }
-
-  public get isClient(): boolean {
+  public get IsClient(): boolean {
     return this.accountService.isClient;
   }
 
@@ -49,10 +45,9 @@ export class RoomsComponent implements OnInit {
     private readonly imageService: ImageService,
     private readonly matDialog: MatDialog,
     private readonly hotelService: HotelService,
-    private readonly accountService: AccountService,
     private readonly formBuilder: FormBuilder,
     private readonly hotelFilterService: HotelFilterService,
-    private readonly authService: AuthService
+    private readonly accountService: AccountService
   ) { 
     this.dateForm = formBuilder. group(
       {
