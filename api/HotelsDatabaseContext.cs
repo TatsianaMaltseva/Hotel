@@ -1,6 +1,9 @@
 ﻿using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.JoinEntities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
+using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api
 {
@@ -62,6 +65,14 @@ namespace iTechArt.Hotels.Api
                 entity.Property(e => e.Description)
                     .HasMaxLength(3000);
             });
+
+            var converter = new EnumToStringConverter<Realm>();
+            modelBuilder.Entity<FacilityEntity>()
+                .Property(facility => facility.Realm)
+                .HasConversion(
+                    realm => realm.ToString(),
+                    realm => (Realm)Enum.Parse(typeof(Realm), realm)
+                );
 
             modelBuilder.Entity<FacilityHotelEntity>()
                 .HasOne(fh => fh.Facility)

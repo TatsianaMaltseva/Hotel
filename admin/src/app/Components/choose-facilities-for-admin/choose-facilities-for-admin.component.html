@@ -1,12 +1,12 @@
 <div [formGroup]="facilitiesForm">
     <ng-container formArrayName="facilities">
-        <ng-container *ngFor="let facilityForm of facilities.controls; let i=index"> 
+        <ng-container *ngFor="let facilityForm of facilities.controls; let i = index"> 
             <div class="facility" [formGroupName]="i"> 
                 <mat-checkbox 
-                    class='name'
+                    class="name"
                     formControlName="checked"
                 >
-                    {{ facilityForm.value.name }} (id{{facilityForm.value.id}})
+                    {{ facilityForm.value.name }} (id{{ facilityForm.value.id }})
                 </mat-checkbox>
                 <mat-form-field *ngIf="roomId" class="price">
                     <span matPrefix>US$</span>

@@ -8,10 +8,10 @@
             public const string Client = "client";
         }
 
-        public static class Realm
+        public enum Realm
         {
-            public const string Hotel = "hotel";
-            public const string Room = "room";
+            Hotel,
+            Room
         }
     }
 }
