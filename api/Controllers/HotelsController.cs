@@ -32,6 +32,7 @@ namespace iTechArt.Hotels.Api.Controllers
         {
             Hotel hotel = await _hotelsDb.Hotels
                 .Where(hotel => hotel.Id == hotelId)
+                .Include(hotel => hotel.Facilities)
                 .ProjectTo<Hotel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
             if (hotel == null)
@@ -39,7 +40,6 @@ namespace iTechArt.Hotels.Api.Controllers
                 return NotFound($"Hotel with {hotelId} id does not exist");
             }
 
-            hotel.Facilities = await GetHotelFacilitiesAsync(hotelId);
             return Ok(hotel);
         }
 
@@ -104,22 +104,6 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Select(h => h.Name)
                 .ToArrayAsync();
             return names;
-        }
-
-        private Task<Facility[]> GetHotelFacilitiesAsync(int hotelId)
-        {
-            return _hotelsDb.Facilities
-               .Join(
-                    _hotelsDb.FacilityHotel.Where(fh => fh.HotelId == hotelId),
-                    facility => facility.Id,
-                    facilityHotel => facilityHotel.FacilityId,
-                    (facility, facilityHotel) => new Facility
-                    {
-                        Id = facility.Id,
-                        Name = facility.Name
-                    }
-                )
-               .ToArrayAsync();
         }
 
         private Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>

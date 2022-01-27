@@ -2,7 +2,7 @@
     <mat-card-title>Facilities</mat-card-title>
     <ng-container formArrayName="facilities">
         <ng-container *ngFor="let facilityForm of facilities.controls; let i = index">    
-            <div [formGroupName]="i">
+            <div class="card" [formGroupName]="i">
                 <mat-form-field>
                     <mat-label>Facility name</mat-label>
                     <input matInput formControlName="name">
@@ -21,7 +21,7 @@
                     </mat-select>
                     <mat-error>Realm is required</mat-error>
                 </mat-form-field>
-                <span *ngIf="facilityExistsInDatabase(facilityForm.value)" class="buttons">
+                <span *ngIf="facilityExistsInDatabase(facilityForm.value); else newFacilityButtons">
                     <span>id{{ facilityForm.value.id }}</span>
                     <button 
                         mat-button
@@ -34,7 +34,7 @@
                         <mat-icon>delete</mat-icon>delete
                     </button>
                 </span>
-                <span *ngIf="!facilityExistsInDatabase(facilityForm.value)" class="buttons">
+                <ng-template #newFacilityButtons>
                     <button 
                         mat-button
                         (click)="addFacility(facilityForm.value)"
@@ -45,7 +45,7 @@
                     <button mat-button (click)="deleteEmptyFacilityCard(i)">
                         <mat-icon>delete</mat-icon>delete
                     </button>
-                </span>
+                </ng-template>
             </div>
         </ng-container>
         <mat-error *ngIf="serverErrorResponse">

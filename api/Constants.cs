@@ -1,4 +1,6 @@
-﻿namespace iTechArt.Hotels.Api
+﻿using System.Text.Json.Serialization;
+
+namespace iTechArt.Hotels.Api
 {
     public static class Constants
     {
@@ -8,10 +10,11 @@
             public const string Client = "client";
         }
 
-        public static class Realm
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum Realm
         {
-            public const string Hotel = "hotel";
-            public const string Room = "room";
+            Hotel,
+            Room
         }
     }
 }

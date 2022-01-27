@@ -33,13 +33,15 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Client)]
         public async Task<decimal> CalculateOrderPrice([FromBody] OrderToAdd order)
         {
-            RoomEntity room = await GetRoomEntityAsync(order.Room.Id);
+            RoomEntity room = await _hotelsDb.Rooms.Where(room => room.Id == order.Room.Id)
+                .Include(room => room.FacilityRooms)
+                .FirstOrDefaultAsync();
             decimal pricePerDay = room.Price;
             foreach (Facility facility in order.Room.Facilities)
             {
                 if (facility.Checked)
                 {
-                    pricePerDay += (await GetFacilityRoomEntity(room.Id, facility.Id)).Price;
+                    pricePerDay += room.FacilityRooms.Where(facilityRoom => facilityRoom.FacilityId == facility.Id).FirstOrDefault().Price;
                 }
             }
             int days = (order.OrderDateParams.CheckOutDate - order.OrderDateParams.CheckInDate).Days;
@@ -55,27 +57,39 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("Such room does not exist");
             }
+
+            var facilities = new List<FacilityEntity>();
+            foreach(Facility facility in order.Room.Facilities)
+            {
+                if (facility.Checked == true)
+                {
+                    facilities.Add(await _hotelsDb.Facilities.FirstOrDefaultAsync(facilityEntity => facilityEntity.Id == facility.Id));
+                }
+            }
+            
+
             OrderEntity orderEntity = new()
             {
                 RoomId = order.Room.Id,
                 AccountId = Convert.ToInt32(User.Identity.Name),
                 Price = await CalculateOrderPrice(order),
                 CheckInDate = order.OrderDateParams.CheckInDate,
-                CheckOutDate = order.OrderDateParams.CheckOutDate
+                CheckOutDate = order.OrderDateParams.CheckOutDate,
+                Facilities = facilities
             };
 
-            foreach (Facility facility in order.Room.Facilities)
-            {
-                if (facility.Checked)
-                {
-                    FacilityOrderEntity facilityOrder = new()
-                    {
-                        FacilityId = facility.Id,
-                        OrderId = orderEntity.Id,
-                    };
-                    orderEntity.FacilityOrders.Add(facilityOrder);
-                }
-            }
+            //foreach (Facility facility in order.Room.Facilities)
+            //{
+            //    if (facility.Checked)
+            //    {
+            //        FacilityOrderEntity facilityOrder = new()
+            //        {
+            //            FacilityId = facility.Id,
+            //            OrderId = orderEntity.Id,
+            //        };
+            //        orderEntity.FacilityOrders.Add(facilityOrder);
+            //    }
+            //}
 
             await _hotelsDb.AddAsync(orderEntity);
             await _hotelsDb.SaveChangesAsync();
@@ -99,14 +113,14 @@ namespace iTechArt.Hotels.Api.Controllers
             RoomEntity roomEntity = await GetRoomEntityAsync(orderEntity.RoomId);
             HotelEntity hotelEntity = await GetHotelEntityAsync(roomEntity.HotelId);
 
-            FacilityOrderEntity[] facilityOrderEntities = await GetFacilityOrderEntities(orderId);
+            //FacilityOrderEntity[] facilityOrderEntities = await GetFacilityOrderEntities(orderId);
 
             List<Facility> facilities = new();
 
-            foreach (FacilityOrderEntity facilityOrder in facilityOrderEntities)
-            {
-                facilities.Add(await GetFacility(facilityOrder.FacilityId));
-            }
+            //foreach (FacilityOrderEntity facilityOrder in facilityOrderEntities)
+            //{
+            //    facilities.Add(await GetFacility(facilityOrder.FacilityId));
+            //}
 
             Order order = new()
             {
@@ -138,14 +152,14 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 RoomEntity roomEntity = await GetRoomEntityAsync(orderEntity.RoomId);
                 HotelEntity hotelEntity = await GetHotelEntityAsync(roomEntity.HotelId);
-                FacilityOrderEntity[] facilityOrderEntities = await GetFacilityOrderEntities(orderEntity.Id);
+                //FacilityOrderEntity[] facilityOrderEntities = await GetFacilityOrderEntities(orderEntity.Id);
 
                 List<Facility> facilities = new();
 
-                foreach (FacilityOrderEntity facilityOrder in facilityOrderEntities)
-                {
-                    facilities.Add(await GetFacility(facilityOrder.FacilityId));
-                }
+                //foreach (FacilityOrderEntity facilityOrder in facilityOrderEntities)
+                //{
+                //    facilities.Add(await GetFacility(facilityOrder.FacilityId));
+                //}
 
                 Order order = new()
                 {
@@ -178,10 +192,10 @@ namespace iTechArt.Hotels.Api.Controllers
             _hotelsDb.Hotels
                 .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
 
-        private Task<FacilityOrderEntity[]> GetFacilityOrderEntities(int orderId) =>
-            _hotelsDb.FacilityOrder
-                .Where(fo => fo.OrderId == orderId)
-                .ToArrayAsync();
+        //private Task<FacilityOrderEntity[]> GetFacilityOrderEntities(int orderId) =>
+        //    _hotelsDb.FacilityOrder
+        //        .Where(fo => fo.OrderId == orderId)
+        //        .ToArrayAsync();
 
         private Task<Facility> GetFacility(int facilityId) =>
             _hotelsDb.Facilities

@@ -31,19 +31,17 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such hotel does not exist");
             }
 
-            RoomEntity room = await GetRoomEntityAsync(roomId);
+            RoomEntity room = await _hotelsDb.Rooms
+                .Where(room => room.Id == roomId)
+                .Include(room => room.FacilityRooms)
+                .FirstOrDefaultAsync();
 
             if (room == null)
             {
                 return BadRequest("Such room does not exist");
             }
 
-            FacilityRoomEntity[] facilityRooms = await GetFacilityRoomsAsync(roomId);
-
-            foreach (FacilityRoomEntity facilityRoom in facilityRooms)
-            {
-                room.FacilityRooms.Remove(facilityRoom);
-            }
+            room.FacilityRooms.RemoveAll(facilityRoom => room.FacilityRooms.Contains(facilityRoom));
 
             foreach (Facility facility in facilities)
             {
@@ -58,15 +56,6 @@ namespace iTechArt.Hotels.Api.Controllers
             await _hotelsDb.SaveChangesAsync();
             return Ok();
         }
-
-        private Task<RoomEntity> GetRoomEntityAsync(int roomId) =>
-            _hotelsDb.Rooms
-                .FirstOrDefaultAsync(room => room.Id == roomId);
-
-        private Task<FacilityRoomEntity[]> GetFacilityRoomsAsync(int roomId) =>
-            _hotelsDb.FacilityRoom
-                .Where(fh => fh.RoomId == roomId)
-                .ToArrayAsync();
 
         private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
             _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);
