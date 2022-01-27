@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Models
 {
@@ -9,7 +10,6 @@ namespace iTechArt.Hotels.Api.Models
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(ValidationParams.Facility.RealmMaxLength)]
-        public string Realm { get; set; }
+        public Realm Realm { get; set; }
     }
 }

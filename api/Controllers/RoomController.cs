@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using static iTechArt.Hotels.Api.Constants;
+using System.Collections.Generic;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -77,33 +78,13 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("Such hotel does not exist");
             }
-            Room[] rooms = await _hotelsDb.Rooms
-                .Where(r => r.HotelId == hotelId)
-                .ProjectTo<Room>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
-            foreach (Room room in rooms)
-            {
-                room.Facilities = await GetRoomFacilitiesAsync(room.Id);
-            }
+            List<Room> rooms = await _hotelsDb.Hotels
+                .Where(h => h.Id == hotelId)
+                .Include(hotel => hotel.Rooms)
+                .ThenInclude(room => room.Facilities)
+                .Select(hotel => _mapper.Map<List<Room>>(hotel.Rooms))
+                .SingleOrDefaultAsync();
             return Ok(rooms);
-        }
-
-        private Task<Facility[]> GetRoomFacilitiesAsync(int roomId)
-        {
-            return _hotelsDb.Facilities
-                .Join(
-                    _hotelsDb.FacilityRoom.Where(fh => fh.RoomId == roomId),
-                    facility => facility.Id,
-                    facilityRoom => facilityRoom.FacilityId,
-                    (facility, facilityRoom) => new Facility
-                    {
-                        Id = facility.Id,
-                        Name = facility.Name,
-                        Price = facilityRoom.Price
-                    }
-                )
-                .OrderBy(facility => facility.Price)
-                .ToArrayAsync();
         }
 
         [Route("{hotelId}/rooms")]
@@ -116,8 +97,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such hotel does not exist");
             }
             RoomEntity room = _mapper.Map<RoomEntity>(request);
-            room.HotelId = hotelId;
-            await _hotelsDb.AddAsync(room);
+            HotelEntity hotel = await _hotelsDb.Hotels.Where(hotel => hotel.Id == hotelId).FirstOrDefaultAsync();
+            hotel.Rooms.Add(room);
             await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(GetRoom), new { hotelId, roomId = room.Id }, room.Id);
         }

@@ -5,7 +5,8 @@ import { ImageService } from 'src/app/image.service';
 
 @Component({
   selector: 'app-images-upload-button',
-  templateUrl: './images-upload-button.component.html'
+  templateUrl: './images-upload-button.component.html',
+  styleUrls: ['./images-upload-button.component.css']
 })
 export class ImagesUploadButtonComponent {
   @Input() public hotelId?: number;

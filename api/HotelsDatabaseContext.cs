@@ -1,9 +1,6 @@
 ﻿using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.JoinEntities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
-using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api
 {
@@ -66,33 +63,40 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(3000);
             });
 
-            var converter = new EnumToStringConverter<Realm>();
-            modelBuilder.Entity<FacilityEntity>()
-                .Property(facility => facility.Realm)
-                .HasConversion(
-                    realm => realm.ToString(),
-                    realm => (Realm)Enum.Parse(typeof(Realm), realm)
+            modelBuilder.Entity<HotelEntity>()
+                .HasMany(hotel => hotel.Rooms)
+                .WithOne()
+                .HasForeignKey(room => room.HotelId);
+
+            modelBuilder.Entity<HotelEntity>()
+                .HasMany(hotel => hotel.Facilities)
+                .WithMany(facility => facility.Hotels)
+                .UsingEntity<FacilityHotelEntity>(
+                    j => j
+                        .HasOne(fh => fh.Facility)
+                        .WithMany(f => f.FacilityHotels)
+                        .HasForeignKey(fh => fh.FacilityId),
+                    j => j
+                        .HasOne(fh => fh.Hotel)
+                        .WithMany(h => h.FacilityHotels)
+                        .HasForeignKey(fh => fh.HotelId),
+                    j => j.HasKey(j => j.Id)
                 );
 
-            modelBuilder.Entity<FacilityHotelEntity>()
-                .HasOne(fh => fh.Facility)
-                .WithMany(f => f.FacilityHotels)
-                .HasForeignKey(fh => fh.FacilityId);
-
-            modelBuilder.Entity<FacilityHotelEntity>()
-                .HasOne(fh => fh.Hotel)
-                .WithMany(h => h.FacilityHotels)
-                .HasForeignKey(fh => fh.HotelId);
-
-            modelBuilder.Entity<FacilityRoomEntity>()
-                .HasOne(fr => fr.Facility)
-                .WithMany(f => f.FacilityRooms)
-                .HasForeignKey(fr => fr.FacilityId);
-
-            modelBuilder.Entity<FacilityRoomEntity>()
-                .HasOne(fr => fr.Room)
-                .WithMany(f => f.FacilityRooms)
-                .HasForeignKey(fr => fr.RoomId);
+            modelBuilder.Entity<RoomEntity>()
+                .HasMany(room => room.Facilities)
+                .WithMany(facility => facility.Rooms)
+                .UsingEntity<FacilityRoomEntity>(
+                    j => j
+                        .HasOne(fr => fr.Facility)
+                        .WithMany(f => f.FacilityRooms)
+                        .HasForeignKey(fr => fr.FacilityId),
+                    j => j
+                        .HasOne(fr => fr.Room)
+                        .WithMany(r => r.FacilityRooms)
+                        .HasForeignKey(fr => fr.RoomId),
+                    j => j.HasKey(j => j.Id)
+                );
         }
     }
 }
