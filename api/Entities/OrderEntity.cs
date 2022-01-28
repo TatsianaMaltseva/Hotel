@@ -1,7 +1,5 @@
-﻿using iTechArt.Hotels.Api.JoinEntities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iTechArt.Hotels.Api.Entities
@@ -12,8 +10,13 @@ namespace iTechArt.Hotels.Api.Entities
 
         public int RoomId { get; set; }
 
-        public int AccountId { get; set; }
+        public RoomEntity Room { get; set; }
 
+        public int HotelId { get; set; }
+
+        public HotelEntity Hotel { get; set; }
+
+        public int AccountId { get; set; }
 
         [Column(TypeName = "decimal(19,4)")]
         public decimal Price { get; set; }
@@ -22,8 +25,6 @@ namespace iTechArt.Hotels.Api.Entities
 
         public DateTime CheckOutDate { get; set; }
 
-        public List<FacilityEntity> Facilities { get; set; } = new List<FacilityEntity>();
-
-        //public List<FacilityOrderEntity> FacilityOrders { get; }
+        public List<FacilityEntity> Facilities { get; set; }
     }
 }

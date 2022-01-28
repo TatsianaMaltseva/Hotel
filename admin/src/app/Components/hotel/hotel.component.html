@@ -15,7 +15,7 @@
           </mat-chip-list><br>
         {{ hotel.description }}
     </mat-card-content>
-    <app-rooms [hotelId]="hotelId"></app-rooms>
+    <app-rooms [hotel]="hotel"></app-rooms>
     <mat-card-actions>
         <button 
             *ngIf="isAdmin" 

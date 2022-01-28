@@ -1,10 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Room } from 'src/app/Dtos/room';
-import { Facility } from 'src/app/Dtos/facility';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
@@ -12,7 +10,8 @@ import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 import { OrderComponent } from '../order/order.component';
 import { AccountService } from 'src/app/account.service';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
-import { AuthService } from 'src/app/auth.service';
+import { Hotel } from 'src/app/Dtos/hotel';
+import { OrderDetails } from 'src/app/Dtos/order-details';
 
 @Component({
   selector: 'app-rooms',
@@ -20,7 +19,7 @@ import { AuthService } from 'src/app/auth.service';
   styleUrls: ['./rooms.component.css']
 })
 export class RoomsComponent implements OnInit {
-  @Input() public hotelId?: number;
+  @Input() public hotel?: Hotel;
   public checkInDate: string = '';
   public checkOutDate: string = '';
 
@@ -63,23 +62,13 @@ export class RoomsComponent implements OnInit {
     this.fetchRooms();
   }
 
-  public changeFacilityStatus(
-    event: MatCheckboxChange, 
-    room: Room, 
-    facility: Facility
-  ): void {
-    room.facilities
-      .filter(f => f.id == facility.id)
-      .map(f => f.checked = event.checked);
-  }
-
   public createImagePath(room: Room): string {
-    if (this.hotelId === undefined || room.mainImageId === undefined) {
+    if (!this.hotel || room.mainImageId === undefined) {
       return '';
     }
     let url = this.imageService
       .createImagePath(
-        this.hotelId, 
+        this.hotel.id, 
         room.mainImageId,
         room.id
       );
@@ -87,11 +76,14 @@ export class RoomsComponent implements OnInit {
   }
 
   public showImagesDialog(room: Room): void {
+    if (!this.hotel) {
+      return;
+    }
     this.matDialog.open(
       ImagesDialogComponent,
       {
         width: '85%',
-        data: { hotelId: this.hotelId, roomId: room.id } as ImageDialogData
+        data: { hotelId: this.hotel.id, roomId: room.id } as ImageDialogData
       }
     );
   }
@@ -101,7 +93,7 @@ export class RoomsComponent implements OnInit {
       OrderComponent,
       {
         width: '400px',
-        data: room 
+        data: { room, hotel: this.hotel } as OrderDetails
       }
     );
 
@@ -114,11 +106,11 @@ export class RoomsComponent implements OnInit {
   }
 
   public fetchRooms(): void {
-    if (this.hotelId === undefined) {
+    if (!this.hotel) {
       return;
     }
     this.hotelService
-      .getRooms(this.hotelId)
+      .getRooms(this.hotel.id)
       .subscribe(
         (rooms) => {
           this.rooms = rooms;

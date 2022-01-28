@@ -8,6 +8,9 @@ namespace iTechArt.Hotels.Api.Models
         public Room Room { get; set; }
 
         [Required]
+        public Hotel Hotel { get; set; }
+
+        [Required]
         public OrderDateParams OrderDateParams { get; set; }
     }
 }

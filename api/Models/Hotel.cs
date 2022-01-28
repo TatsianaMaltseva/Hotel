@@ -1,4 +1,6 @@
-﻿namespace iTechArt.Hotels.Api.Models
+﻿using System.Collections.Generic;
+
+namespace iTechArt.Hotels.Api.Models
 {
     public class Hotel
     {
@@ -8,7 +10,7 @@
         public string City { get; set; }
         public string Address { get; set; }
         public string Description { get; set; }
-        public string MainImageId { get; set; }
-        public Facility[] Facilities { get; set; }
+        public int? MainImageId { get; set; }
+        public List<Facility> Facilities { get; set; }
     }
 }

@@ -69,6 +69,16 @@ namespace iTechArt.Hotels.Api
                 .WithOne()
                 .HasForeignKey(room => room.HotelId);
 
+            modelBuilder.Entity<RoomEntity>()
+                .HasMany(room => room.Orders)
+                .WithOne(order => order.Room)
+                .HasForeignKey(order => order.RoomId);
+
+            modelBuilder.Entity<OrderEntity>()
+                .HasOne(order => order.Hotel)
+                .WithMany()
+                .HasForeignKey(order => order.HotelId);
+
             modelBuilder.Entity<HotelEntity>()
                 .HasMany(hotel => hotel.Facilities)
                 .WithMany(facility => facility.Hotels)

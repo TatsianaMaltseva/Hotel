@@ -1,22 +1,20 @@
 import { OrderDateParams } from '../Core/order-date-params';
 import { Facility } from './facility';
+import { Hotel } from './hotel';
 import { Room } from './room';
 
 export interface Order {
     room: Room;
+    hotel: Hotel;
     orderDateParams: OrderDateParams;
-    price?: number;
+    price: number;
 }
 
 export interface OrderToShow {
-    hotelName: string;
-    country: string;
-    city: string;
-    address: string;
-    roomName: string;
-    sleeps: number;
+    hotel: Hotel;
+    room: Room;
     price: number;
     facilities: Facility[];
     checkInDate: string;
-    checkOutDate: string; // as OderDateParams
+    checkOutDate: string;
 }

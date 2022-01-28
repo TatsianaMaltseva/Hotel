@@ -83,6 +83,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(h => h.Id == hotelId)
                 .Include(hotel => hotel.Rooms)
                 .ThenInclude(room => room.Facilities)
+                .Include(hotel => hotel.Rooms)
+                .ThenInclude(room => room.Orders)
                 .Select(hotel => _mapper.Map<List<Room>>(hotel.Rooms))
                 .SingleOrDefaultAsync();
 
