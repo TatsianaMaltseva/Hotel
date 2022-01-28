@@ -21,7 +21,6 @@ export class OrdersListComponent implements OnInit {
     .subscribe(
       (orders: OrderToShow[]) => {
         this.orders = orders;
-        console.log(this.orders);
       }
     );
   }

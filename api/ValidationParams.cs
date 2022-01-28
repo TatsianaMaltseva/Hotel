@@ -21,5 +21,10 @@
             public const int NameMaxLenght = 60;
             public const int RealmMaxLength = 30;
         }
+
+        public static class Account
+        {
+            public const int PasswordMinLength = 8;
+        }
     }
 }

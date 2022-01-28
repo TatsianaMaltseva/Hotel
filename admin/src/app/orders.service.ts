@@ -17,13 +17,6 @@ export class OrderService {
     this.apiUrl = environment.api;
   }
 
-  public calculateOrderPrice(order: Order): Observable<number> {
-    return this.http.post<number>(
-      `${this.apiUrl}api/orders/calculate-price`,
-      order
-    );
-  }
-
   public reserveRoom(order: Order): Observable<string> {
     return this.http.post<string>(
       `${this.apiUrl}api/orders`,

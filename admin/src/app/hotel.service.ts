@@ -41,13 +41,14 @@ export class HotelService {
   public editHotel(hotelId: number, editedHotel: HotelToEdit): Observable<string> {
     return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}`,
-      { ...editedHotel }
+      editedHotel
     );
   }
 
   public getHotelsCount(filterParameters: HotelFilterParameters): Observable<number> {
     const httpParams = filterParameters as Params;
-    return this.http.get<number>(`${this.apiUrl}api/hotels/count`, { params: httpParams });
+    return this.http.get<number>(`${this.apiUrl}api/hotels/count`,
+    { params: httpParams });
   }
 
   public getRooms(hotelId: number): Observable<Room[]> {
@@ -65,7 +66,7 @@ export class HotelService {
   public addHotel(hotel: HotelToAdd): Observable<number> {
     return this.http.post<number>(
       `${this.apiUrl}api/hotels`,
-      { ...hotel }
+      hotel
     );
   }
 }

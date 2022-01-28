@@ -46,7 +46,7 @@ export class HotelsFilterComponent implements OnInit {
 
   public updateUrl(): void {
     this.hotelFilterService.updateParameters(this.filterForm.value);
-    const params = this.hotelFilterService.filterParameters  as Params;
+    const params = this.hotelFilterService.filterParameters as Params;
     void this.router.navigate(
       [],
       {

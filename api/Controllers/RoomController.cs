@@ -102,7 +102,6 @@ namespace iTechArt.Hotels.Api.Controllers
                     }
                 }
             }
-
             rooms.RemoveAll(room => room.Number <= 0);
 
             return Ok(rooms);

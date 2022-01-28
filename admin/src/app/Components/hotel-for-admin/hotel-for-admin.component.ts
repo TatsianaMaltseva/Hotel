@@ -73,7 +73,6 @@ export class HotelForAdminComponent implements OnInit {
 
   public ngOnInit(): void {
     if (this.route.routeConfig?.path?.includes('add-new')) {
-      this.isHotelExistInDataBase = false;
       this.isHotelLoaded = true;
       return;
     }

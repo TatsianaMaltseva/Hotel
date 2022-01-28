@@ -22,7 +22,6 @@ export class RoomsComponent implements OnInit {
   @Input() public hotel?: Hotel;
   public checkInDate: string = '';
   public checkOutDate: string = '';
-
   public dateForm: FormGroup;
   public readonly tableColumns: string[] = [
     'image',
@@ -34,7 +33,6 @@ export class RoomsComponent implements OnInit {
     'reserve'
   ];
   public rooms: Room[] = [];
-  public minDate = new Date();
 
   public get IsClient(): boolean {
     return this.accountService.isClient;
@@ -48,7 +46,7 @@ export class RoomsComponent implements OnInit {
     private readonly hotelFilterService: HotelFilterService,
     private readonly accountService: AccountService
   ) { 
-    this.dateForm = formBuilder. group(
+    this.dateForm = formBuilder.group(
       {
         checkInDate: ['', [Validators.required]],
         checkOutDate: ['', [Validators.required]]
@@ -105,7 +103,7 @@ export class RoomsComponent implements OnInit {
     );
   }
 
-  public fetchRooms(): void {
+  private fetchRooms(): void {
     if (!this.hotel) {
       return;
     }
@@ -114,7 +112,6 @@ export class RoomsComponent implements OnInit {
       .subscribe(
         (rooms) => {
           this.rooms = rooms;
-          this.rooms.filter(room => room.number);
         }
       );
   }
