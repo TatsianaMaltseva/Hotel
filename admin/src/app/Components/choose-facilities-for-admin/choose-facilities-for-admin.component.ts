@@ -21,7 +21,7 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
   }
 
   private get emptyFacilityForm(): FormGroup {
-    const facilityGroup =  this.formBuilder.group(
+    const facilityGroup = this.formBuilder.group(
       {
         id: [],
         name: [],

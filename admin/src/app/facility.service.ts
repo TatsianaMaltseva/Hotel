@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Facility, realm } from './Dtos/facility';
+import { Facility, Realm } from './Dtos/facility';
 
 @Injectable({
   providedIn: 'root'
@@ -37,13 +37,13 @@ export class FacilityService {
 
   public changeHotelFacilities(hotelId: number, facilities: Facility[], roomId?: number): Observable<string> {
     if (!roomId) {
-      facilities.map(f => f.realm = realm.hotel);
+      facilities.map(f => f.realm = Realm.hotel);
       return this.http.put<string>(
         `${this.apiUrl}api/hotels/${hotelId}/facilities`,
         facilities
       );
     }
-    facilities.map(f => f.realm = realm.room);
+    facilities.map(f => f.realm = Realm.room);
     return this.http.put<string>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/facilities`,
       facilities

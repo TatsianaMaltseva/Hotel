@@ -111,11 +111,9 @@ namespace iTechArt.Hotels.Api.Controllers
                 .ProjectTo<Facility>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
-            List<FacilityHotelEntity> facilityHotels = await _hotelsDb.Hotels
-                .Where(hotel => hotel.Id == hotelId)
-                .Include(hotel => hotel.FacilityHotels)
-                .Select(hotel => hotel.FacilityHotels)
-                .FirstOrDefaultAsync();
+            List<FacilityHotelEntity> facilityHotels = await _hotelsDb.FacilityHotel
+                .Where(fh => fh.HotelId == hotelId)
+                .ToListAsync();
 
             foreach (FacilityHotelEntity facilityHotel in facilityHotels)
             {
