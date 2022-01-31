@@ -1,4 +1,39 @@
-<p> Rooms available from {{ checkInDate }} to {{ checkOutDate }}</p>
+<div *ngIf="!isAdmin">
+    <mat-form-field>
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input 
+            [formGroup]="dateForm" 
+            [rangePicker]="picker" 
+            [min]="today"
+        >
+            <input 
+                matStartDate 
+                readonly 
+                formControlName="checkInDate" 
+                placeholder="check in"
+            >
+            <input 
+                matEndDate 
+                readonly 
+                formControlName="checkOutDate" 
+                placeholder="check out"
+            >
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-error>Select date to move in and move out to see which rooms are available</mat-error>
+    </mat-form-field>
+
+    <button 
+        mat-button 
+        (click)="loadAvailableRooms()"
+        [disabled]="dateForm.invalid"
+    >
+        Show available rooms
+        <mat-icon matTooltip="Select dates and click me">help_outline</mat-icon>
+    </button>
+</div>
+
 <table mat-table [dataSource]="rooms">
     <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
     <tr *matRowDef="let row; columns: tableColumns" mat-row></tr>
@@ -50,13 +85,14 @@
     <ng-container matColumnDef="reserve">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let room">
-            <button
-                mat-button
+            <button 
+                *ngIf="!isAdmin"
+                mat-stroked-button
                 (click)="showReserveDialog(room)"
-                [disabled]="!IsClient"
+                [disabled]="!areAllShownRoomsAvailable"
             >
                 Reserve
-                <mat-icon *ngIf="!IsClient" matTooltip="Log in to make button active">help_outline</mat-icon>
+                <mat-icon matTooltip="Select dates">help_outline</mat-icon>
             </button>
         </td>
     </ng-container>

@@ -18,7 +18,7 @@
     <span *ngIf="facility.price; else free">- US${{ facility.price }}</span>
     <ng-template #free>- free</ng-template>
 </mat-checkbox>
-<p>Reserve from {{ order.orderDateParams.checkInDate }} to {{ order.orderDateParams.checkOutDate }} for {{ days }} day(s)</p>
+<p>Reserve from {{ order.checkInDate }} to {{ order.checkOutDate }} for {{ days }} day(s)</p>
 <p>Room price per day: US${{ order.room.price }}</p>
 <p>Sleeps: {{ order.room.sleeps }}</p>
 <mat-card-title *ngIf="order.price">

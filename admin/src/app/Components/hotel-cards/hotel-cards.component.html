@@ -1,6 +1,6 @@
 <div class="wrapper">
-    <app-hotels-filter></app-hotels-filter>
-    <div *ngIf="isDateEntered" class="cards">
+    <app-hotels-filter (filterParametersUpdated)="fetchHotels()"></app-hotels-filter>
+    <div class="cards">
         <mat-card class="card" *ngFor="let hotel of hotels">
             <mat-grid-list cols="5" rowHeight="60px">
                 <mat-grid-tile colspan="3" rowspan="1">
@@ -26,11 +26,10 @@
 </div>
 
 <mat-paginator
-    *ngIf="isDateEntered"
     [length]="hotelCount"
     [pageSizeOptions]="[1, 2, 5]"
-    [pageSize]="pageParameters.pageSize"
-    [pageIndex]="pageParameters.pageIndex"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
     (page)="onPaginationChange($event)"
 >
 </mat-paginator>

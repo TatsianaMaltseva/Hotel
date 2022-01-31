@@ -26,6 +26,13 @@ namespace iTechArt.Hotels.Api.Controllers
             _mapper = mapper;
         }
 
+        [Route("viewed-rooms/{roomId}")]
+        [HttpPost]
+        public async Task<IActionResult> AddRoomToViewed([FromRoute] int roomId)
+        {
+            return Ok();
+        }
+
         [Route("orders")]
         [HttpPost]
         [Authorize(Roles = Role.Client)]
@@ -59,8 +66,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 RoomId = order.Room.Id,
                 AccountId = Convert.ToInt32(User.Identity.Name),
                 Price = await CalculateOrderPrice(order),
-                CheckInDate = order.OrderDateParams.CheckInDate,
-                CheckOutDate = order.OrderDateParams.CheckOutDate,
+                CheckInDate = order.CheckInDate,
+                CheckOutDate = order.CheckOutDate,
                 Facilities = facilities
             };
 
@@ -131,7 +138,7 @@ namespace iTechArt.Hotels.Api.Controllers
                         .Price;
                 }
             }
-            int days = (order.OrderDateParams.CheckOutDate - order.OrderDateParams.CheckInDate).Days + 1;
+            int days = (order.CheckOutDate - order.CheckInDate).Days + 1;
             return days * pricePerDay;
         }
 

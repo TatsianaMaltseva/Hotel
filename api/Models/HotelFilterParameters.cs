@@ -5,8 +5,8 @@ namespace iTechArt.Hotels.Api.Models
 {
     public class HotelFilterParameters
     {
-        public DateTime CheckInDate { get; set; }
-        public DateTime CheckOutDate { get; set; }
+        public DateTime? CheckInDate { get; set; }
+        public DateTime? CheckOutDate { get; set; }
 
         [MaxLength(ValidationParams.Hotel.NameMaxLength)]
         public string Name { get; set; }

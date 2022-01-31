@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Params, Router } from '@angular/router';
+import { AccountService } from 'src/app/account.service';
 
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
@@ -10,24 +10,33 @@ import { HotelFilterService } from 'src/app/hotel-filter.service';
   templateUrl: './hotels-filter.component.html'
 })
 export class HotelsFilterComponent implements OnInit {
-  public names: string[] = [];
+  @Output() public filterParametersUpdated = new EventEmitter<void>();
+
   public filterForm: FormGroup;
+  public names: string[] = [];
   public today = new Date();
 
   public get name(): AbstractControl | null {
     return this.filterForm.get('name');
   }
 
+  public get isAdmin(): boolean {
+    return this.accountService.isAdmin;
+  }
+
   public constructor(
     private readonly hotelFilterService: HotelFilterService,
     private readonly formBuilder: FormBuilder,
-    private readonly router: Router
+    private readonly accountService: AccountService
   ) {
     this.filterForm = formBuilder.group(
       {
-        name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
-        checkInDate: ['', [Validators.required]],
-        checkOutDate: ['', [Validators.required]]
+        name: [
+          this.hotelFilterService.name, 
+          [Validators.maxLength(hotelParamsMaxLenght.name)]
+        ],
+        checkInDate: [this.hotelFilterService.checkInDate],
+        checkOutDate: [this.hotelFilterService.checkOutDate]
       }
     );
   }
@@ -44,16 +53,9 @@ export class HotelsFilterComponent implements OnInit {
       );
   }
 
-  public updateUrl(): void {
+  public updateFilterParameters(): void {
     this.hotelFilterService.updateParameters(this.filterForm.value);
-    const params = this.hotelFilterService.filterParameters as Params;
-    void this.router.navigate(
-      [],
-      {
-        queryParams: params,
-        queryParamsHandling: 'merge'
-      }
-    );
+    this.filterParametersUpdated.emit();
   }
 
   public fetchAutocompleteValues(value: string): void {

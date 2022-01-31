@@ -26,10 +26,6 @@ export class HotelFilterService{
     return filter;
   }
 
-  public get isDateEntered(): boolean {
-    return this.checkInDate !== '' && this.checkOutDate !== '';
-  }
-
   public constructor(
     private readonly http: HttpClient
   ) {
@@ -38,9 +34,15 @@ export class HotelFilterService{
 
   public updateParameters(data: Params | any): void {
     const format = 'YYYY-MM-DD';
-    this.name = data.name;
-    this.checkInDate = dayjs(new Date(data.checkInDate)).format(format);
-    this.checkOutDate = dayjs(new Date(data.checkOutDate)).format(format);
+    if (data.name) {
+      this.name = data.name;
+    }
+    if (data.checkInDate) {
+      this.checkInDate = dayjs(new Date(data.checkInDate)).format(format);
+    }
+    if (data.checkOutDate) {
+      this.checkOutDate = dayjs(new Date(data.checkOutDate)).format(format);
+    }
   }
 
   public getHotelNames(enteredName: string): Observable<string[]> {

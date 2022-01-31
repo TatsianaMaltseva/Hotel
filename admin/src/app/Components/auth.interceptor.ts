@@ -6,9 +6,9 @@ import {
   HttpInterceptor,
   HttpErrorResponse
 } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
 
 import { AuthenticationDialogComponent } from './authenticationDialog/authenticationDialog.component';
 

@@ -12,6 +12,7 @@ import { AccountService } from 'src/app/account.service';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { OrderDetails } from 'src/app/Dtos/order-details';
+import { OrderService } from 'src/app/orders.service';
 
 @Component({
   selector: 'app-rooms',
@@ -20,9 +21,9 @@ import { OrderDetails } from 'src/app/Dtos/order-details';
 })
 export class RoomsComponent implements OnInit {
   @Input() public hotel?: Hotel;
-  public checkInDate: string = '';
-  public checkOutDate: string = '';
+
   public dateForm: FormGroup;
+  public today = new Date();
   public readonly tableColumns: string[] = [
     'image',
     'name', 
@@ -33,9 +34,10 @@ export class RoomsComponent implements OnInit {
     'reserve'
   ];
   public rooms: Room[] = [];
+  public areAllShownRoomsAvailable: boolean = false;
 
-  public get IsClient(): boolean {
-    return this.accountService.isClient;
+  public get isAdmin(): boolean {
+    return this.accountService.isAdmin;
   }
 
   public constructor(
@@ -44,20 +46,42 @@ export class RoomsComponent implements OnInit {
     private readonly hotelService: HotelService,
     private readonly formBuilder: FormBuilder,
     private readonly hotelFilterService: HotelFilterService,
-    private readonly accountService: AccountService
+    private readonly accountService: AccountService,
+    public readonly orderService: OrderService
   ) { 
     this.dateForm = formBuilder.group(
       {
-        checkInDate: ['', [Validators.required]],
-        checkOutDate: ['', [Validators.required]]
+        checkInDate: [
+          this.hotelFilterService.checkInDate, 
+          [Validators.required]
+        ],
+        checkOutDate: [
+          this.hotelFilterService.checkOutDate, 
+          [Validators.required]
+        ]
       }
     );
+
+    this.dateForm
+      .valueChanges
+      .subscribe(
+        () => 
+          this.areAllShownRoomsAvailable = false
+        );
+
+    if (this.hotelFilterService.checkInDate && this.hotelFilterService.checkOutDate) {
+      this.areAllShownRoomsAvailable = true;
+    }
   }
 
   public ngOnInit(): void {
-    this.checkInDate = this.hotelFilterService.checkInDate;
-    this.checkOutDate = this.hotelFilterService.checkOutDate;
     this.fetchRooms();
+  }
+
+  public loadAvailableRooms(): void {
+    this.hotelFilterService.updateParameters(this.dateForm.value);
+    this.fetchRooms();
+    this.areAllShownRoomsAvailable = true;
   }
 
   public createImagePath(room: Room): string {
@@ -87,6 +111,7 @@ export class RoomsComponent implements OnInit {
   }
 
   public showReserveDialog(room: Room): void {
+    this.orderService.addRoomToViewed(room).subscribe();
     const dialogRef = this.matDialog.open(
       OrderComponent,
       {

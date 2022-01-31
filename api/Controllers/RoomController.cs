@@ -72,7 +72,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms")]
         [HttpGet]
-        public async Task<IActionResult> GetRooms([FromRoute] int hotelId, [FromQuery] OrderDateParams orderDateParams)
+        public async Task<IActionResult> GetRooms([FromRoute] int hotelId, [FromQuery] RoomFilterParams roomFilterParams)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
@@ -83,26 +83,27 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(h => h.Id == hotelId)
                 .Include(hotel => hotel.Rooms)
                 .ThenInclude(room => room.Facilities)
-                .Include(hotel => hotel.Rooms)
-                .ThenInclude(room => room.Orders)
                 .Select(hotel => _mapper.Map<List<Room>>(hotel.Rooms))
                 .SingleOrDefaultAsync();
 
-            foreach (Room room in rooms)
+            if (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
             {
-                OrderEntity[] orders = await _hotelsDb.Orders
-                    .Where(order => order.RoomId == room.Id)
-                    .ToArrayAsync();
-                foreach (OrderEntity order in orders)
+                foreach (Room room in rooms)
                 {
-                    if (!(orderDateParams.CheckInDate < order.CheckInDate
-                        || orderDateParams.CheckInDate > order.CheckOutDate))
+                    OrderEntity[] orders = await _hotelsDb.Orders
+                        .Where(order => order.RoomId == room.Id)
+                        .ToArrayAsync();
+                    foreach (OrderEntity order in orders)
                     {
-                        room.Number -= 1;
+                        if (!(roomFilterParams.CheckInDate < order.CheckInDate
+                            || roomFilterParams.CheckInDate > order.CheckOutDate))
+                        {
+                            room.Number -= 1;
+                        }
                     }
                 }
+                rooms.RemoveAll(room => room.Number <= 0);
             }
-            rooms.RemoveAll(room => room.Number <= 0);
 
             return Ok(rooms);
         }
@@ -117,7 +118,10 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such hotel does not exist");
             }
             RoomEntity room = _mapper.Map<RoomEntity>(request);
-            HotelEntity hotel = await _hotelsDb.Hotels.Where(hotel => hotel.Id == hotelId).FirstOrDefaultAsync();
+            HotelEntity hotel = await _hotelsDb.Hotels
+                .Where(hotel => hotel.Id == hotelId)
+                .Include(hotel => hotel.Rooms)
+                .FirstOrDefaultAsync();
             hotel.Rooms.Add(room);
             await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(GetRoom), new { hotelId, roomId = room.Id }, room.Id);

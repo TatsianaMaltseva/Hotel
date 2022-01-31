@@ -24,18 +24,18 @@ export class OrderComponent {
     private readonly hotelFilterService: HotelFilterService,
     private readonly dialogRef: MatDialogRef<OrderComponent>
   ) {
-    this.order = {
-      room: orderDetails.room,
-      hotel: orderDetails.hotel,
-      orderDateParams: {
+      this.order = {
+        room: orderDetails.room,
+        hotel: orderDetails.hotel,
         checkInDate: this.hotelFilterService.checkInDate,
-        checkOutDate: this.hotelFilterService.checkOutDate
-      },
-      price: orderDetails.room.price
-    };
-    this.days = dayjs(this.order.orderDateParams.checkOutDate).diff(
-      dayjs(this.order.orderDateParams.checkInDate), 
-      'day') + 1;
+        checkOutDate: this.hotelFilterService.checkOutDate,
+        price: orderDetails.room.price
+      };
+      this.days = dayjs(this.order.checkOutDate)
+          .diff(
+            dayjs(this.order.checkInDate), 
+            'day'
+          ) + 1;
   }
 
   public changeRoomFacilityStatus(
