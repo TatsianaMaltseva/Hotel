@@ -2,7 +2,7 @@
 <form *ngIf="isHotelLoaded" [formGroup]="hotelForm">
     <mat-card>
         <mat-card-title>Edit hotel information</mat-card-title>
-        <mat-card-content >
+        <mat-card-content>
             <mat-form-field class="input-field">
                 <mat-label>Name</mat-label>
                 <input matInput formControlName="name">
@@ -56,6 +56,33 @@
                     Description value should have less than {{ getMaxLengthValue('description') }} symbols
                 </mat-error>
             </mat-form-field>
+
+            <mat-form-field class="input-field">
+                <input 
+                    matInput
+                    readonly
+                    formControlName="checkInTime"
+                    placeholder="Check in time"
+                    [format]="24"
+                    [ngxTimepicker]="checkInTimepicker"
+                >
+            </mat-form-field>
+            <ngx-material-timepicker #checkInTimepicker></ngx-material-timepicker>
+            <mat-form-field class="input-field">
+                <input 
+                    matInput
+                    readonly
+                    formControlName="checkOutTime"
+                    placeholder="Check out time"
+                    [min]="hotel.checkInTime"
+                    [format]="24"
+                    [ngxTimepicker]="checkOutTimepicker"
+                >
+            </mat-form-field>
+            <ngx-material-timepicker #checkOutTimepicker></ngx-material-timepicker>
+            <mat-error *ngIf="serverErrorResponse">
+                {{ serverErrorResponse }}
+            </mat-error>
             <mat-card-actions *ngIf="isHotelExistInDataBase">
                 <button
                     mat-button

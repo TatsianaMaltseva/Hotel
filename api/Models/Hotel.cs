@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace iTechArt.Hotels.Api.Models
 {
@@ -12,5 +13,7 @@ namespace iTechArt.Hotels.Api.Models
         public string Description { get; set; }
         public int? MainImageId { get; set; }
         public List<Facility> Facilities { get; set; }
+        public string CheckInTime { get; set; }
+        public string CheckOutTime { get; set; }
     }
 }

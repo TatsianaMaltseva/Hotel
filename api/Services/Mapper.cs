@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.Models;
+using System;
 using System.Linq;
 
 namespace iTechArt.Hotels.Api.Services
@@ -8,6 +9,7 @@ namespace iTechArt.Hotels.Api.Services
     public class Mapper : Profile
     {
         private readonly string dateFormat = "dd MMMM yyyy";
+       
 
         public Mapper()
         {
@@ -15,8 +17,9 @@ namespace iTechArt.Hotels.Api.Services
                 .ReverseMap();
 
             CreateMap<HotelEntity, Hotel>()
+                .ForMember(h => h.CheckInTime, y => y.MapFrom(he => he.CheckInTime.ToString()))
+                .ForMember(h => h.CheckOutTime, y => y.MapFrom(he => he.CheckOutTime.ToString()))
                 .ReverseMap();
-
             CreateMap<HotelEntity, HotelToAdd>()
                 .ReverseMap();
 

@@ -1,5 +1,7 @@
 using iTechArt.Hotels.Api.JoinEntities;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iTechArt.Hotels.Api.Entities
 {
@@ -23,5 +25,11 @@ namespace iTechArt.Hotels.Api.Entities
         public List<FacilityEntity> Facilities { get; }
 
         public List<FacilityHotelEntity> FacilityHotels { get; }
+
+        [Column(TypeName = "time")]
+        public TimeSpan CheckInTime { get; set; }
+
+        [Column(TypeName = "time")]
+        public TimeSpan CheckOutTime { get; set; }
     }
 }

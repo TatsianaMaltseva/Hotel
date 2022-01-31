@@ -25,6 +25,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { JwtModule } from '@auth0/angular-jwt';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -113,6 +114,7 @@ import { OrdersListComponent } from './Components/orders-list/orders-list.compon
     MatDatepickerModule,
     MatNativeDateModule,
     MatTooltipModule,
+    NgxMaterialTimepickerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

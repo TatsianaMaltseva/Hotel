@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace iTechArt.Hotels.Api.Models
 {
@@ -22,5 +23,11 @@ namespace iTechArt.Hotels.Api.Models
 
         [MaxLength(ValidationParams.Hotel.DescriptionMaxLength)]
         public string Description { get; set; }
+
+        [Required]
+        public TimeSpan CheckInTime { get; set; }
+
+        [Required]
+        public TimeSpan CheckOutTime { get; set; }
     }
 }

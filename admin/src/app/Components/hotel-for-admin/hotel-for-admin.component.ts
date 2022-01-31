@@ -19,9 +19,10 @@ import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admi
 export class HotelForAdminComponent implements OnInit {
   public hotelId?: number;
   public hotelForm: FormGroup;
-  public loading = false;
-  public isHotelLoaded = false;
-  public isHotelExistInDataBase = false;
+  public loading: boolean = false;
+  public isHotelLoaded: boolean = false;
+  public isHotelExistInDataBase: boolean = false;
+  public serverErrorResponse: string = '';
 
   public get hotel(): Hotel {
     return { id: this.hotelId, ...this.hotelForm.value } as Hotel;
@@ -66,6 +67,8 @@ export class HotelForAdminComponent implements OnInit {
           ]
         ],
         description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
+        checkInTime: ['', [Validators.required]],
+        checkOutTime: ['', [Validators.required]],
         mainImageId: []
       }
     );
@@ -100,7 +103,11 @@ export class HotelForAdminComponent implements OnInit {
     }
     this.hotelService
       .editHotel(this.hotelId, this.hotelForm.value as HotelToEdit)
-      .subscribe();
+      .subscribe(
+        null,//snackbar
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string;
+        });
   }
 
   public getMaxLengthValue(controlName: string): number {

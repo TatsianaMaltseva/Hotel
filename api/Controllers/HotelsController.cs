@@ -26,6 +26,15 @@ namespace iTechArt.Hotels.Api.Controllers
             _mapper = mapper;
         }
 
+
+        [Route("hehe")]
+        public IActionResult hehe()
+        {
+            var hotel = _hotelsDb.Hotels.Where(hotel => hotel.Id == 1044).FirstOrDefault();
+            return Ok(hotel.CheckInTime.ToString());
+        }
+
+
         [Route("{hotelId}")]
         [HttpGet]
         public async Task<IActionResult> GetHotel([FromRoute] int hotelId)
@@ -78,6 +87,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> ChangeHotel([FromRoute] int hotelId, [FromBody] HotelToEdit request)
         {
+            if (request.CheckInTime >= request.CheckOutTime)
+            {
+                return BadRequest("Check in time should be less than check out time");
+            }
             HotelEntity hotelEntity = await GetHotelEntityAsync(hotelId);
             if (hotelEntity == null)
             {
@@ -108,6 +121,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private Task<HotelEntity> GetHotelEntityAsync(int hotelId) =>
              _hotelsDb.Hotels
-                .FirstOrDefaultAsync(hotel => hotel.Id == hotelId);
+                .Where(hotel => hotel.Id == hotelId)
+                .FirstOrDefaultAsync();
     }
 }
