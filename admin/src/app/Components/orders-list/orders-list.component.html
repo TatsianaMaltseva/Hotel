@@ -3,7 +3,7 @@
         <mat-card class="card" *ngFor="let order of orders">
             <mat-grid-list cols="6" rowHeight="60px">
                 <mat-grid-tile colspan="6" rowspan="1">
-                    <mat-card-title>
+                    <mat-card-title [routerLink]="['/hotels', order.hotel.id]">
                         {{ order.hotel.country }} - {{ order.hotel.city }} - {{ order.hotel.name }} - {{ order.room.name }}
                     </mat-card-title>
                 </mat-grid-tile>

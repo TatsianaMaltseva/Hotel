@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,7 +20,7 @@ export class HotelForAdminComponent implements OnInit {
   public hotelId?: number;
   public hotelForm: FormGroup;
   public loading: boolean = false;
-  public isHotelLoaded: boolean = false;
+  public isHotelLoaded: boolean = false;//
   public isHotelExistInDataBase: boolean = false;
   public serverErrorResponse: string = '';
 
@@ -107,7 +107,8 @@ export class HotelForAdminComponent implements OnInit {
         null,//snackbar
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;
-        });
+        }
+      );
   }
 
   public getMaxLengthValue(controlName: string): number {
@@ -130,6 +131,9 @@ export class HotelForAdminComponent implements OnInit {
       .subscribe(
         (hotelId: number) => {
           this.router.navigate(['hotels', hotelId, 'edit']);
+        },
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string;
         }
       );
   }

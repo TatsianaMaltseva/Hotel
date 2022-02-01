@@ -64,6 +64,15 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(3000);
             });
 
+            modelBuilder.Entity<ImageEntity>()
+                .HasOne(i => i.Hotel)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FacilityEntity>()
+                .Property(e => e.Realm)
+                .HasConversion<string>();
+
             modelBuilder.Entity<HotelEntity>()
                 .HasMany(hotel => hotel.Rooms)
                 .WithOne()

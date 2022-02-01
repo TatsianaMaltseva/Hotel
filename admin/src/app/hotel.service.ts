@@ -69,4 +69,10 @@ export class HotelService {
       hotel
     );
   }
+
+  public deleteHotel(hotelId: number): Observable<string> {
+    return this.http.delete<string>(
+      `${this.apiUrl}api/hotels/${hotelId}`
+    );
+  }
 }

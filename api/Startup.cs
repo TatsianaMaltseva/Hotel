@@ -24,8 +24,7 @@ namespace iTechArt.Hotels.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddNewtonsoftJson();
+            services.AddControllers();
 
             services.AddDbContext<HotelsDatabaseContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("HotelsDb"))

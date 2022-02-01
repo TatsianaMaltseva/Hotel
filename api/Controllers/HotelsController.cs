@@ -26,15 +26,6 @@ namespace iTechArt.Hotels.Api.Controllers
             _mapper = mapper;
         }
 
-
-        [Route("hehe")]
-        public IActionResult hehe()
-        {
-            var hotel = _hotelsDb.Hotels.Where(hotel => hotel.Id == 1044).FirstOrDefault();
-            return Ok(hotel.CheckInTime.ToString());
-        }
-
-
         [Route("{hotelId}")]
         [HttpGet]
         public async Task<IActionResult> GetHotel([FromRoute] int hotelId)
@@ -76,6 +67,10 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> AddHotel([FromBody] HotelToAdd request)
         {
+            if (request.CheckInTime >= request.CheckOutTime)
+            {
+                return BadRequest("Check in time should be less than check out time");
+            }
             HotelEntity hotel = _mapper.Map<HotelEntity>(request);
             await _hotelsDb.AddAsync(hotel);
             await _hotelsDb.SaveChangesAsync();
@@ -97,6 +92,25 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such hotel does not exist");
             }
             _mapper.Map(request, hotelEntity);
+            await _hotelsDb.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [Route("{hotelId}")]
+        [HttpDelete]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> DeleteHotel([FromRoute] int hotelId)
+        {
+            HotelEntity hotel = await GetHotelEntityAsync(hotelId);
+            if (hotel == null)
+            {
+                return BadRequest("Such hotel does not exist");
+            }
+            _hotelsDb.Hotels.Remove(hotel);
+
+            var hotelImages = _hotelsDb.Images.Where(image => image.HotelId == hotelId);
+            _hotelsDb.Images.RemoveRange(hotelImages);
+
             await _hotelsDb.SaveChangesAsync();
             return NoContent();
         }

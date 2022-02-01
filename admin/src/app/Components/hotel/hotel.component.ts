@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Location } from '@angular/common';
 
 import { HotelService } from 'src/app/hotel.service';
 import { Hotel } from 'src/app/Dtos/hotel';
@@ -26,7 +27,8 @@ export class HotelComponent implements OnInit{
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
     private readonly accountService: AccountService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly location: Location
   ) {
   }
 
@@ -39,6 +41,16 @@ export class HotelComponent implements OnInit{
       this.hotelId = +id;
       this.fetchHotel(this.hotelId);
     }
+  }
+
+  public deleteHotel(): void {
+    this.hotelService
+      .deleteHotel(this.hotel.id)
+      .subscribe(
+        () => {
+          this.location.back();
+        }
+      );
   }
 
   private openSnackBar(message: string): void {

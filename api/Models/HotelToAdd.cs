@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace iTechArt.Hotels.Api.Models
 {
@@ -25,9 +26,11 @@ namespace iTechArt.Hotels.Api.Models
         public string Description { get; set; }
 
         [Required]
+        [JsonConverter(typeof(JsonTimeSpanConverter))]
         public TimeSpan CheckInTime { get; set; }
 
         [Required]
+        [JsonConverter(typeof(JsonTimeSpanConverter))]
         public TimeSpan CheckOutTime { get; set; }
     }
 }

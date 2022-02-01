@@ -56,13 +56,13 @@
                     Description value should have less than {{ getMaxLengthValue('description') }} symbols
                 </mat-error>
             </mat-form-field>
-
             <mat-form-field class="input-field">
                 <input 
                     matInput
                     readonly
                     formControlName="checkInTime"
                     placeholder="Check in time"
+                    [max]="'12:00'"
                     [format]="24"
                     [ngxTimepicker]="checkInTimepicker"
                 >
@@ -74,7 +74,7 @@
                     readonly
                     formControlName="checkOutTime"
                     placeholder="Check out time"
-                    [min]="hotel.checkInTime"
+                    [min]="'12:00'"
                     [format]="24"
                     [ngxTimepicker]="checkOutTimepicker"
                 >
