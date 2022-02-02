@@ -3,6 +3,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ImageService } from 'src/app/image.service';
 import { AccountService } from 'src/app/account.service';
 import { Image } from 'src/app/Dtos/image';
+import { PageParameters } from 'src/app/Core/page-parameters';
+import { ImagesResponce } from 'src/app/Core/images-response';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-images',
@@ -15,6 +18,9 @@ export class ImagesComponent implements OnInit {
   
   public progress: number = 0;
   public images: Image[] = [];
+  public imageCount: number = 0;
+  public pageSize: number = 5;
+  public pageIndex: number = 0;
 
   public get isAdmin(): boolean {
     return this.accountService.isAdmin;
@@ -42,12 +48,27 @@ export class ImagesComponent implements OnInit {
       );
   }
 
+  public onPaginationChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.fetchImages();
+  }
+
   private fetchImages(): void {
     if (this.hotelId === undefined) {
       return;
     }
     this.imageService
-      .getImages(this.hotelId, this.roomId)
-      .subscribe(images => this.images = images);
+      .getImages(
+        this.hotelId,
+        { pageSize: this.pageSize, pageIndex: this.pageIndex } as PageParameters,
+        this.roomId
+      )
+      .subscribe(
+        (responce: ImagesResponce) => {
+          this.images = responce.images;
+          this.imageCount = responce.imageCount;
+        }
+      );
   }
 }

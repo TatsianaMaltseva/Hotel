@@ -131,22 +131,28 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/images")]
         [HttpGet]
-        public async Task<IActionResult> GetHotelImages([FromRoute] int hotelId)
+        public async Task<IActionResult> GetHotelImages([FromRoute] int hotelId, [FromQuery] PageParameters pageParameters)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            var images = await _hotelsDb.Images
-                .Where(image => image.HotelId == hotelId && image.RoomId == null)
+            var imagesBeforePagination = _hotelsDb.Images
+                .Where(image => image.HotelId == hotelId && image.RoomId == null);
+
+            var imageCount = await imagesBeforePagination.CountAsync();
+
+            Image[] images = await imagesBeforePagination
+                .Skip(pageParameters.PageIndex * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            return Ok(images);
+            return Ok( new { images, imageCount });
         }
 
         [Route("{hotelId}/rooms/{roomId}/images")]
         [HttpGet]
-        public async Task<IActionResult> GetRoomImages([FromRoute] int hotelId, [FromRoute] int roomId)
+        public async Task<IActionResult> GetRoomImages([FromRoute] int hotelId, [FromRoute] int roomId, [FromQuery] PageParameters pageParameters)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
@@ -156,11 +162,17 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("Such room does not exist");
             }
-            var images = await _hotelsDb.Images
-                .Where(image => image.HotelId == hotelId && image.RoomId == roomId)
+            var imagesBeforePagination = _hotelsDb.Images
+                .Where(image => image.HotelId == hotelId && image.RoomId == roomId);
+
+            var imageCount = await imagesBeforePagination.CountAsync();
+
+            Image[] images = await imagesBeforePagination
+                .Skip(pageParameters.PageIndex * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            return Ok(images);
+            return Ok(new { images, imageCount });
         }
 
         [Route("{hotelId}/images/{imageId}")]

@@ -7,7 +7,6 @@ import { HotelCard } from 'src/app/Dtos/hotelCard';
 import { ImageService } from 'src/app/image.service';
 import { HotelCardResponse } from 'src/app/Core/hotel-card-response';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
-import { AccountService } from 'src/app/account.service';
 import { PageParametersService } from 'src/app/page-parameters.service';
 
 @Component({

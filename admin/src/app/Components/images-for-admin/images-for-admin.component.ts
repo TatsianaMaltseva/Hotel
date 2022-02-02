@@ -9,6 +9,9 @@ import { HotelService } from 'src/app/hotel.service';
 import { RoomService } from '../../room.service';
 import { Room } from 'src/app/Dtos/room';
 import { Hotel } from 'src/app/Dtos/hotel';
+import { PageEvent } from '@angular/material/paginator';
+import { PageParameters } from 'src/app/Core/page-parameters';
+import { ImagesResponce } from 'src/app/Core/images-response';
 
 @Component({
   selector: 'app-images-for-admin',
@@ -21,6 +24,9 @@ export class ImagesForAdminComponent implements OnInit {
 
   public progress: number = 0;
   public images: Image[] = [];
+  public imageCount: number = 0;
+  public pageSize: number = 5;
+  public pageIndex: number = 0;
 
   public constructor(
     private readonly imageService: ImageService,
@@ -48,6 +54,7 @@ export class ImagesForAdminComponent implements OnInit {
 
   public addImage(imageId: number): void {
     this.images.push({ id: imageId } as Image);
+    this.imageCount += 1;
   }
 
   public changeMainImage(image: Image): void {
@@ -85,6 +92,7 @@ export class ImagesForAdminComponent implements OnInit {
             this.room.mainImageId = undefined;
           }
           this.images = this.images.filter(img => img.id !== image.id);
+          this.imageCount -= 1;
           this.openSnackBar('Image was successfully deleted');
         },
         (serverError: HttpErrorResponse) => {
@@ -93,13 +101,29 @@ export class ImagesForAdminComponent implements OnInit {
     );
   }
 
+    
+  public onPaginationChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.fetchImages();
+  }
+
   private fetchImages(): void {
     if (!this.hotel) {
       return;
     }
     this.imageService
-      .getImages(this.hotel.id, this.room?.id)
-      .subscribe(images => this.images = images);
+      .getImages(
+        this.hotel.id,
+        { pageSize: this.pageSize, pageIndex: this.pageIndex } as PageParameters,
+        this.room?.id
+      )
+      .subscribe(
+        (responce: ImagesResponce) => {
+          this.images = responce.images;
+          this.imageCount = responce.imageCount;
+        }
+      );
   }
 
   private openSnackBar(message: string): void {
