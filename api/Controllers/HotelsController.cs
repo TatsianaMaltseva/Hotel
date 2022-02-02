@@ -54,6 +54,14 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 filteredHotelCards = filteredHotelCards.Where(h => h.Name.Contains(filterParams.Name));
             }
+            if (!string.IsNullOrEmpty(filterParams.Country))
+            {
+                filteredHotelCards = filteredHotelCards.Where(h => h.Country.Contains(filterParams.Country));
+            }
+            if (!string.IsNullOrEmpty(filterParams.City))
+            {
+                filteredHotelCards = filteredHotelCards.Where(h => h.City.Contains(filterParams.City));
+            }
             var hotelCount = await filteredHotelCards.CountAsync();
             HotelCard[] hotelCards = await filteredHotelCards
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
@@ -129,6 +137,42 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Distinct()
                 .Take(number)
                 .Select(h => h.Name)
+                .ToArrayAsync();
+            return names;
+        }
+
+        [Route("countries")]
+        [HttpGet]
+        public async Task<string[]> GetHotelCountries([FromQuery] string country, [FromQuery] int number = 2)
+        {
+            if (string.IsNullOrEmpty(country))
+            {
+                return Array.Empty<string>();
+            }
+            string[] names = await _hotelsDb.Hotels
+                .Where(h => h.Country.Contains(country))
+                .OrderBy(h => h.Country)
+                .Distinct()
+                .Take(number)
+                .Select(h => h.Country)
+                .ToArrayAsync();
+            return names;
+        }
+
+        [Route("cities")]
+        [HttpGet]
+        public async Task<string[]> GetHotelCities([FromQuery] string city, [FromQuery] int number = 2)
+        {
+            if (string.IsNullOrEmpty(city))
+            {
+                return Array.Empty<string>();
+            }
+            string[] names = await _hotelsDb.Hotels
+                .Where(h => h.City.Contains(city))
+                .OrderBy(h => h.City)
+                .Distinct()
+                .Take(number)
+                .Select(h => h.City)
                 .ToArrayAsync();
             return names;
         }

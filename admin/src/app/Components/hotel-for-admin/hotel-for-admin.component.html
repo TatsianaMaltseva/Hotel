@@ -15,7 +15,16 @@
             </mat-form-field>
             <mat-form-field class="input-field">
                 <mat-label>Country</mat-label>
-                <input matInput formControlName="country">
+                <input
+                    matInput
+                    formControlName="country"
+                    [matAutocomplete]="countryAutocomplete"
+                >
+                <mat-autocomplete #countryAutocomplete ="matAutocomplete">
+                    <mat-option *ngFor="let country of countries" [value]="country">
+                        {{ country }}
+                    </mat-option>
+                </mat-autocomplete>
                 <mat-error *ngIf="checkIfHasRequiredError('country')">
                     Country is required
                 </mat-error>
@@ -25,7 +34,16 @@
             </mat-form-field>
             <mat-form-field class="input-field">
                 <mat-label>City</mat-label>
-                <input matInput formControlName="city">
+                <input
+                    matInput
+                    formControlName="city"
+                    [matAutocomplete]="cityAutocomplete"
+                >
+                <mat-autocomplete #cityAutocomplete ="matAutocomplete">
+                    <mat-option *ngFor="let city of cities" [value]="city">
+                        {{ city }}
+                    </mat-option>
+                </mat-autocomplete>
                 <mat-error *ngIf="checkIfHasRequiredError('city')">
                     City is required
                 </mat-error>

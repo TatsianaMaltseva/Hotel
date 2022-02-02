@@ -12,6 +12,8 @@ import { HotelFilterParameters } from './Core/filter-parameters';
 })
 export class HotelFilterService{
   public name: string = '';
+  public country: string = '';
+  public city: string = '';
   public checkInDate: string = '';
   public checkOutDate: string = '';
   private readonly autocompleteVariantNumber = 2;
@@ -20,6 +22,8 @@ export class HotelFilterService{
   public get filterParameters(): HotelFilterParameters {
     const filter: HotelFilterParameters = {
       name: this.name,
+      country: this.country,
+      city: this.city,
       checkInDate: this.checkInDate,
       checkOutDate: this.checkOutDate
     };
@@ -34,9 +38,9 @@ export class HotelFilterService{
 
   public updateParameters(data: Params | any): void {
     const format = 'YYYY-MM-DD';
-    if (data.name) {
-      this.name = data.name;
-    }
+    this.name = data.name;
+    this.country = data.country;
+    this.city = data.city;
     if (data.checkInDate) {
       this.checkInDate = dayjs(new Date(data.checkInDate)).format(format);
     }
@@ -51,6 +55,26 @@ export class HotelFilterService{
       .set('number', this.autocompleteVariantNumber);
     return this.http.get<string[]>(
       `${this.apiUrl}api/hotels/names`,
+      { params: httpParams }
+    );
+  }
+
+  public getHotelCountries(enteredCountry: string): Observable<string[]> {
+    const httpParams = new HttpParams()
+      .set('country', enteredCountry)
+      .set('number', this.autocompleteVariantNumber);
+    return this.http.get<string[]>(
+      `${this.apiUrl}api/hotels/countries`,
+      { params: httpParams }
+    );
+  }
+
+  public getHotelCities(enteredCity: string): Observable<string[]> {
+    const httpParams = new HttpParams()
+      .set('city', enteredCity)
+      .set('number', this.autocompleteVariantNumber);
+    return this.http.get<string[]>(
+      `${this.apiUrl}api/hotels/cities`,
       { params: httpParams }
     );
   }

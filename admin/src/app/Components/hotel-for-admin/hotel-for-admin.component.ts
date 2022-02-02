@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { Hotel, HotelToAdd, HotelToEdit } from 'src/app/Dtos/hotel';
+import { HotelFilterService } from 'src/app/hotel-filter.service';
 import { HotelService } from 'src/app/hotel.service';
 import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 
@@ -23,9 +24,19 @@ export class HotelForAdminComponent implements OnInit {
   public isHotelLoaded: boolean = false;//
   public isHotelExistInDataBase: boolean = false;
   public serverErrorResponse: string = '';
+  public countries: string[] = [];
+  public cities: string[] = [];
 
   public get hotel(): Hotel {
     return { id: this.hotelId, ...this.hotelForm.value } as Hotel;
+  }
+
+  public get country(): AbstractControl | null {
+    return this.hotelForm.get('country');
+  }
+
+  public get city(): AbstractControl | null {
+    return this.hotelForm.get('city');
   }
 
   public constructor(
@@ -34,7 +45,8 @@ export class HotelForAdminComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar,
     private readonly matDialog: MatDialog,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly hotelFilterService: HotelFilterService
   ) {
     this.hotelForm = formBuilder.group(
       {
@@ -75,10 +87,24 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.country?.valueChanges
+    .subscribe(
+      (value) => {
+        this.fetchCountryAutocompleteValues(value);
+      }
+    );
+    this.city?.valueChanges
+      .subscribe(
+        (value) => {
+          this.fetchCityAutocompleteValues(value);
+        }
+      );
+
     if (this.route.routeConfig?.path?.includes('add-new')) {
       this.isHotelLoaded = true;
       return;
     }
+    
     const id: string | null = this.route.snapshot.paramMap.get('id');
     if (!id || !this.isValidId(id)) {
       this.openErrorSnackBar('Hotel id is not valid');
@@ -171,5 +197,17 @@ export class HotelForAdminComponent implements OnInit {
           this.loading = false;
         }
       );
+  }
+
+  private fetchCountryAutocompleteValues(filterValue: string): void {
+    this.hotelFilterService
+      .getHotelCountries(filterValue)
+      .subscribe(countries => this.countries = countries);
+  }
+
+  private fetchCityAutocompleteValues(filterValue: string): void {
+    this.hotelFilterService
+      .getHotelCities(filterValue)
+      .subscribe(cities => this.cities = cities);
   }
 }

@@ -27,7 +27,6 @@ export class HotelCardsComponent implements OnInit {
     private readonly router: Router,
     private readonly imageService: ImageService,
     private readonly hotelFilterService: HotelFilterService,
-    private readonly acountService: AccountService,
     private readonly pageParametersService: PageParametersService
   ) {
     this.pageSize = this.pageParametersService.pageSize;

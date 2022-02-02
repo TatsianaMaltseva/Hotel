@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AccountService } from 'src/app/account.service';
 
+import { AccountService } from 'src/app/account.service';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
 
@@ -14,10 +14,20 @@ export class HotelsFilterComponent implements OnInit {
 
   public filterForm: FormGroup;
   public names: string[] = [];
+  public countries: string[] = [];
+  public cities: string[] = [];
   public today = new Date();
 
   public get name(): AbstractControl | null {
     return this.filterForm.get('name');
+  }
+
+  public get country(): AbstractControl | null {
+    return this.filterForm.get('country');
+  }
+
+  public get city(): AbstractControl | null {
+    return this.filterForm.get('city');
   }
 
   public get isAdmin(): boolean {
@@ -35,6 +45,14 @@ export class HotelsFilterComponent implements OnInit {
           this.hotelFilterService.name, 
           [Validators.maxLength(hotelParamsMaxLenght.name)]
         ],
+        country: [
+          this.hotelFilterService.country,
+          [Validators.maxLength(hotelParamsMaxLenght.country)]
+        ],
+        city: [
+          this.hotelFilterService.city,
+          [Validators.maxLength(hotelParamsMaxLenght.city)]
+        ],
         checkInDate: [this.hotelFilterService.checkInDate],
         checkOutDate: [this.hotelFilterService.checkOutDate]
       }
@@ -48,7 +66,19 @@ export class HotelsFilterComponent implements OnInit {
     this.name?.valueChanges
       .subscribe(
         (value) => {
-            this.fetchAutocompleteValues(value);
+            this.fetchNameAutocompleteValues(value);
+        }
+      );
+    this.country?.valueChanges
+      .subscribe(
+        (value) => {
+          this.fetchCountryAutocompleteValues(value);
+        }
+      );
+    this.city?.valueChanges
+      .subscribe(
+        (value) => {
+          this.fetchCityAutocompleteValues(value);
         }
       );
   }
@@ -58,11 +88,22 @@ export class HotelsFilterComponent implements OnInit {
     this.filterParametersUpdated.emit();
   }
 
-  public fetchAutocompleteValues(value: string): void {
-    const filterValue: string = value;
+  private fetchNameAutocompleteValues(filterValue: string): void {
     this.hotelFilterService
       .getHotelNames(filterValue)
       .subscribe(names => this.names = names);
+  }
+
+  private fetchCountryAutocompleteValues(filterValue: string): void {
+    this.hotelFilterService
+      .getHotelCountries(filterValue)
+      .subscribe(countries => this.countries = countries);
+  }
+
+  private fetchCityAutocompleteValues(filterValue: string): void {
+    this.hotelFilterService
+      .getHotelCities(filterValue)
+      .subscribe(cities => this.cities = cities);
   }
 
   private isEmpty(obj: object): boolean {
