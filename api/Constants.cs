@@ -16,5 +16,12 @@ namespace iTechArt.Hotels.Api
             Hotel,
             Room
         }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum OrderDate
+        {
+            Past,
+            Future
+        }
     }
 }

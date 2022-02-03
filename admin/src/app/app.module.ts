@@ -24,6 +24,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRadioModule } from '@angular/material/radio';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
@@ -114,6 +115,7 @@ import { OrdersListComponent } from './Components/orders-list/orders-list.compon
     MatDatepickerModule,
     MatNativeDateModule,
     MatTooltipModule,
+    MatRadioModule,
     NgxMaterialTimepickerModule,
     JwtModule.forRoot({
       config: {

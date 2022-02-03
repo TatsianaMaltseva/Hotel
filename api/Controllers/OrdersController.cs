@@ -94,16 +94,29 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("orders")]
         [HttpGet]
         [Authorize(Roles = Role.Client)]
-        public async Task<IActionResult> GetOrders()
+        public async Task<IActionResult> GetOrders([FromQuery] OrderFilterParams filterParams)
         {
-            List<Order> orders = await _hotelsDb.Orders
+            var orders = _hotelsDb.Orders
+                .AsQueryable();
+
+            if (filterParams.Date == OrderDate.Future)
+            {
+                orders = orders.Where(order => order.CheckOutDate >= DateTime.Today);
+            }
+            else if (filterParams.Date == OrderDate.Past)
+            {
+                orders = orders.Where(order => order.CheckOutDate < DateTime.Today);
+            }
+
+            List<Order> ordersToReturn = await orders
                 .Where(order => order.AccountId == Convert.ToInt32(User.Identity.Name))
                 .Include(order => order.Hotel)
                 .Include(order => order.Room)
                 .Include(order => order.Facilities)
+                .OrderBy(order => order.CheckInDate)
                 .ProjectTo<Order>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-            return Ok(orders);
+            return Ok(ordersToReturn);
         }
 
         private async Task<decimal> CalculateOrderPrice(OrderToAdd order)

@@ -1,4 +1,11 @@
 <div class="wrapper">
+    <div [formGroup]="ordersFilterForm">
+        <mat-radio-group formControlName="date" (change)="onDateFilterChange()">
+            <mat-radio-button *ngFor="let dateOption of dateOptions" [value]="dateOption">
+                {{ dateOption }} bookings
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
     <div class="cards">
         <mat-card class="card" *ngFor="let order of orders">
             <mat-grid-list cols="6" rowHeight="60px">

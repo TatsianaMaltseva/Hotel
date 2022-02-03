@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
+import { OrderFilterDateOptions } from 'src/app/Core/order-filter-date-options';
+import { OrderFilterParams } from 'src/app/Core/order-filter-params';
 import { OrderToShow } from 'src/app/Dtos/order';
 import { OrderService } from 'src/app/orders.service';
 
@@ -9,19 +13,35 @@ import { OrderService } from 'src/app/orders.service';
 })
 export class OrdersListComponent implements OnInit {
   public orders: OrderToShow[] = [];
+  public ordersFilterForm: FormGroup;
+  public dateOptions = [OrderFilterDateOptions.future, OrderFilterDateOptions.past];
 
   public constructor(
-    private readonly orderService: OrderService
+    private readonly orderService: OrderService,
+    private readonly formBuilder: FormBuilder
   ) { 
+    this.ordersFilterForm = formBuilder.group(
+      {
+        date: [OrderFilterDateOptions.future]
+      }
+    );
   }
 
   public ngOnInit(): void {
+    this.fetchOrders();
+  }
+
+  public onDateFilterChange(): void {
+    this.fetchOrders();
+  }
+
+  private fetchOrders(): void {
     this.orderService
-    .getOrders()
-    .subscribe(
-      (orders: OrderToShow[]) => {
-        this.orders = orders;
-      }
-    );
+      .getOrders(this.ordersFilterForm.value as OrderFilterParams)
+      .subscribe(
+        (orders: OrderToShow[]) => {
+          this.orders = orders;
+        }
+      );
   }
 }

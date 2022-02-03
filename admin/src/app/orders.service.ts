@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
+import { OrderFilterParams } from './Core/order-filter-params';
 import { Order, OrderToShow } from './Dtos/order';
 import { Room } from './Dtos/room';
 
@@ -32,9 +34,10 @@ export class OrderService {
     );
   }
   
-  public getOrders(): Observable<OrderToShow[]> {
+  public getOrders(filterParams: OrderFilterParams): Observable<OrderToShow[]> {
     return this.http.get<OrderToShow[]>(
-      `${this.apiUrl}api/orders`
+      `${this.apiUrl}api/orders`,
+      { params: filterParams as Params }
     );
   }
 }

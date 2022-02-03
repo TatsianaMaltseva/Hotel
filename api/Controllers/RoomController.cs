@@ -95,7 +95,7 @@ namespace iTechArt.Hotels.Api.Controllers
                         .ToArrayAsync();
                     foreach (OrderEntity order in orders)
                     {
-                        if (!(roomFilterParams.CheckInDate < order.CheckInDate
+                        if (!(roomFilterParams.CheckOutDate < order.CheckInDate
                             || roomFilterParams.CheckInDate > order.CheckOutDate))
                         {
                             room.Number -= 1;
