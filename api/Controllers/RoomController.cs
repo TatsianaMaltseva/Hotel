@@ -82,28 +82,25 @@ namespace iTechArt.Hotels.Api.Controllers
             List<Room> rooms = await _hotelsDb.Rooms
                 .Where(room => room.HotelId == hotelId)
                 .Include(room => room.Facilities)
-                .Include(room => room.Views)
-                .ProjectTo<Room>(_mapper.ConfigurationProvider)
-                .ToListAsync();
-
-            if (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
-            {
-                foreach (Room room in rooms)
+                .Include(room => room.ActiveViews)
+                .Include(room => room.Orders)
+                .Select(room => new Room()
                 {
-                    OrderEntity[] orders = await _hotelsDb.Orders
-                        .Where(order => order.RoomId == room.Id)
-                        .ToArrayAsync();
-                    foreach (OrderEntity order in orders)
-                    {
-                        if (!(roomFilterParams.CheckOutDate < order.CheckInDate
-                            || roomFilterParams.CheckInDate > order.CheckOutDate))
-                        {
-                            room.Number -= 1;
-                        }
-                    }
-                }
-                rooms.RemoveAll(room => room.Number <= 0);
-            }
+                    Id = room.Id,
+                    Name = room.Name,
+                    Sleeps = room.Sleeps,
+                    Price = room.Price,
+                    MainImageId = room.MainImageId,
+                    Number = (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null) 
+                        ? room.Number - room.Orders
+                            .Where(order => !(roomFilterParams.CheckOutDate < order.CheckInDate
+                                || roomFilterParams.CheckInDate > order.CheckOutDate))
+                            .Count() - room.ActiveViews.Count()
+                        : room.Number - room.ActiveViews.Count(),
+                    //Facilities
+                })
+                .Where(room => room.Number > 0)
+                .ToListAsync();
 
             return Ok(rooms);
         }
@@ -124,23 +121,23 @@ namespace iTechArt.Hotels.Api.Controllers
                 .FirstOrDefaultAsync();
             hotel.Rooms.Add(room);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetRoom), new { hotelId, roomId = room.Id }, room.Id);
+            return CreatedAtAction(nameof(ChangeRoom), new { hotelId, roomId = room.Id }, room.Id);
         }
 
-        [Route("{hotelId}/rooms/{roomId}")]
-        [HttpGet]
-        public async Task<IActionResult> GetRoom([FromRoute] int hotelId, [FromRoute] int roomId)
-        {
-            if (!await CheckIfHotelExistsAsync(hotelId))
-            {
-                return BadRequest("Such hotel does not exist");
-            }
-            Room room = await _hotelsDb.Rooms
-                .Where(room => room.Id == roomId)
-                .ProjectTo<Room>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-            return Ok(room);
-        }
+        //[Route("{hotelId}/rooms/{roomId}")]
+        //[HttpGet]
+        //public async Task<IActionResult> GetRoom([FromRoute] int hotelId, [FromRoute] int roomId)
+        //{
+        //    if (!await CheckIfHotelExistsAsync(hotelId))
+        //    {
+        //        return BadRequest("Such hotel does not exist");
+        //    }
+        //    Room room = await _hotelsDb.Rooms
+        //        .Where(room => room.Id == roomId)
+        //        .ProjectTo<Room>(_mapper.ConfigurationProvider)
+        //        .FirstOrDefaultAsync();
+        //    return Ok(room);
+        //}
 
         private Task<RoomEntity> GetRoomEntityAsync(int? roomId) =>
             _hotelsDb.Rooms

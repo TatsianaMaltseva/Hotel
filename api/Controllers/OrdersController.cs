@@ -5,6 +5,7 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,22 +20,31 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
+        private readonly IOptions<ViewsOptions> _viewsOptions;
 
-        public OrdersController(HotelsDatabaseContext hotelDb, IMapper mapper)
+        public OrdersController(
+            HotelsDatabaseContext hotelDb,
+            IMapper mapper,
+            IOptions<ViewsOptions> viewsOptions
+        )
         {
             _hotelsDb = hotelDb;
             _mapper = mapper;
+            _viewsOptions = viewsOptions;
         }
 
         [Route("viewed-rooms/{roomId}")]
         [HttpPost]
         public async Task<IActionResult> AddRoomToViewed([FromRoute] int roomId)
         {
-            //use options pattern
+            if (!await CheckIfRoomExistsAsync(roomId))
+            {
+                return BadRequest("Such room does not exist");
+            }
             ViewEntity view = new ViewEntity()
             {
-                RoomId = roomId,///validate
-                ExpireTime = DateTime.Now//.Add(new TimeSpan(0, 1, 0))
+                RoomId = roomId,
+                ExpireTime = DateTime.Now.Add(_viewsOptions.Value.ExpireTime)
             };
             await _hotelsDb.Views.AddAsync(view);
             await _hotelsDb.SaveChangesAsync();
@@ -46,7 +56,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = Role.Client)]
         public async Task<IActionResult> AddOrder([FromBody] OrderToAdd order)
         {
-            if (!await CheckIfRoomExists(order.Room.Id))
+            if (!await CheckIfRoomExistsAsync(order.Room.Id))
             {
                 return BadRequest("Such room does not exist");
             }
@@ -163,7 +173,7 @@ namespace iTechArt.Hotels.Api.Controllers
             return days * pricePerDay;
         }
 
-        private Task<bool> CheckIfRoomExists(int roomId) =>
+        private Task<bool> CheckIfRoomExistsAsync(int roomId) =>
             _hotelsDb.Rooms.AnyAsync(room => room.Id == roomId);
     }
 }

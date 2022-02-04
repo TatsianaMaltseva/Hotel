@@ -38,6 +38,6 @@ namespace iTechArt.Hotels.Api.Entities
 
         public List<OrderEntity> Orders { get; }
 
-        public List<ViewEntity> Views { get; }
+        public List<ViewEntity> ActiveViews { get; }
     }
 }
