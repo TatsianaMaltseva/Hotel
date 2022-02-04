@@ -19,6 +19,7 @@ namespace iTechArt.Hotels.Api
         public DbSet<FacilityHotelEntity> FacilityHotel { get; set; }
         public DbSet<FacilityRoomEntity> FacilityRoom { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
+        public DbSet<ViewEntity> Views { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,6 +88,11 @@ namespace iTechArt.Hotels.Api
                 .HasOne(order => order.Hotel)
                 .WithMany()
                 .HasForeignKey(order => order.HotelId);
+
+            modelBuilder.Entity<RoomEntity>()
+                .HasMany(room => room.Views)
+                .WithOne()
+                .HasForeignKey(viev => viev.RoomId);
 
             modelBuilder.Entity<HotelEntity>()
                 .HasMany(hotel => hotel.Facilities)

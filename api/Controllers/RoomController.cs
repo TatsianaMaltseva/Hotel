@@ -79,12 +79,12 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such hotel does not exist");
             }
 
-            List<Room> rooms = await _hotelsDb.Hotels
-                .Where(h => h.Id == hotelId)
-                .Include(hotel => hotel.Rooms)
-                .ThenInclude(room => room.Facilities)
-                .Select(hotel => _mapper.Map<List<Room>>(hotel.Rooms))
-                .SingleOrDefaultAsync();
+            List<Room> rooms = await _hotelsDb.Rooms
+                .Where(room => room.HotelId == hotelId)
+                .Include(room => room.Facilities)
+                .Include(room => room.Views)
+                .ProjectTo<Room>(_mapper.ConfigurationProvider)
+                .ToListAsync();
 
             if (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
             {

@@ -67,5 +67,6 @@
     <Build Include="FacilityRoom.sql" />
     <Build Include="Orders.sql" />
     <Build Include="FacilityOrder.sql" />
+    <Build Include="Views.sql" />
   </ItemGroup>
 </Project>

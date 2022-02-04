@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32.TaskScheduler;
+using System;
 
 namespace iTechArt.Hotels.Api
 {
@@ -95,6 +97,8 @@ namespace iTechArt.Hotels.Api
                 }
             );
 
+            AddClearRoomViewsTask();
+
             app.UseRouting();
             app.UseCors();
 
@@ -105,6 +109,24 @@ namespace iTechArt.Hotels.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        public void AddClearRoomViewsTask()
+        {
+            using (var ts = new TaskService())
+            {
+                TaskDefinition td = ts.NewTask();
+                td.Settings.ExecutionTimeLimit = new TimeSpan(1, 0, 0);
+                td.Settings.MultipleInstances = TaskInstancesPolicy.Parallel;
+
+                var trigger = new TimeTrigger();
+                trigger.Repetition.Interval = TimeSpan.FromMinutes(5);
+                td.Triggers.Add(trigger);
+
+                td.Actions.Add(new ExecAction(System.IO.Path.Combine(Configuration["Resources:ScriptsFolder"], "delete_views.bat")));
+
+                ts.RootFolder.RegisterTaskDefinition("Clear room viewes table", td);
+            }
         }
     }
 }

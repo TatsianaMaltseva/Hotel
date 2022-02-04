@@ -30,6 +30,14 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRoomToViewed([FromRoute] int roomId)
         {
+            //use options pattern
+            ViewEntity view = new ViewEntity()
+            {
+                RoomId = roomId,///validate
+                ExpireTime = DateTime.Now//.Add(new TimeSpan(0, 1, 0))
+            };
+            await _hotelsDb.Views.AddAsync(view);
+            await _hotelsDb.SaveChangesAsync();
             return Ok();
         }
 

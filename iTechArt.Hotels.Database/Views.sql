@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[Views] (
+    [Id] INT IDENTITY (1,1) NOT NULL,
+    [RoomId] INT NOT NULL,
+    [ExpireTime] SMALLDATETIME NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    FOREIGN KEY ([RoomId]) REFERENCES [dbo].[Rooms](Id) ON DELETE CASCADE
+)
