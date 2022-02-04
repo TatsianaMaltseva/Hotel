@@ -22,8 +22,6 @@ namespace iTechArt.Hotels.Api.Entities
 
         public List<RoomEntity> Rooms { get; }
 
-        public List<FacilityEntity> Facilities { get; }
-
         public List<FacilityHotelEntity> FacilityHotels { get; }
 
         [Column(TypeName = "time")]

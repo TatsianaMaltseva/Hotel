@@ -106,8 +106,16 @@ namespace iTechArt.Hotels.Api.Controllers
                 return Array.Empty<Facility>();
             }
 
-            Facility[] facilities = await _hotelsDb.Facilities
-                .Where(facility => facility.Realm == Realm.Hotel)
+            Facility[] facilities = await _hotelsDb.Hotels
+                .Include(facility => facility)
+                .Include(hotel => hotel.FacilityHotels)
+                //.Where(facility => facility.Realm == Realm.Hotel)
+                //.Select(hotel => new Facility()
+                //{
+                //    Id = facility.Id,
+                //    Name = facility.Name,
+                //    Checked = 
+                //})
                 .ProjectTo<Facility>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
