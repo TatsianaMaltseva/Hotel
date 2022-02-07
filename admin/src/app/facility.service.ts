@@ -35,7 +35,7 @@ export class FacilityService {
     );
   }
 
-  public changeHotelFacilities(hotelId: number, facilities: Facility[], roomId?: number): Observable<string> {
+  public changeFacilities(hotelId: number, facilities: Facility[], roomId?: number): Observable<string> {
     if (!roomId) {
       facilities.map(f => f.realm = Realm.hotel);
       return this.http.put<string>(

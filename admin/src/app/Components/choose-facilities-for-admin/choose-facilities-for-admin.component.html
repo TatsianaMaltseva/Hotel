@@ -2,10 +2,7 @@
     <ng-container formArrayName="facilities">
         <ng-container *ngFor="let facilityForm of facilities.controls; let i = index"> 
             <div class="facility" [formGroupName]="i"> 
-                <mat-checkbox 
-                    class="name"
-                    formControlName="checked"
-                >
+                <mat-checkbox class="name" formControlName="checked">
                     {{ facilityForm.value.name }} (id{{ facilityForm.value.id }})
                 </mat-checkbox>
                 <mat-form-field>
@@ -18,6 +15,13 @@
                 </mat-form-field>
             </div>
         </ng-container>
+        <button
+            mat-button
+            [disabled]="seeOtherClicked"
+            (click)="fetchAvilableFacilities()"
+        >
+            <mat-icon>add</mat-icon>see other facilities to add
+        </button>
         <button mat-button (click)="changeFacilitiesStatus()">
             <mat-icon>save</mat-icon>save changes
         </button>

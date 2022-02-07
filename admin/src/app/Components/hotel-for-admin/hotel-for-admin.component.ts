@@ -23,7 +23,7 @@ export class HotelForAdminComponent implements OnInit {
   public isHotelLoaded = false;
 
   public get hotel(): Hotel {
-    return { id: this.hotelId, ...this.changeHotelForm.value } as Hotel;
+    return this.changeHotelForm.value as Hotel;
   }
 
   public constructor(
@@ -35,12 +35,14 @@ export class HotelForAdminComponent implements OnInit {
   ) {
     this.changeHotelForm = formBuilder.group(
       {
+        id: [''],
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
         country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],
         city: ['', Validators.maxLength(hotelParamsMaxLenght.city)],
         address: ['', Validators.maxLength(hotelParamsMaxLenght.address)],
         description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
-        mainImageId: []
+        mainImageId: [],
+        facilities: []
       }
     );
   }
@@ -74,7 +76,7 @@ export class HotelForAdminComponent implements OnInit {
       ChooseFacilitiesForAdminComponent,
       {
         width: '600px',
-        data: { hotelId: this.hotelId } as FacilititesDialogData
+        data: { hotel: this.hotel, facilities: this.hotel.facilities } as FacilititesDialogData
       }
     );
   }
@@ -98,8 +100,7 @@ export class HotelForAdminComponent implements OnInit {
       .getHotel(hotelId)
       .subscribe(
         (hotel) => {
-          const { id, ...data } = hotel;
-          this.changeHotelForm.patchValue(data);
+          this.changeHotelForm.patchValue(hotel);
           this.isHotelLoaded = true;
         },
         (serverError: HttpErrorResponse) => {
