@@ -44,7 +44,7 @@ namespace iTechArt.Hotels.Api.Controllers
             ViewEntity view = new ViewEntity()
             {
                 RoomId = roomId,
-                ExpireTime = DateTime.Now.Add(_viewsOptions.Value.ExpireTime)
+                ExpireTime = DateTime.Now//.Add(_viewsOptions.Value.ExpireTime)
             };
             await _hotelsDb.Views.AddAsync(view);
             await _hotelsDb.SaveChangesAsync();

@@ -62,6 +62,7 @@ namespace iTechArt.Hotels.Api
                 );
             services.AddSingleton<HashPasswordsService>();
             services.AddSingleton<JwtService>();
+            services.AddHostedService<DbCleaningHostedService>();
 
             MapperConfiguration mapperConfig = new(mc =>
             {
