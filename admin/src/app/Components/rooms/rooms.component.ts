@@ -25,10 +25,10 @@ export class RoomsComponent implements OnInit {
   public dateForm: FormGroup;
   public readonly tableColumns: string[] = [
     'image',
-    'name', 
-    'sleeps', 
-    'facilities', 
-    'price', 
+    'name',
+    'sleeps',
+    'facilities',
+    'price',
     'number',
     'reserve'
   ];
@@ -45,7 +45,7 @@ export class RoomsComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly hotelFilterService: HotelFilterService,
     private readonly accountService: AccountService
-  ) { 
+  ) {
     this.dateForm = formBuilder.group(
       {
         checkInDate: ['', [Validators.required]],
@@ -66,7 +66,7 @@ export class RoomsComponent implements OnInit {
     }
     let url = this.imageService
       .createImagePath(
-        this.hotel.id, 
+        this.hotel.id,
         room.mainImageId,
         room.id
       );
@@ -97,10 +97,11 @@ export class RoomsComponent implements OnInit {
 
     dialogRef
       .afterClosed()
-      .subscribe(() => {
+      .subscribe(
+        () => {
           this.rooms = this.rooms.filter(room => room.number > 0);
         }
-    );
+      );
   }
 
   private fetchRooms(): void {

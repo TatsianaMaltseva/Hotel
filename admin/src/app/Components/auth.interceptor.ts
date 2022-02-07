@@ -18,19 +18,20 @@ export class AuthInterceptor implements HttpInterceptor {
     private readonly matDialog: MatDialog
   ) {
   }
+
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request)
       .pipe(
         catchError((response: HttpErrorResponse) => {
           if (response.status === 401) {
-            this.login();
+            this.openLoginDialog();
           }
           return throwError(response);
         })
       );
   }
 
-  public login(): void {
+  public openLoginDialog(): void {
     this.matDialog.open(
       AuthenticationDialogComponent,
       {

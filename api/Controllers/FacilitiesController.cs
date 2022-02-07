@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using iTechArt.Hotels.Api.Entities;
-using iTechArt.Hotels.Api.JoinEntities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static iTechArt.Hotels.Api.Constants;
@@ -27,32 +24,24 @@ namespace iTechArt.Hotels.Api.Controllers
             _mapper = mapper;
         }
 
-        [Route("{facilityId}")]
-        [HttpGet]
-        public async Task<IActionResult> GetFacility([FromRoute] int facilityId)
-        {
-            Facility facility = await _hotelsDb.Facilities
-                .Where(facility => facility.Id == facilityId)
-                .ProjectTo<Facility>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-            if (facility == null)
-            {
-                return BadRequest($"Facility with {facilityId} id does not exist");
-            }
-            return Ok(facility);
-        }
-
         [HttpGet]
         [Authorize(Roles = Role.Admin)]
         public async Task<Facility[]> GetFacilities([FromQuery] FacilityParams facilityParams)
         {
             if (facilityParams.RoomId != null)
             {
-                return await GetCheckedRoomFacilities(facilityParams.RoomId ?? -1);
+                return await _hotelsDb.Facilities
+                    .Where(facility => facility.Realm == Realm.Room)
+                    .ProjectTo<Facility>(_mapper.ConfigurationProvider)
+                    .ToArrayAsync();
+
             }
             if (facilityParams.HotelId != null)
             {
-                return await GetCheckedHotelFacilitiesAsync(facilityParams.HotelId ?? -1);
+                return await _hotelsDb.Facilities
+                    .Where(facility => facility.Realm == Realm.Hotel)
+                    .ProjectTo<Facility>(_mapper.ConfigurationProvider)
+                    .ToArrayAsync();
             }
             return await _hotelsDb.Facilities
                 .ProjectTo<Facility>(_mapper.ConfigurationProvider)
@@ -70,7 +59,7 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             await _hotelsDb.AddAsync(facility);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetFacility), new { facilityId = facility.Id }, facility.Id);
+            return CreatedAtAction(nameof(ChangeFacility), new { facilityId = facility.Id }, facility.Id);
         }
 
         [Route("{facilityId}")]
@@ -99,71 +88,14 @@ namespace iTechArt.Hotels.Api.Controllers
             return NoContent();
         }
 
-        private async Task<Facility[]> GetCheckedHotelFacilitiesAsync(int hotelId)
-        {
-            if (!await CheckIfHotelExistsAsync(hotelId))
-            {
-                return Array.Empty<Facility>();
-            }
-
-            Facility[] facilities = await _hotelsDb.Facilities
-                .Where(facility => facility.Realm == Realm.Hotel)
-                .ProjectTo<Facility>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
-
-            List<FacilityHotelEntity> facilityHotels = await _hotelsDb.Hotels
-                .Where(hotel => hotel.Id == hotelId)
-                .Include(hotel => hotel.FacilityHotels)
-                .Select(hotel => hotel.FacilityHotels)
-                .FirstOrDefaultAsync();
-
-            foreach (FacilityHotelEntity facilityHotel in facilityHotels)
-            {
-                Facility facilityToEdit = facilities.Where(facility => facility.Id == facilityHotel.FacilityId).FirstOrDefault();
-                facilityToEdit.Checked = true;
-                facilityToEdit.Price = facilityHotel.Price;
-            }
-            return facilities;
-        }
-
-        private async Task<Facility[]> GetCheckedRoomFacilities(int roomId)
-        {
-            if (!await CheckIfRoomExists(roomId))
-            {
-                return Array.Empty<Facility>();
-            }
-
-            Facility[] facilities = await _hotelsDb.Facilities
-                .Where(facility => facility.Realm == Realm.Room)
-                .ProjectTo<Facility>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
-
-            List<FacilityRoomEntity> facilityRooms = await _hotelsDb.Rooms
-                .Where(room => room.Id == roomId)
-                .Include(room => room.FacilityRooms)
-                .Select(room => room.FacilityRooms)
-                .FirstOrDefaultAsync();
-
-            foreach (FacilityRoomEntity facilityRoom in facilityRooms)
-            {
-                Facility facilityToEdit = facilities.Where(facility => facility.Id == facilityRoom.FacilityId).FirstOrDefault();
-                facilityToEdit.Checked = true;
-                facilityToEdit.Price = facilityRoom.Price;
-            }
-            return facilities;
-        }
-
         private Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>
              _hotelsDb.Facilities
-                .FirstOrDefaultAsync(facility => facility.Id == facilityId);
+                .Where(facility => facility.Id == facilityId)
+                .FirstOrDefaultAsync();
 
         private async Task<bool> CheckIfFacilityUniqueAsync(FacilityEntity facility) =>
-            !await _hotelsDb.Facilities.AnyAsync(f => f.Name == facility.Name && f.Realm == facility.Realm);
-
-        private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
-            _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);
-
-        private Task<bool> CheckIfRoomExists(int roomId) =>
-            _hotelsDb.Rooms.AnyAsync(room => room.Id == roomId);
+            !await _hotelsDb.Facilities
+                .Where(f => f.Name == facility.Name && f.Realm == facility.Realm)
+                .AnyAsync();
     }
 }

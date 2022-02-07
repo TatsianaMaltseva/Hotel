@@ -24,7 +24,7 @@ export class HotelForAdminComponent implements OnInit {
   public isHotelExistInDataBase = false;
 
   public get hotel(): Hotel {
-    return { id: this.hotelId, ...this.hotelForm.value } as Hotel;
+    return this.hotelForm.value as Hotel;
   }
 
   public constructor(
@@ -37,36 +37,38 @@ export class HotelForAdminComponent implements OnInit {
   ) {
     this.hotelForm = formBuilder.group(
       {
+        id: [],
         name: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(hotelParamsMaxLenght.name)
           ]
         ],
         country: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(hotelParamsMaxLenght.country)
           ]
         ],
         city: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(hotelParamsMaxLenght.city)
           ]
         ],
         address: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(hotelParamsMaxLenght.address)
           ]
         ],
         description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
-        mainImageId: []
+        mainImageId: [],
+        facilities: []
       }
     );
   }
@@ -112,7 +114,7 @@ export class HotelForAdminComponent implements OnInit {
       ChooseFacilitiesForAdminComponent,
       {
         width: '600px',
-        data: { hotelId: this.hotelId } as FacilititesDialogData
+        data: { hotel: this.hotel, facilities: this.hotel.facilities } as FacilititesDialogData
       }
     );
   }
@@ -137,7 +139,7 @@ export class HotelForAdminComponent implements OnInit {
     );
   }
 
-  private isValidId(id: string): boolean { 
+  private isValidId(id: string): boolean {
     return !isNaN(+id);
   }
 
@@ -146,10 +148,9 @@ export class HotelForAdminComponent implements OnInit {
       .getHotel(hotelId)
       .subscribe(
         (hotel) => {
-          const { id, ...data } = hotel;
-          this.hotelForm.patchValue(data);
+          this.hotelForm.patchValue(hotel);
           this.isHotelExistInDataBase = true;
-          this.isHotelLoaded = true;
+          this.isHotelLoaded = true; //
         },
         (serverError: HttpErrorResponse) => {
           this.openErrorSnackBar(serverError.error as string);

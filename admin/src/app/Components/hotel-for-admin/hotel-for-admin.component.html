@@ -45,7 +45,7 @@
             </mat-form-field>
             <mat-form-field class="input-field">
                 <mat-label>Description</mat-label>
-                <textarea 
+                <textarea
                     matInput
                     cdkTextareaAutosize
                     formControlName="description"
@@ -56,29 +56,33 @@
                     Description value should have less than {{ getMaxLengthValue('description') }} symbols
                 </mat-error>
             </mat-form-field>
-            <mat-card-actions *ngIf="isHotelExistInDataBase">
-                <button
-                    mat-button
-                    [disabled]="hotelForm.invalid"
-                    (click)="editHotel()"
-                >
-                    <mat-icon>save</mat-icon>save changes  
-                </button>
-                <button mat-button (click)="openFacilitiesDialog()">
-                    <mat-icon>add_shopping_cart</mat-icon>facilities
-                </button>
-            </mat-card-actions>
-            <app-images-for-admin *ngIf="isHotelExistInDataBase" [hotel]="hotel"></app-images-for-admin>
-            <app-rooms-for-admin *ngIf="isHotelExistInDataBase" [hotel]="hotel"></app-rooms-for-admin>
-            <mat-card-actions *ngIf="!isHotelExistInDataBase">
-                <button 
-                    mat-button
-                    (click)="addHotel()"
-                    [disabled]="hotelForm.invalid"
-                >
-                    <mat-icon>save</mat-icon>add hotel
-                </button>
-            </mat-card-actions>
+            <div *ngIf="isHotelExistInDataBase; else newHotel">
+                <mat-card-actions>
+                    <button
+                        mat-button
+                        [disabled]="hotelForm.invalid"
+                        (click)="editHotel()"
+                    >
+                        <mat-icon>save</mat-icon>save changes
+                    </button>
+                    <button mat-button (click)="openFacilitiesDialog()">
+                        <mat-icon>add_shopping_cart</mat-icon>facilities
+                    </button>
+                </mat-card-actions>
+                <app-images-for-admin *ngIf="isHotelExistInDataBase" [hotel]="hotel"></app-images-for-admin>
+                <app-rooms-for-admin *ngIf="isHotelExistInDataBase" [hotel]="hotel"></app-rooms-for-admin>
+            </div>
+            <ng-template #newHotel>
+                <mat-card-actions>
+                    <button
+                        mat-button
+                        (click)="addHotel()"
+                        [disabled]="hotelForm.invalid"
+                    >
+                        <mat-icon>save</mat-icon>add hotel
+                    </button>
+                </mat-card-actions>
+            </ng-template>
         </mat-card-content>
     </mat-card>
 </form>

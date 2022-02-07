@@ -1,5 +1,4 @@
-﻿using iTechArt.Hotels.Api.JoinEntities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Entities
@@ -12,14 +11,6 @@ namespace iTechArt.Hotels.Api.Entities
 
         public Realm Realm { get; set; }
 
-        public List<RoomEntity> Rooms { get; }
-
-        public List<FacilityRoomEntity> FacilityRooms { get; }
-
-        public List<HotelEntity> Hotels { get; }
-
-        public List<FacilityHotelEntity> FacilityHotels { get; }
-
-        public List<OrderEntity> Orders { get; }
+        public List<OrderEntity> Orders { get; set; }
     }
 }

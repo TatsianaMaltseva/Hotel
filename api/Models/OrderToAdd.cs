@@ -11,6 +11,6 @@ namespace iTechArt.Hotels.Api.Models
         public Hotel Hotel { get; set; }
 
         [Required]
-        public OrderDateParams OrderDateParams { get; set; }
+        public OrderDateParams OrderDateParams { get; set; }//
     }
 }

@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Facility } from 'src/app/Dtos/facility';
 import * as dayjs from 'dayjs';
 
+import { Facility } from 'src/app/Dtos/facility';
 import { Order } from 'src/app/Dtos/order';
 import { OrderDetails } from 'src/app/Dtos/order-details';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
@@ -33,13 +33,15 @@ export class OrderComponent {
       },
       price: orderDetails.room.price
     };
-    this.days = dayjs(this.order.orderDateParams.checkOutDate).diff(
-      dayjs(this.order.orderDateParams.checkInDate), 
-      'day') + 1;
+    this.days = dayjs(this.order.orderDateParams.checkOutDate)
+      .diff(
+        dayjs(this.order.orderDateParams.checkInDate),
+        'day')
+       + 1;
   }
 
   public changeRoomFacilityStatus(
-    event: MatCheckboxChange, 
+    event: MatCheckboxChange,
     facility: Facility
   ): void {
     this.order.room.facilities
@@ -53,7 +55,7 @@ export class OrderComponent {
   }
 
   public changeHotelFacilityStatus(
-    event: MatCheckboxChange, 
+    event: MatCheckboxChange,
     facility: Facility
   ): void {
     this.order.hotel.facilities

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using System.Linq;
 using System.Threading.Tasks;
 using iTechArt.Hotels.Api.Entities;
@@ -72,37 +71,33 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms")]
         [HttpGet]
-        public async Task<IActionResult> GetRooms([FromRoute] int hotelId, [FromQuery] OrderDateParams orderDateParams)
+        public async Task<IActionResult> GetRooms([FromRoute] int hotelId, [FromQuery] OrderDateParams roomFilterParams)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
 
-            List<Room> rooms = await _hotelsDb.Hotels
-                .Where(h => h.Id == hotelId)
-                .Include(hotel => hotel.Rooms)
-                .ThenInclude(room => room.Facilities)
-                .Include(hotel => hotel.Rooms)
-                .ThenInclude(room => room.Orders)
-                .Select(hotel => _mapper.Map<List<Room>>(hotel.Rooms))
-                .SingleOrDefaultAsync();
 
-            foreach (Room room in rooms)
-            {
-                OrderEntity[] orders = await _hotelsDb.Orders
-                    .Where(order => order.RoomId == room.Id)
-                    .ToArrayAsync();
-                foreach (OrderEntity order in orders)
+            List<Room> rooms = await _hotelsDb.Rooms
+                .Where(room => room.HotelId == hotelId)
+                .Include(room => room.Orders)
+                .Select(room => new Room()
                 {
-                    if (!(orderDateParams.CheckInDate < order.CheckInDate
-                        || orderDateParams.CheckInDate > order.CheckOutDate))
-                    {
-                        room.Number -= 1;
-                    }
-                }
-            }
-            rooms.RemoveAll(room => room.Number <= 0);
+                    Id = room.Id,
+                    Name = room.Name,
+                    Sleeps = room.Sleeps,
+                    Price = room.Price,
+                    MainImageId = room.MainImageId,
+                    Number = (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
+                        ? room.Number - room.Orders
+                            .Where(order => !(roomFilterParams.CheckOutDate < order.CheckInDate
+                                || roomFilterParams.CheckInDate > order.CheckOutDate))
+                            .Count()
+                        : room.Number,
+                    //Facilities
+                })
+                .ToListAsync();
 
             return Ok(rooms);
         }
@@ -117,25 +112,12 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such hotel does not exist");
             }
             RoomEntity room = _mapper.Map<RoomEntity>(request);
-            HotelEntity hotel = await _hotelsDb.Hotels.Where(hotel => hotel.Id == hotelId).FirstOrDefaultAsync();
+            HotelEntity hotel = await _hotelsDb.Hotels
+                .Where(hotel => hotel.Id == hotelId)
+                .FirstOrDefaultAsync();
             hotel.Rooms.Add(room);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetRoom), new { hotelId, roomId = room.Id }, room.Id);
-        }
-
-        [Route("{hotelId}/rooms/{roomId}")]
-        [HttpGet]
-        public async Task<IActionResult> GetRoom([FromRoute] int hotelId, [FromRoute] int roomId)
-        {
-            if (!await CheckIfHotelExistsAsync(hotelId))
-            {
-                return BadRequest("Such hotel does not exist");
-            }
-            Room room = await _hotelsDb.Rooms
-                .Where(room => room.Id == roomId)
-                .ProjectTo<Room>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-            return Ok(room);
+            return CreatedAtAction(nameof(ChangeRoom), new { hotelId, roomId = room.Id }, room.Id);
         }
 
         private Task<RoomEntity> GetRoomEntityAsync(int? roomId) =>

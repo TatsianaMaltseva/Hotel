@@ -1,9 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { Facility } from 'src/app/Dtos/facility';
+import { Hotel } from 'src/app/Dtos/hotel';
+import { Room } from 'src/app/Dtos/room';
 import { FacilityService } from '../../facility.service';
 
 @Component({
@@ -11,17 +13,18 @@ import { FacilityService } from '../../facility.service';
   templateUrl: './choose-facilities-for-admin.component.html',
   styleUrls: ['./choose-facilities-for-admin.component.css']
 })
-export class ChooseFacilitiesForAdminComponent implements OnInit {
-  public hotelId?: number;
-  public roomId?: number;
+export class ChooseFacilitiesForAdminComponent {
+  public hotel?: Hotel;
+  public room?: Room;
   public facilitiesForm: FormGroup; 
+  public seeOtherClicked = false;
 
   public get facilities(): FormArray {
     return this.facilitiesForm.get('facilities') as FormArray;
   }
 
   private get emptyFacilityForm(): FormGroup {
-    const facilityGroup =  this.formBuilder.group(
+    const facilityGroup = this.formBuilder.group(
       {
         id: [],
         name: [],
@@ -37,38 +40,56 @@ export class ChooseFacilitiesForAdminComponent implements OnInit {
     private readonly facilityService: FacilityService,
     private readonly formBuilder: FormBuilder
   ) { 
-    this.hotelId = data.hotelId;
-    this.roomId = data.roomId;
+    this.hotel = data.hotel;
+    this.room = data.room;
     this.facilitiesForm = this.formBuilder.group(
       {
         facilities: this.formBuilder.array([])
       }
     );
-  }
 
-  public ngOnInit(): void {
-    if (!this.hotelId) {
-      return;
-    }
-    this.facilityService
-      .getCheckedFacilities(this.hotelId, this.roomId)
-      .subscribe(
-        (facilities) => {
-          facilities.forEach(facility => this.addFacilityToForm(facility));
-        }
-      );
+    this.data.facilities.forEach(facility => facility.checked = true);
+    this.data.facilities.forEach(facility => this.addFacilityToForm(facility));
   }
 
   public changeFacilitiesStatus(): void {
-    if (!this.hotelId) {
+    if (!this.hotel) {
       return;
     }
 
     const checkedFacilitites = (this.facilities.value as Facility[])
       .filter(facility => facility.checked);
+    
     this.facilityService
-      .changeHotelFacilities(this.hotelId, checkedFacilitites, this.roomId)
-      .subscribe();
+      .changeFacilities(this.hotel.id, checkedFacilitites, this.room?.id)
+      .subscribe(
+        () => {
+          if (this.room) {
+            this.room.facilities = checkedFacilitites;
+          } else if (this.hotel) {
+            this.hotel.facilities = checkedFacilitites;
+          }
+        }
+      );
+  }
+
+  public fetchAvilableFacilities(): void {
+    this.seeOtherClicked = true;
+    if (!this.hotel) {
+      return;
+    }
+    this.facilityService
+      .getCheckedFacilities(this.hotel.id, this.room?.id)
+      .subscribe(
+        (facilities) => {
+          facilities.forEach(newFacility => {
+            if((this.facilities.value as Facility[])
+                .every(hotelFacility => hotelFacility.id !== newFacility.id)) {
+              this.addFacilityToForm(newFacility);
+            }
+          });
+        }
+      );
   }
 
   private addFacilityToForm(facility: Facility): void {

@@ -42,7 +42,8 @@ export class RoomsForAdminComponent implements OnInit {
         sleeps: ['', Validators.required],
         mainImageId: [],
         price: ['', Validators.required],
-        number: ['', Validators.required]
+        number: ['', Validators.required],
+        facilities: []
       }
     );
     return roomForm;
@@ -157,7 +158,11 @@ export class RoomsForAdminComponent implements OnInit {
       ChooseFacilitiesForAdminComponent,
       {
         width: '600px',
-        data: { hotelId: this.hotelId, roomId: room.id } as FacilititesDialogData
+        data: { 
+          hotel: this.hotel, 
+          room: room, 
+          facilities: room.facilities 
+        } as FacilititesDialogData
       }
     );
   }

@@ -39,18 +39,6 @@ namespace iTechArt.Hotels.Api.Services
                 .ReverseMap();
 
             CreateMap<FacilityEntity, Facility>()
-                .ForMember(
-                    f => f.Price,
-                    m => m
-                        .MapFrom(fe => fe.Realm == Constants.Realm.Hotel ?
-                            fe.FacilityHotels
-                                .Where(fr => fr.FacilityId == fe.Id)
-                                .FirstOrDefault()
-                                .Price :
-                            fe.FacilityRooms
-                                .Where(fr => fr.FacilityId == fe.Id)
-                                .FirstOrDefault()
-                                .Price))
                 .ReverseMap();
 
             CreateMap<FacilityEntity, FacilityToEdit>()
