@@ -28,7 +28,7 @@ export class HotelForAdminComponent implements OnInit {
   public cities: string[] = [];
 
   public get hotel(): Hotel {
-    return { id: this.hotelId, ...this.hotelForm.value } as Hotel;
+    return this.hotelForm.value as Hotel;
   }
 
   public get country(): AbstractControl | null {
@@ -50,29 +50,30 @@ export class HotelForAdminComponent implements OnInit {
   ) {
     this.hotelForm = formBuilder.group(
       {
+        id: [],
         name: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(hotelParamsMaxLenght.name)
           ]
         ],
         country: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(hotelParamsMaxLenght.country)
           ]
         ],
         city: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(hotelParamsMaxLenght.city)
           ]
         ],
         address: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(hotelParamsMaxLenght.address)
@@ -81,7 +82,8 @@ export class HotelForAdminComponent implements OnInit {
         description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
         checkInTime: ['', [Validators.required]],
         checkOutTime: ['', [Validators.required]],
-        mainImageId: []
+        mainImageId: [],
+        facilities: []
       }
     );
   }
@@ -104,7 +106,7 @@ export class HotelForAdminComponent implements OnInit {
       this.isHotelLoaded = true;
       return;
     }
-    
+
     const id: string | null = this.route.snapshot.paramMap.get('id');
     if (!id || !this.isValidId(id)) {
       this.openErrorSnackBar('Hotel id is not valid');
@@ -146,7 +148,7 @@ export class HotelForAdminComponent implements OnInit {
       ChooseFacilitiesForAdminComponent,
       {
         width: '600px',
-        data: { hotelId: this.hotelId } as FacilititesDialogData
+        data: { hotel: this.hotel, facilities: this.hotel.facilities } as FacilititesDialogData
       }
     );
   }
@@ -174,7 +176,7 @@ export class HotelForAdminComponent implements OnInit {
     );
   }
 
-  private isValidId(id: string): boolean { 
+  private isValidId(id: string): boolean {
     return !isNaN(+id);
   }
 
@@ -183,10 +185,9 @@ export class HotelForAdminComponent implements OnInit {
       .getHotel(hotelId)
       .subscribe(
         (hotel) => {
-          const { id, ...data } = hotel;
-          this.hotelForm.patchValue(data);
+          this.hotelForm.patchValue(hotel);
           this.isHotelExistInDataBase = true;
-          this.isHotelLoaded = true;
+          this.isHotelLoaded = true; //
         },
         (serverError: HttpErrorResponse) => {
           this.openErrorSnackBar(serverError.error as string);

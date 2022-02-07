@@ -7,12 +7,12 @@ namespace iTechArt.Hotels.Api.JoinEntities
     {
         public int Id { get; set; }
 
-        [ForeignKey("Hotel")]
+        [ForeignKey(nameof(Hotel))]
         public int HotelId { get; set; }
 
         public HotelEntity Hotel { get; set; }
 
-        [ForeignKey("Facility")]
+        [ForeignKey(nameof(Facility))]
         public int FacilityId { get; set; }
 
         public FacilityEntity Facility { get; set; }

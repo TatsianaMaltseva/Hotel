@@ -20,7 +20,7 @@ import { Room } from 'src/app/Dtos/room';
 })
 export class RoomsForAdminComponent implements OnInit {
   @Input() public hotel?: Hotel;
-  
+
   public hotelId?: number;
   public roomsForm: FormGroup;
 
@@ -34,15 +34,16 @@ export class RoomsForAdminComponent implements OnInit {
         id: [],
         name: [
           '',
-          [ 
-            Validators.required, 
+          [
+            Validators.required,
             Validators.maxLength(roomParamsMaxLength.name)
           ]
         ],
         sleeps: ['', Validators.required],
         mainImageId: [],
         price: ['', Validators.required],
-        number: ['', Validators.required]
+        number: ['', Validators.required],
+        facilities: []
       }
     );
     return roomForm;
@@ -135,7 +136,7 @@ export class RoomsForAdminComponent implements OnInit {
     }
     let url = this.imageService
       .createImagePath(
-        this.hotel.id, 
+        this.hotel.id,
         room.mainImageId,
         room.id
       );
@@ -153,11 +154,20 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public openFacilitiesDialog(room: Room): void {
+    console.log(         {
+      hotel: this.hotel,
+      room: room,
+      facilities: room.facilities
+    } as FacilititesDialogData)
     this.matDialog.open(
       ChooseFacilitiesForAdminComponent,
       {
         width: '600px',
-        data: { hotelId: this.hotelId, roomId: room.id } as FacilititesDialogData
+        data: {
+          hotel: this.hotel,
+          room: room,
+          facilities: room.facilities
+        } as FacilititesDialogData
       }
     );
   }

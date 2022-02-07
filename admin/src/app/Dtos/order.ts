@@ -7,13 +7,13 @@ export interface Order {
     hotel: Hotel;
     checkInDate: string;
     checkOutDate: string;
+    facilities: Facility[];
     price: number;
 }
 
-export interface OrderToShow {
-    hotel: Hotel;
-    room: Room;
-    price: number;
+export interface OrderToAdd {
+    hotelId: number;
+    roomId: number;
     facilities: Facility[];
     checkInDate: string;
     checkOutDate: string;

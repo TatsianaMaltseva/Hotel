@@ -23,7 +23,7 @@ namespace iTechArt.Hotels.Api.Controllers
         private readonly IOptions<ViewsOptions> _viewsOptions;
 
         public OrdersController(
-            HotelsDatabaseContext hotelDb,
+            HotelsDatabaseContext hotelDb, 
             IMapper mapper,
             IOptions<ViewsOptions> viewsOptions
         )
@@ -31,6 +31,38 @@ namespace iTechArt.Hotels.Api.Controllers
             _hotelsDb = hotelDb;
             _mapper = mapper;
             _viewsOptions = viewsOptions;
+        }
+
+        [Route("orders")]
+        [HttpPost]
+        [Authorize(Roles = Role.Client)]
+        public async Task<IActionResult> AddOrder([FromBody] OrderToAdd order)
+        {
+            //check hotel if exists
+            if (!await CheckIfRoomExistsAsync(order.RoomId))
+            {
+                return BadRequest("Such room does not exist");
+            }
+
+            List<FacilityEntity> facilities = await _hotelsDb.Facilities
+                
+                //.ProjectTo<FacilityEntity>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            OrderEntity orderEntity = new()
+            {
+                HotelId = order.HotelId,
+                RoomId = order.RoomId,
+                AccountId = Convert.ToInt32(User.Identity.Name),
+                Price = await CalculateOrderPrice(order),
+                CheckInDate = order.CheckInDate,
+                CheckOutDate = order.CheckOutDate,
+                Facilities = facilities
+            };
+
+            await _hotelsDb.AddAsync(orderEntity);
+            await _hotelsDb.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetOrder), new { orderId = orderEntity.Id }, null);
         }
 
         [Route("viewed-rooms/{roomId}")]
@@ -44,54 +76,11 @@ namespace iTechArt.Hotels.Api.Controllers
             ViewEntity view = new ViewEntity()
             {
                 RoomId = roomId,
-                ExpireTime = DateTime.Now//.Add(_viewsOptions.Value.ExpireTime)
+                ExpireTime = DateTime.Now.Add(_viewsOptions.Value.ExpireTime)
             };
             await _hotelsDb.Views.AddAsync(view);
             await _hotelsDb.SaveChangesAsync();
             return Ok();
-        }
-
-        [Route("orders")]
-        [HttpPost]
-        [Authorize(Roles = Role.Client)]
-        public async Task<IActionResult> AddOrder([FromBody] OrderToAdd order)
-        {
-            if (!await CheckIfRoomExistsAsync(order.Room.Id))
-            {
-                return BadRequest("Such room does not exist");
-            }
-
-            var facilities = new List<FacilityEntity>();
-            foreach(Facility facility in order.Room.Facilities)
-            {
-                if (facility.Checked == true)
-                {
-                    facilities.Add(await _hotelsDb.Facilities.FirstOrDefaultAsync(facilityEntity => facilityEntity.Id == facility.Id));
-                }
-            }
-
-            foreach(Facility facility in order.Hotel.Facilities)
-            {
-                if (facility.Checked == true)
-                {
-                    facilities.Add(await _hotelsDb.Facilities.FirstOrDefaultAsync(facilityEntity => facilityEntity.Id == facility.Id));
-                }
-            }
-            
-            OrderEntity orderEntity = new()
-            {
-                HotelId = order.Hotel.Id,
-                RoomId = order.Room.Id,
-                AccountId = Convert.ToInt32(User.Identity.Name),
-                Price = await CalculateOrderPrice(order),
-                CheckInDate = order.CheckInDate,
-                CheckOutDate = order.CheckOutDate,
-                Facilities = facilities
-            };
-
-            await _hotelsDb.AddAsync(orderEntity);
-            await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetOrder), new { orderId = orderEntity.Id }, null);
         }
 
         [Route("orders/{orderId}")]
@@ -112,59 +101,36 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("orders")]
         [HttpGet]
         [Authorize(Roles = Role.Client)]
-        public async Task<IActionResult> GetOrders([FromQuery] OrderFilterParams filterParams)
+        public async Task<IActionResult> GetOrders()
         {
-            var orders = _hotelsDb.Orders
-                .AsQueryable();
-
-            if (filterParams.Date == OrderDate.Future)
-            {
-                orders = orders.Where(order => order.CheckOutDate >= DateTime.Today);
-            }
-            else if (filterParams.Date == OrderDate.Past)
-            {
-                orders = orders.Where(order => order.CheckOutDate < DateTime.Today);
-            }
-
-            List<Order> ordersToReturn = await orders
+            List<Order> orders = await _hotelsDb.Orders
                 .Where(order => order.AccountId == Convert.ToInt32(User.Identity.Name))
                 .Include(order => order.Hotel)
                 .Include(order => order.Room)
                 .Include(order => order.Facilities)
-                .OrderBy(order => order.CheckInDate)
                 .ProjectTo<Order>(_mapper.ConfigurationProvider)
                 .ToListAsync();
-            return Ok(ordersToReturn);
+            return Ok(orders);
         }
 
         private async Task<decimal> CalculateOrderPrice(OrderToAdd order)
         {
             RoomEntity room = await _hotelsDb.Rooms
-                .Where(room => room.Id == order.Room.Id)
+                .Where(room => room.Id == order.RoomId)
                 .Include(room => room.FacilityRooms)
                 .FirstOrDefaultAsync();
             HotelEntity hotel = await _hotelsDb.Hotels
-                .Where(hotel => hotel.Id == order.Hotel.Id)
+                .Where(hotel => hotel.Id == order.HotelId)
                 .Include(hotel => hotel.FacilityHotels)
                 .FirstOrDefaultAsync();
 
             decimal pricePerDay = room.Price;
-            foreach (Facility facility in order.Room.Facilities)
+            foreach (Facility facility in order.Facilities)
             {
                 if (facility.Checked)
                 {
                     pricePerDay += room.FacilityRooms
                         .Where(facilityRoom => facilityRoom.FacilityId == facility.Id)
-                        .FirstOrDefault()
-                        .Price;
-                }
-            }
-           foreach (Facility facility in order.Hotel.Facilities)
-            {
-                if (facility.Checked)
-                {
-                    pricePerDay += hotel.FacilityHotels
-                        .Where(facilityHotel => facilityHotel.FacilityId == facility.Id)
                         .FirstOrDefault()
                         .Price;
                 }

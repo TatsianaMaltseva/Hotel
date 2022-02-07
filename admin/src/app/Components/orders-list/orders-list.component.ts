@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { OrderFilterDateOptions } from 'src/app/Core/order-filter-date-options';
 import { OrderFilterParams } from 'src/app/Core/order-filter-params';
-import { OrderToShow } from 'src/app/Dtos/order';
+import { Order } from 'src/app/Dtos/order';
 import { OrderService } from 'src/app/orders.service';
 
 @Component({
@@ -12,14 +12,14 @@ import { OrderService } from 'src/app/orders.service';
   styleUrls: ['./orders-list.component.css']
 })
 export class OrdersListComponent implements OnInit {
-  public orders: OrderToShow[] = [];
+  public orders: Order[] = [];
   public ordersFilterForm: FormGroup;
   public dateOptions = [OrderFilterDateOptions.future, OrderFilterDateOptions.past];
 
   public constructor(
     private readonly orderService: OrderService,
     private readonly formBuilder: FormBuilder
-  ) { 
+  ) {
     this.ordersFilterForm = formBuilder.group(
       {
         date: [OrderFilterDateOptions.future]
@@ -39,7 +39,7 @@ export class OrdersListComponent implements OnInit {
     this.orderService
       .getOrders(this.ordersFilterForm.value as OrderFilterParams)
       .subscribe(
-        (orders: OrderToShow[]) => {
+        (orders: Order[]) => {
           this.orders = orders;
         }
       );

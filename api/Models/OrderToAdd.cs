@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace iTechArt.Hotels.Api.Models
@@ -6,15 +7,17 @@ namespace iTechArt.Hotels.Api.Models
     public class OrderToAdd
     {
         [Required]
-        public Room Room { get; set; }
+        public int RoomId { get; set; }
 
         [Required]
-        public Hotel Hotel { get; set; }
+        public int HotelId { get; set; }
 
         [Required]
         public DateTime CheckInDate { get; set; }
 
         [Required]
         public DateTime CheckOutDate { get; set; }
+
+        public List<Facility> Facilities { get; set; }
     }
 }

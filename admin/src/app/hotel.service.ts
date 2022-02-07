@@ -47,8 +47,9 @@ export class HotelService {
 
   public getHotelsCount(filterParameters: HotelFilterParameters): Observable<number> {
     const httpParams = filterParameters as Params;
-    return this.http.get<number>(`${this.apiUrl}api/hotels/count`,
-    { params: httpParams });
+    return this.http.get<number>(
+      `${this.apiUrl}api/hotels/count`,
+      { params: httpParams });
   }
 
   public getRooms(hotelId: number): Observable<Room[]> {

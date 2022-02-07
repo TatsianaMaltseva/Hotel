@@ -19,6 +19,7 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
+        private readonly string timeFormat = @"hh\:mm";
 
         public HotelsController(HotelsDatabaseContext hotelsDb, IMapper mapper)
         {
@@ -30,11 +31,31 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotel([FromRoute] int hotelId)
         {
-            var hotel = await _hotelsDb.Hotels
+            Hotel hotel = await _hotelsDb.Hotels
                 .Where(hotel => hotel.Id == hotelId)
                 .Include(hotel => hotel.FacilityHotels)
                 .ThenInclude(facilityHotel => facilityHotel.Facility)
-                .ProjectTo<Hotel>(_mapper.ConfigurationProvider)
+                .Select(hotel => new Hotel()
+                {
+                    Id = hotel.Id,
+                    Name = hotel.Name,
+                    Country = hotel.Country,
+                    City = hotel.City,
+                    Address = hotel.Address,
+                    Description = hotel.Description,
+                    MainImageId = hotel.MainImageId,
+                    Facilities = hotel.FacilityHotels
+                        .Select(facilityHotel => new Facility()
+                        {
+                            Id = facilityHotel.FacilityId,
+                            Name = facilityHotel.Facility.Name,
+                            Realm = Realm.Hotel,
+                            Price = facilityHotel.Price
+                        })
+                        .ToList(),
+                    CheckInTime = hotel.CheckInTime.ToString(timeFormat),
+                    CheckOutTime = hotel.CheckOutTime.ToString(timeFormat)
+                })
                 .FirstOrDefaultAsync();
             if (hotel == null)
             {
@@ -65,9 +86,9 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             var hotelCount = await filteredHotelCards.CountAsync();
             HotelCard[] hotelCards = await filteredHotelCards
-                //.Where(hotel => CheckIfHotelHasAvailableRooms(hotel, filterParams.CheckInDate, filterParams.CheckOutDate))
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
+                //
                 .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
             return Ok(new { hotelCards, hotelCount });
@@ -183,38 +204,5 @@ namespace iTechArt.Hotels.Api.Controllers
              _hotelsDb.Hotels
                 .Where(hotel => hotel.Id == hotelId)
                 .FirstOrDefaultAsync();
-
-        //private bool CheckIfHotelHasAvailableRooms(HotelEntity hotel, DateTime? checkInDate = null, DateTime? checkOutDate = null)
-        //{
-        //    List<RoomEntity> rooms = _hotelsDb.Rooms
-        //        .Where(room => room.HotelId == hotel.Id)
-        //        .Include(room => room.ActiveViews)
-        //        .Include(room => room.Orders)
-        //        .ToList();
-
-        //    foreach (RoomEntity room in rooms)
-        //    {
-        //        if (checkInDate != null && checkOutDate != null)
-        //        {
-        //            foreach (OrderEntity order in room.Orders)//
-        //            {
-        //                if (!(checkOutDate < order.CheckInDate
-        //                    || checkInDate > order.CheckOutDate))
-        //                {
-        //                    room.Number -= 1;
-        //                }
-        //            }
-        //        }
-        //        int activeViewsNumber = room.ActiveViews.Count;
-        //        room.Number -= activeViewsNumber;
-
-        //        if (room.Number <= 0)
-        //        {
-        //            rooms.Remove(room);
-        //        }
-        //    }
-
-        //    return rooms.Count > 0;
-        //}
     }
 }

@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Facility } from 'src/app/Dtos/facility';
 import * as dayjs from 'dayjs';
 
+import { Facility } from 'src/app/Dtos/facility';
 import { Order } from 'src/app/Dtos/order';
 import { OrderDetails } from 'src/app/Dtos/order-details';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
@@ -29,34 +29,22 @@ export class OrderComponent {
         hotel: orderDetails.hotel,
         checkInDate: this.hotelFilterService.checkInDate,
         checkOutDate: this.hotelFilterService.checkOutDate,
-        price: orderDetails.room.price
+        price: orderDetails.room.price,
+        facilities: orderDetails.facilities
       };
       this.days = dayjs(this.order.checkOutDate)
-          .diff(
-            dayjs(this.order.checkInDate), 
-            'day'
-          ) + 1;
+        .diff(
+          dayjs(this.order.checkInDate),
+          'day'
+          )
+        + 1;
   }
 
-  public changeRoomFacilityStatus(
-    event: MatCheckboxChange, 
+  public changeFacilityStatus(
+    event: MatCheckboxChange,
     facility: Facility
   ): void {
-    this.order.room.facilities
-      .filter(f => f.id == facility.id)
-      .map(f => f.checked = event.checked);
-    if (event.checked) {
-      this.order.price += facility.price;
-    } else {
-      this.order.price -= facility.price;
-    }
-  }
-
-  public changeHotelFacilityStatus(
-    event: MatCheckboxChange, 
-    facility: Facility
-  ): void {
-    this.order.hotel.facilities
+    this.order.facilities
       .filter(f => f.id == facility.id)
       .map(f => f.checked = event.checked);
     if (event.checked) {
@@ -67,8 +55,16 @@ export class OrderComponent {
   }
 
   public reserveRoom(): void {
+    this.order.hotel.facilities.filter(facility => facility.checked);
+    this.order.room.facilities.filter(facility => facility.checked);
     this.orderService
-      .reserveRoom(this.order)
+      .reserveRoom({
+        hotelId: this.order.hotel.id,
+        roomId: this.order.room.id,
+        facilities: this.order.facilities,
+        checkInDate: this.order.checkInDate,
+        checkOutDate: this.order.checkOutDate
+      })
       .subscribe(
         () => {
           this.order.room.number -= 1;

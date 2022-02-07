@@ -13,6 +13,7 @@ import { HotelFilterService } from 'src/app/hotel-filter.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { OrderDetails } from 'src/app/Dtos/order-details';
 import { OrderService } from 'src/app/orders.service';
+import { Facility } from 'src/app/Dtos/facility';
 
 @Component({
   selector: 'app-rooms',
@@ -26,10 +27,10 @@ export class RoomsComponent implements OnInit {
   public today = new Date();
   public readonly tableColumns: string[] = [
     'image',
-    'name', 
-    'sleeps', 
-    'facilities', 
-    'price', 
+    'name',
+    'sleeps',
+    'facilities',
+    'price',
     'number',
     'reserve'
   ];
@@ -46,17 +47,17 @@ export class RoomsComponent implements OnInit {
     private readonly hotelService: HotelService,
     private readonly formBuilder: FormBuilder,
     private readonly hotelFilterService: HotelFilterService,
-    private readonly accountService: AccountService,
-    public readonly orderService: OrderService
-  ) { 
+    private readonly orderService: OrderService,
+    private readonly accountService: AccountService
+  ) {
     this.dateForm = formBuilder.group(
       {
         checkInDate: [
-          this.hotelFilterService.checkInDate, 
+          this.hotelFilterService.checkInDate,
           [Validators.required]
         ],
         checkOutDate: [
-          this.hotelFilterService.checkOutDate, 
+          this.hotelFilterService.checkOutDate,
           [Validators.required]
         ]
       }
@@ -65,7 +66,7 @@ export class RoomsComponent implements OnInit {
     this.dateForm
       .valueChanges
       .subscribe(
-        () => 
+        () =>
           this.areAllShownRoomsAvailable = false
         );
 
@@ -90,7 +91,7 @@ export class RoomsComponent implements OnInit {
     }
     let url = this.imageService
       .createImagePath(
-        this.hotel.id, 
+        this.hotel.id,
         room.mainImageId,
         room.id
       );
@@ -111,21 +112,31 @@ export class RoomsComponent implements OnInit {
   }
 
   public showReserveDialog(room: Room): void {
-    this.orderService.addRoomToViewed(room).subscribe();
+    if (!this.hotel) {
+      return;
+    }
+    this.orderService
+      .addRoomToViewed(room)
+      .subscribe();
     const dialogRef = this.matDialog.open(
       OrderComponent,
       {
         width: '400px',
-        data: { room, hotel: this.hotel } as OrderDetails
+        data: {
+          hotel: this.hotel,
+          room: room,
+          facilities: [ ...this.hotel.facilities, ...room.facilities ] as Facility[]
+        } as OrderDetails
       }
     );
 
     dialogRef
       .afterClosed()
-      .subscribe(() => {
+      .subscribe(
+        () => {
           this.rooms = this.rooms.filter(room => room.number > 0);
         }
-    );
+      );
   }
 
   private fetchRooms(): void {

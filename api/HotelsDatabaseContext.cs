@@ -94,25 +94,14 @@ namespace iTechArt.Hotels.Api
                 .WithOne()
                 .HasForeignKey(viev => viev.RoomId);
 
-            modelBuilder.Entity<RoomEntity>()
-                .HasMany(room => room.Facilities)
-                .WithMany(facility => facility.Rooms)
-                .UsingEntity<FacilityRoomEntity>(
-                    j => j
-                        .HasOne(fr => fr.Facility)
-                        .WithMany(f => f.FacilityRooms)
-                        .HasForeignKey(fr => fr.FacilityId),
-                    j => j
-                        .HasOne(fr => fr.Room)
-                        .WithMany(r => r.FacilityRooms)
-                        .HasForeignKey(fr => fr.RoomId),
-                    j => j.HasKey(j => j.Id)
-                );
-
             modelBuilder.Entity<OrderEntity>()
                 .HasMany(order => order.Facilities)
                 .WithMany(facility => facility.Orders)
                 .UsingEntity(t => t.ToTable("FacilityOrder"));
+
+            modelBuilder.Entity<FacilityEntity>()
+                .Property(e => e.Realm)
+                .HasConversion<string>();
         }
     }
 }

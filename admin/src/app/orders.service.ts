@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { OrderFilterParams } from './Core/order-filter-params';
-import { Order, OrderToShow } from './Dtos/order';
+import { Order, OrderToAdd } from './Dtos/order';
 import { Room } from './Dtos/room';
 
 @Injectable({
@@ -13,10 +13,10 @@ import { Room } from './Dtos/room';
 })
 export class OrderService {
   private readonly apiUrl: string;
-  
+
   public constructor(
     private readonly http: HttpClient
-  ) { 
+  ) {
     this.apiUrl = environment.api;
   }
 
@@ -27,15 +27,15 @@ export class OrderService {
     );
   }
 
-  public reserveRoom(order: Order): Observable<string> {
+  public reserveRoom(order: OrderToAdd): Observable<string> {
     return this.http.post<string>(
       `${this.apiUrl}api/orders`,
       order
     );
   }
-  
-  public getOrders(filterParams: OrderFilterParams): Observable<OrderToShow[]> {
-    return this.http.get<OrderToShow[]>(
+
+  public getOrders(filterParams: OrderFilterParams): Observable<Order[]> {
+    return this.http.get<Order[]>(
       `${this.apiUrl}api/orders`,
       { params: filterParams as Params }
     );

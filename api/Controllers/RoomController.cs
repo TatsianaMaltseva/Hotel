@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using System.Linq;
 using System.Threading.Tasks;
 using iTechArt.Hotels.Api.Entities;
@@ -81,9 +80,10 @@ namespace iTechArt.Hotels.Api.Controllers
 
             List<Room> rooms = await _hotelsDb.Rooms
                 .Where(room => room.HotelId == hotelId)
-                .Include(room => room.Facilities)
-                .Include(room => room.ActiveViews)
                 .Include(room => room.Orders)
+                .Include(room => room.ActiveViews)
+                .Include(room => room.FacilityRooms)
+                .ThenInclude(facilityRoom => facilityRoom.Facility)
                 .Select(room => new Room()
                 {
                     Id = room.Id,
@@ -97,7 +97,15 @@ namespace iTechArt.Hotels.Api.Controllers
                                 || roomFilterParams.CheckInDate > order.CheckOutDate))
                             .Count() - room.ActiveViews.Count()
                         : room.Number - room.ActiveViews.Count(),
-                    //Facilities
+                    Facilities = room.FacilityRooms
+                        .Select(facilityRoom => new Facility()
+                        {
+                            Id = facilityRoom.FacilityId,
+                            Name = facilityRoom.Facility.Name,
+                            Realm = Realm.Room,
+                            Price = facilityRoom.Price
+                        })
+                        .ToList()
                 })
                 .Where(room => room.Number > 0)
                 .ToListAsync();
@@ -123,21 +131,6 @@ namespace iTechArt.Hotels.Api.Controllers
             await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(ChangeRoom), new { hotelId, roomId = room.Id }, room.Id);
         }
-
-        //[Route("{hotelId}/rooms/{roomId}")]
-        //[HttpGet]
-        //public async Task<IActionResult> GetRoom([FromRoute] int hotelId, [FromRoute] int roomId)
-        //{
-        //    if (!await CheckIfHotelExistsAsync(hotelId))
-        //    {
-        //        return BadRequest("Such hotel does not exist");
-        //    }
-        //    Room room = await _hotelsDb.Rooms
-        //        .Where(room => room.Id == roomId)
-        //        .ProjectTo<Room>(_mapper.ConfigurationProvider)
-        //        .FirstOrDefaultAsync();
-        //    return Ok(room);
-        //}
 
         private Task<RoomEntity> GetRoomEntityAsync(int? roomId) =>
             _hotelsDb.Rooms

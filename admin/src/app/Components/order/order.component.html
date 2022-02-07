@@ -1,22 +1,12 @@
 <mat-card-title>{{ order.room.name }}</mat-card-title>
 <p>Selected facilities:</p>
-<mat-checkbox 
-    *ngFor="let facility of order.room.facilities"
+<mat-checkbox
+    *ngFor="let facility of order.facilities"
     class="facilities"
-    (change)="changeRoomFacilityStatus($event, facility)"
+    (change)="changeFacilityStatus($event, facility)"
 >
-    {{ facility.name }} 
-    <span *ngIf="facility.price; else free">- US${{ facility.price }}</span>
-    <ng-template #free>- free</ng-template>
-</mat-checkbox>
-<mat-checkbox 
-    *ngFor="let facility of order.hotel.facilities"
-    class="facilities"
-    (change)="changeHotelFacilityStatus($event, facility)"
->
-    {{ facility.name }} 
-    <span *ngIf="facility.price; else free">- US${{ facility.price }}</span>
-    <ng-template #free>- free</ng-template>
+    {{ facility.name }} hehe
+    <span>- US${{ facility.price ?? 'free' }}</span>
 </mat-checkbox>
 <p>Reserve from {{ order.checkInDate }} to {{ order.checkOutDate }} for {{ days }} day(s)</p>
 <p>Room price per day: US${{ order.room.price }}</p>
