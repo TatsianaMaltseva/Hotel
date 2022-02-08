@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using static iTechArt.Hotels.Api.Constants;
 using System.Collections.Generic;
+using System.IO;
+using Microsoft.Extensions.Options;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -17,14 +19,17 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
+        private readonly string _imagesFolder;
 
         public RoomController(
             HotelsDatabaseContext hotelsDb,
-            IMapper mapper
+            IMapper mapper,
+            IOptions<ResourcesOptions> resourcesOptions
         )
         {
             _hotelsDb = hotelsDb;
             _mapper = mapper;
+            _imagesFolder = resourcesOptions.Value.ImagesFolder;
         }
 
         [Route("{hotelId}/rooms/{roomId}")]
@@ -43,8 +48,17 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             _hotelsDb.Rooms.Remove(room);
 
-            var roomImages = _hotelsDb.Images.Where(image => image.RoomId == roomId);
+            var roomImages = _hotelsDb.Images
+                .Where(image => image.RoomId == roomId);
             _hotelsDb.Images.RemoveRange(roomImages);
+            foreach(ImageEntity image in roomImages)
+            {
+                string imageFullPath = Path.Combine(_imagesFolder, image.Path);
+                if (System.IO.File.Exists(imageFullPath))
+                {
+                    System.IO.File.Delete(imageFullPath);
+                }
+            }
 
             await _hotelsDb.SaveChangesAsync();
             return NoContent();

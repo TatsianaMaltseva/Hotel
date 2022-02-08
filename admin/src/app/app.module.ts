@@ -57,6 +57,7 @@ import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilitie
 import { OrderComponent } from './Components/order/order.component';
 import { AuthInterceptor } from './Components/auth.interceptor';
 import { OrdersListComponent } from './Components/orders-list/orders-list.component';
+import { BadRequestInterceptor } from './Components/bad-request.interceptor';
 
 @NgModule({
   declarations: [
@@ -129,6 +130,11 @@ import { OrdersListComponent } from './Components/orders-list/orders-list.compon
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BadRequestInterceptor,
       multi: true
     }
   ]

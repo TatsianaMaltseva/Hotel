@@ -20,7 +20,7 @@ namespace iTechArt.Hotels.Api.Entities
 
         public int? MainImageId { get; set; }
 
-        public List<RoomEntity> Rooms { get; }
+        public List<RoomEntity> Rooms { get; set; }
 
         public List<FacilityHotelEntity> FacilityHotels { get; }
 

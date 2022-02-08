@@ -21,7 +21,7 @@ export class HotelForAdminComponent implements OnInit {
   public hotelId?: number;
   public hotelForm: FormGroup;
   public loading: boolean = false;
-  public isHotelLoaded: boolean = false;//
+  public isHotelLoaded: boolean = false;
   public isHotelExistInDataBase: boolean = false;
   public serverErrorResponse: string = '';
   public countries: string[] = [];
@@ -132,7 +132,7 @@ export class HotelForAdminComponent implements OnInit {
     this.hotelService
       .editHotel(this.hotelId, this.hotelForm.value as HotelToEdit)
       .subscribe(
-        null,//snackbar
+        null,
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;
         }
@@ -187,7 +187,7 @@ export class HotelForAdminComponent implements OnInit {
         (hotel) => {
           this.hotelForm.patchValue(hotel);
           this.isHotelExistInDataBase = true;
-          this.isHotelLoaded = true; //
+          this.isHotelLoaded = true;
         },
         (serverError: HttpErrorResponse) => {
           this.openErrorSnackBar(serverError.error as string);

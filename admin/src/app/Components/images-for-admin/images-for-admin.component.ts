@@ -39,14 +39,14 @@ export class ImagesForAdminComponent implements OnInit {
   public ngOnInit(): void {
     this.fetchImages();
   }
-  
+
   public createImagePath(image: Image): string {
     if (!this.hotel) {
       return '';
     }
     return this.imageService
       .createImagePath(
-        this.hotel.id, 
+        this.hotel.id,
         image.id,
         this.room?.id
       );
@@ -69,7 +69,7 @@ export class ImagesForAdminComponent implements OnInit {
       this.hotel.mainImageId = image.id;
       changeMain$ = this.hotelService.editHotel(this.hotel.id, this.hotel);
     }
-    changeMain$      
+    changeMain$
       .subscribe(
         () => {
           this.openSnackBar('Main image was successfully changed');
@@ -94,14 +94,11 @@ export class ImagesForAdminComponent implements OnInit {
           this.images = this.images.filter(img => img.id !== image.id);
           this.imageCount -= 1;
           this.openSnackBar('Image was successfully deleted');
-        },
-        (serverError: HttpErrorResponse) => {
-          this.openSnackBar(serverError.error as string);
         }
     );
   }
 
-    
+
   public onPaginationChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;

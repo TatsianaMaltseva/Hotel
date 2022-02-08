@@ -27,8 +27,7 @@ namespace iTechArt.Hotels.Api
             services.AddControllers();
 
             services.AddDbContext<HotelsDatabaseContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("HotelsDb")), 
-                ServiceLifetime.Transient
+                options => options.UseSqlServer(Configuration.GetConnectionString("HotelsDb"))
             );
 
             var authOptionsConfiguration = Configuration.GetSection("Auth");

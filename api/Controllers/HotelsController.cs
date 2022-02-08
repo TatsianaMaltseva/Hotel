@@ -5,8 +5,10 @@ using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static iTechArt.Hotels.Api.Constants;
@@ -20,11 +22,17 @@ namespace iTechArt.Hotels.Api.Controllers
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
         private readonly string timeFormat = @"hh\:mm";
+        private readonly string _imagesFolder;
 
-        public HotelsController(HotelsDatabaseContext hotelsDb, IMapper mapper)
+        public HotelsController(
+            HotelsDatabaseContext hotelsDb,
+            IMapper mapper,
+            IOptions<ResourcesOptions> resourcesOptions
+        )
         {
             _hotelsDb = hotelsDb;
             _mapper = mapper;
+            _imagesFolder = resourcesOptions.Value.ImagesFolder;
         }
 
         [Route("{hotelId}")]
@@ -71,7 +79,9 @@ namespace iTechArt.Hotels.Api.Controllers
             [FromQuery] HotelFilterParameters filterParams
         )
         {
-            var filteredHotelCards = _hotelsDb.Hotels.AsQueryable();
+            var filteredHotelCards = _hotelsDb.Hotels
+                .AsQueryable()
+                .AsNoTracking();
             if (!string.IsNullOrEmpty(filterParams.Name))
             {
                 filteredHotelCards = filteredHotelCards
@@ -90,11 +100,23 @@ namespace iTechArt.Hotels.Api.Controllers
                     .Where(h => h.City
                         .Contains(filterParams.City));
             }
-            var hotelCount = await filteredHotelCards.CountAsync();
+            int hotelCount = await filteredHotelCards.CountAsync();
             HotelCard[] hotelCards = await filteredHotelCards
+                .Include(hotel => hotel.Rooms)
+                .ThenInclude(room => room.ActiveViews)
+                .Include(hotel => hotel.Rooms)
+                .ThenInclude(room => room.Orders)
+                .Where(hotel => hotel.Rooms
+                    .Select(room => (filterParams.CheckInDate != null && filterParams.CheckOutDate != null)
+                        ? room.Number - room.Orders
+                            .Where(order => !(filterParams.CheckOutDate < order.CheckInDate
+                                || filterParams.CheckInDate > order.CheckOutDate)).Count()
+                                - room.ActiveViews.Count()
+                        : room.Number - room.ActiveViews.Count())
+                    .Any(availableRoomsNumber => availableRoomsNumber > 0)
+                     == true)
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
-                //
                 .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
             return Ok(new { hotelCards, hotelCount });
@@ -148,6 +170,14 @@ namespace iTechArt.Hotels.Api.Controllers
             var hotelImages = _hotelsDb.Images
                 .Where(image => image.HotelId == hotelId);
             _hotelsDb.Images.RemoveRange(hotelImages);
+            foreach (ImageEntity image in hotelImages)
+            {
+                string imageFullPath = Path.Combine(_imagesFolder, image.Path);
+                if (System.IO.File.Exists(imageFullPath))
+                {
+                    System.IO.File.Delete(imageFullPath);
+                }
+            }
 
             await _hotelsDb.SaveChangesAsync();
             return NoContent();

@@ -63,7 +63,7 @@ export class HotelComponent implements OnInit{
     );
   }
 
-  private isValidId(id: string): boolean { 
+  private isValidId(id: string): boolean {
     return !isNaN(+id);
   }
 
@@ -74,9 +74,6 @@ export class HotelComponent implements OnInit{
         (hotel) => {
           this.hotel = hotel;
           this.isHotelLoaded = true;
-        },
-        (serverError: HttpErrorResponse) => {
-          this.openSnackBar(serverError.error as string);
         }
       )
       .add(
