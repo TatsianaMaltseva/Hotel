@@ -2,23 +2,23 @@
     <mat-form-field *ngIf="!isAdmin">
         <mat-label>Enter a date range</mat-label>
         <mat-date-range-input [rangePicker]="picker" [min]="today">
-            <input 
-                matStartDate 
-                readonly 
-                formControlName="checkInDate" 
+            <input
+                matStartDate
+                readonly
+                formControlName="checkInDate"
                 placeholder="check in"
             >
-            <input 
-                matEndDate 
-                readonly 
-                formControlName="checkOutDate" 
+            <input
+                matEndDate
+                readonly
+                formControlName="checkOutDate"
                 placeholder="check out"
             >
         </mat-date-range-input>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
         <mat-error>Select date to move in and move out to see which rooms are available</mat-error>
-    </mat-form-field> 
+    </mat-form-field>
 
     <mat-form-field>
         <mat-label>Hotel name</mat-label>
@@ -28,10 +28,7 @@
             [matAutocomplete]="nameAutocomplete"
         >
         <mat-autocomplete #nameAutocomplete ="matAutocomplete">
-            <mat-option 
-                *ngFor="let name of names" 
-                [value]="name"
-            >
+            <mat-option *ngFor="let name of names" [value]="name">
                 {{ name }}
             </mat-option>
         </mat-autocomplete>
@@ -45,10 +42,7 @@
             [matAutocomplete]="countryAutocomplete"
         >
         <mat-autocomplete #countryAutocomplete ="matAutocomplete">
-            <mat-option 
-                *ngFor="let country of countries" 
-                [value]="country"
-            >
+            <mat-option *ngFor="let country of countries" [value]="country">
                 {{ country }}
             </mat-option>
         </mat-autocomplete>
@@ -62,10 +56,7 @@
             [matAutocomplete]="cityAutocomplete"
         >
         <mat-autocomplete #cityAutocomplete ="matAutocomplete">
-            <mat-option 
-                *ngFor="let city of cities" 
-                [value]="city"
-            >
+            <mat-option *ngFor="let city of cities" [value]="city">
                 {{ city }}
             </mat-option>
         </mat-autocomplete>

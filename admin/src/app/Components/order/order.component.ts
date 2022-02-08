@@ -5,7 +5,6 @@ import * as dayjs from 'dayjs';
 
 import { Facility } from 'src/app/Dtos/facility';
 import { Order } from 'src/app/Dtos/order';
-import { OrderDetails } from 'src/app/Dtos/order-details';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
 import { OrderService } from 'src/app/orders.service';
 
@@ -19,7 +18,7 @@ export class OrderComponent {
   public days: number;
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public orderDetails: OrderDetails,
+    @Inject(MAT_DIALOG_DATA) public orderDetails: Order,
     private readonly orderService: OrderService,
     private readonly hotelFilterService: HotelFilterService,
     private readonly dialogRef: MatDialogRef<OrderComponent>

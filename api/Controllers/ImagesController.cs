@@ -140,7 +140,8 @@ namespace iTechArt.Hotels.Api.Controllers
             var imagesBeforePagination = _hotelsDb.Images
                 .Where(image => image.HotelId == hotelId && image.RoomId == null);
 
-            var imageCount = await imagesBeforePagination.CountAsync();
+            int imageCount = await imagesBeforePagination
+                .CountAsync();
 
             Image[] images = await imagesBeforePagination
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
@@ -152,7 +153,11 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms/{roomId}/images")]
         [HttpGet]
-        public async Task<IActionResult> GetRoomImages([FromRoute] int hotelId, [FromRoute] int roomId, [FromQuery] PageParameters pageParameters)
+        public async Task<IActionResult> GetRoomImages(
+            [FromRoute] int hotelId,
+            [FromRoute] int roomId,
+            [FromQuery] PageParameters pageParameters
+        )
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
@@ -165,7 +170,8 @@ namespace iTechArt.Hotels.Api.Controllers
             var imagesBeforePagination = _hotelsDb.Images
                 .Where(image => image.HotelId == hotelId && image.RoomId == roomId);
 
-            var imageCount = await imagesBeforePagination.CountAsync();
+            int imageCount = await imagesBeforePagination
+                .CountAsync();
 
             Image[] images = await imagesBeforePagination
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)

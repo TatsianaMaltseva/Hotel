@@ -14,7 +14,7 @@
                 </button>
             </mat-grid-tile>
             <mat-grid-tile colspan="3" rowspan="1">
-                <button 
+                <button
                     mat-button
                     type="button"
                     (click)="changeMainImage(image)"
@@ -23,7 +23,6 @@
                 </button>
             </mat-grid-tile>
         </mat-grid-list>
-
     </div>
 </div>
 <mat-paginator
@@ -32,10 +31,9 @@
     [pageSize]="pageSize"
     [pageIndex]="pageIndex"
     (page)="onPaginationChange($event)"
-    >
-</mat-paginator>
-<app-images-upload-button 
-    [hotelId]="hotel?.id" 
+></mat-paginator>
+<app-images-upload-button
+    [hotelId]="hotel?.id"
     [roomId]="room?.id"
     (imageLoaded)="addImage($event)"
 ></app-images-upload-button>

@@ -43,7 +43,11 @@ export class ImageService {
     );
   }
 
-  public getImages(hotelId: number, pageParameters: PageParameters, roomId?: number): Observable<ImagesResponce>{
+  public getImages(
+    hotelId: number,
+    pageParameters: PageParameters,
+    roomId?: number
+    ): Observable<ImagesResponce>{
     const httpParams = pageParameters as Params;
     if (roomId === undefined) {
       return this.http.get<ImagesResponce>(

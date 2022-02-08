@@ -74,15 +74,21 @@ namespace iTechArt.Hotels.Api.Controllers
             var filteredHotelCards = _hotelsDb.Hotels.AsQueryable();
             if (!string.IsNullOrEmpty(filterParams.Name))
             {
-                filteredHotelCards = filteredHotelCards.Where(h => h.Name.Contains(filterParams.Name));
+                filteredHotelCards = filteredHotelCards
+                    .Where(h => h.Name
+                        .Contains(filterParams.Name));
             }
             if (!string.IsNullOrEmpty(filterParams.Country))
             {
-                filteredHotelCards = filteredHotelCards.Where(h => h.Country.Contains(filterParams.Country));
+                filteredHotelCards = filteredHotelCards
+                    .Where(h => h.Country
+                        .Contains(filterParams.Country));
             }
             if (!string.IsNullOrEmpty(filterParams.City))
             {
-                filteredHotelCards = filteredHotelCards.Where(h => h.City.Contains(filterParams.City));
+                filteredHotelCards = filteredHotelCards
+                    .Where(h => h.City
+                        .Contains(filterParams.City));
             }
             var hotelCount = await filteredHotelCards.CountAsync();
             HotelCard[] hotelCards = await filteredHotelCards
@@ -139,7 +145,8 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             _hotelsDb.Hotels.Remove(hotel);
 
-            var hotelImages = _hotelsDb.Images.Where(image => image.HotelId == hotelId);
+            var hotelImages = _hotelsDb.Images
+                .Where(image => image.HotelId == hotelId);
             _hotelsDb.Images.RemoveRange(hotelImages);
 
             await _hotelsDb.SaveChangesAsync();

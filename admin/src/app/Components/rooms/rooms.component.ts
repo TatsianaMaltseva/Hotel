@@ -11,9 +11,9 @@ import { OrderComponent } from '../order/order.component';
 import { AccountService } from 'src/app/account.service';
 import { HotelFilterService } from 'src/app/hotel-filter.service';
 import { Hotel } from 'src/app/Dtos/hotel';
-import { OrderDetails } from 'src/app/Dtos/order-details';
 import { OrderService } from 'src/app/orders.service';
 import { Facility } from 'src/app/Dtos/facility';
+import { Order } from 'src/app/Dtos/order';
 
 @Component({
   selector: 'app-rooms',
@@ -115,9 +115,11 @@ export class RoomsComponent implements OnInit {
     if (!this.hotel) {
       return;
     }
+
     this.orderService
       .addRoomToViewed(room)
       .subscribe();
+
     const dialogRef = this.matDialog.open(
       OrderComponent,
       {
@@ -126,7 +128,7 @@ export class RoomsComponent implements OnInit {
           hotel: this.hotel,
           room: room,
           facilities: [ ...this.hotel.facilities, ...room.facilities ] as Facility[]
-        } as OrderDetails
+        } as Order
       }
     );
 
