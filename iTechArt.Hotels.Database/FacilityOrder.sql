@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[FacilityOrder] (
+﻿CREATE TABLE [dbo].[FacilityEntityOrderEntity] (
     [Id] INT IDENTITY (1,1) NOT NULL,
     [OrdersId] INT NOT NULL,
     [FacilitiesId] INT NOT NULL,

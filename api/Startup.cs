@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Win32.TaskScheduler;
-using System;
 
 namespace iTechArt.Hotels.Api
 {
@@ -29,7 +27,8 @@ namespace iTechArt.Hotels.Api
             services.AddControllers();
 
             services.AddDbContext<HotelsDatabaseContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("HotelsDb"))
+                options => options.UseSqlServer(Configuration.GetConnectionString("HotelsDb")), 
+                ServiceLifetime.Transient
             );
 
             var authOptionsConfiguration = Configuration.GetSection("Auth");

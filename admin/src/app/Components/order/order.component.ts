@@ -55,13 +55,13 @@ export class OrderComponent {
   }
 
   public reserveRoom(): void {
-    this.order.hotel.facilities.filter(facility => facility.checked);
-    this.order.room.facilities.filter(facility => facility.checked);
     this.orderService
       .reserveRoom({
         hotelId: this.order.hotel.id,
         roomId: this.order.room.id,
-        facilities: this.order.facilities,
+        facilityIds: this.order.facilities
+          .filter(facility => facility.checked)
+          .map(facility =>  facility.id),
         checkInDate: this.order.checkInDate,
         checkOutDate: this.order.checkOutDate
       })

@@ -18,6 +18,6 @@ namespace iTechArt.Hotels.Api.Models
         [Required]
         public DateTime CheckOutDate { get; set; }
 
-        public List<Facility> Facilities { get; set; }
+        public List<int> FacilityIds { get; set; }
     }
 }

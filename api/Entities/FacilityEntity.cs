@@ -11,6 +11,6 @@ namespace iTechArt.Hotels.Api.Entities
 
         public Realm Realm { get; set; }
 
-        public List<OrderEntity> Orders { get; } //
+        public List<OrderEntity> Orders { get; }
     }
 }

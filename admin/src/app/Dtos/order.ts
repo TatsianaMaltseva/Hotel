@@ -14,7 +14,7 @@ export interface Order {
 export interface OrderToAdd {
     hotelId: number;
     roomId: number;
-    facilities: Facility[];
+    facilityIds: number[];
     checkInDate: string;
     checkOutDate: string;
 }
