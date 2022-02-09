@@ -90,11 +90,11 @@ export class HotelForAdminComponent implements OnInit {
 
   public ngOnInit(): void {
     this.country?.valueChanges
-    .subscribe(
-      (value) => {
-        this.fetchCountryAutocompleteValues(value);
-      }
-    );
+      .subscribe(
+        (value) => {
+          this.fetchCountryAutocompleteValues(value);
+        }
+      );
     this.city?.valueChanges
       .subscribe(
         (value) => {
