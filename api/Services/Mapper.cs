@@ -31,6 +31,10 @@ namespace iTechArt.Hotels.Api.Services
             CreateMap<AccountEntity, AccountToAdd>()
                 .ReverseMap();
 
+            CreateMap<AccountEntity, AccountToEdit>()
+                .ForMember(a => a.Password, m => m.Ignore())
+                .ReverseMap();
+
             CreateMap<AccountEntity, Account>()
                 .ReverseMap();
 

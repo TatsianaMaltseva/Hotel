@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static iTechArt.Hotels.Api.Constants;
 
@@ -53,17 +54,19 @@ namespace iTechArt.Hotels.Api.Controllers
             };
             await _hotelsDb.AddAsync(account);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(ChangeAccountPassword), new { id = account.Id }, null);
+            return CreatedAtAction(nameof(ChangeAccount), new { accountId = account.Id }, null);
         }
 
-        [Route("{id}")]
+        [Route("{accountId}/password")]
         [HttpPut]
         [Authorize]
         public async Task<IActionResult> ChangeAccountPassword([FromBody] AccountPasswordToEdit request)
         {
-            int id = Convert.ToInt32(User.Identity.Name);
+            int id = Convert.ToInt32((HttpContext.User.Identity as ClaimsIdentity)
+                .FindFirst("name")
+                .Value);
 
-            AccountEntity account = await GetAccountById(id);
+            AccountEntity account = await GetAccountEntityAsync(id);
 
             if (!_hashPasswordsService
                 .CheckIfPasswordIsCorrect(account.Password, request.OldPassword, Convert.FromBase64String(account.Salt)))
@@ -80,6 +83,26 @@ namespace iTechArt.Hotels.Api.Controllers
             }
 
             account.Password = newPasswordHashed;
+            await _hotelsDb.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Route("{accountId}")]
+        [HttpPut]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> ChangeAccount([FromRoute] int accountId, [FromBody] AccountToEdit request)
+        {
+            AccountEntity account = await GetAccountEntityAsync(accountId);
+            if (account == null)
+            {
+                return BadRequest("Such account does not exist");
+            }
+            _mapper.Map(request, account);
+            if (!string.IsNullOrWhiteSpace(request.Password))
+            {
+                account.Password = _hashPasswordsService
+                    .HashPassword(request.Password, Convert.FromBase64String(account.Salt));
+            }
             await _hotelsDb.SaveChangesAsync();
             return Ok();
         }
@@ -124,7 +147,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> DeleteAccount([FromRoute] int accountId)
         {
-            AccountEntity account = await GetAccountById(accountId);
+            AccountEntity account = await GetAccountEntityAsync(accountId);
             if (account == null)
             {
                 return BadRequest("Such account does not exist");
@@ -135,9 +158,9 @@ namespace iTechArt.Hotels.Api.Controllers
             return NoContent();
         }
 
-        private async Task<AccountEntity> GetAccountById(int id) =>
-            await _hotelsDb.Accounts
-                .Where(account => account.Id == id)
+        private Task<AccountEntity> GetAccountEntityAsync(int accountId) =>
+            _hotelsDb.Accounts
+                .Where(account => account.Id == accountId)
                 .FirstOrDefaultAsync();
 
         private async Task<bool> CheckIfEmailUniqueAsync(string email) =>

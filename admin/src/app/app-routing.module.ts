@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AccountsComponent } from './Components/accounts/accounts.component';
+import { AccountsListComponent } from './Components/accounts-list/accounts-list.component';
 import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
 
 import { ChangePasswordComponent } from './Components/change-password/change-password.component';
@@ -56,7 +56,7 @@ const routes: Routes = [
     data: {
       roles: [Role.admin]
     },
-    component: AccountsComponent
+    component: AccountsListComponent
   }
 ];
 

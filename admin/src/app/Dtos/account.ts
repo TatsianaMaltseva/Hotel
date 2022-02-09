@@ -3,3 +3,9 @@ export interface Account {
     email: string;
     role: string;
 }
+
+export interface AccountToEdit {
+    email: string;
+    role: string;
+    password: string;
+}

@@ -31,7 +31,7 @@ export class ChangePasswordComponent{
   public get confirmNewPassword(): AbstractControl | null {
     return this.changePasswordForm.get('confirmNewPassword');
   }
-  
+
   public constructor(
     private readonly accountService: AccountService,
     private readonly formBuilder: FormBuilder,
@@ -40,14 +40,14 @@ export class ChangePasswordComponent{
   ) {
       this.changePasswordForm = formBuilder.group(
         {
-          oldPassword: [
+          oldPassword: ['', [Validators.required]],
+          newPassword: [
             '',
             [
               Validators.required,
               Validators.minLength(this.passwordMinLength)
             ]
           ],
-          newPassword: ['', Validators.required],
           confirmNewPassword: ['']
         },
         {
@@ -75,7 +75,7 @@ export class ChangePasswordComponent{
     this.snackBar.open(
       `${message}`,
       'Close',
-      { 
+      {
         duration: 15000
       }
     );

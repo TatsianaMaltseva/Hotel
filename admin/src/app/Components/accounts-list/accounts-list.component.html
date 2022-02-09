@@ -38,8 +38,12 @@
                     {{ account.role }} {{ account.email }}  id{{ account.id }}
                 </span>
                 <span class="inlineRight">
-                    <mat-icon>edit</mat-icon>
-                    <mat-icon (click)="deleteAccount(account.id)">delete</mat-icon>
+                    <button mat-raised-button (click)="openEditAccountDialog(account)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-raised-button (click)="deleteAccount(account.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </span>
             </mat-list-item>
             <mat-divider></mat-divider>

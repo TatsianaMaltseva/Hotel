@@ -10,15 +10,16 @@ import { PageParameters } from 'src/app/Core/page-parameters';
 import { Role } from 'src/app/Core/roles';
 import { AccountParams } from 'src/app/Core/validation-params';
 import { Account } from 'src/app/Dtos/account';
+import { AccountComponent } from '../account/account.component';
 import { CreateAdminComponent } from '../create-admin/create-admin.component';
 import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-accounts',
-  templateUrl: './accounts.component.html',
-  styleUrls: ['./accounts.component.css']
+  templateUrl: './accounts-list.component.html',
+  styleUrls: ['./accounts-list.component.css']
 })
-export class AccountsComponent implements OnInit {
+export class AccountsListComponent implements OnInit {
   public accounts: Account[] = [];
   public accountCount: number = 0;
   public pageParameters: PageParameters = {
@@ -38,6 +39,10 @@ export class AccountsComponent implements OnInit {
 
   public get role(): AbstractControl | null {
     return this.filterForm.get('role');
+  }
+
+  public get adminId(): number | null {
+    return this.accountService.accountId;
   }
 
   public constructor(
@@ -72,6 +77,16 @@ export class AccountsComponent implements OnInit {
       RegisterComponent,
       {
         width: '400px'
+      }
+    );
+  }
+
+  public openEditAccountDialog(account: Account): void {
+    this.matDialog.open(
+      AccountComponent,
+      {
+        width: '400px',
+        data: account
       }
     );
   }

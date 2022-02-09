@@ -9,7 +9,7 @@ import { ACCESS_TOKEN_KEY, getToken } from './Core/get-token';
 
 export interface Token {
   email: string;
-  sub:  number;
+  name:  number;
   role: string;
   exp: number;
   iss: string;
@@ -36,7 +36,7 @@ export class AuthService {
 
   public get id(): number | null {
     if (this.isLoggedIn) {
-      return this.decodedToken.sub;
+      return this.decodedToken.name;
     }
     return null;
   }

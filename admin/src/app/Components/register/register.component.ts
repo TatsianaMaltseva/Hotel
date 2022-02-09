@@ -32,8 +32,8 @@ export class RegisterComponent {
     return this.registerForm.get('confirmPassword');
   }
 
-  public get isClient(): boolean {
-    return this.accountService.isClient;
+  public get isAdmin(): boolean {
+    return this.accountService.isAdmin;
   }
 
   public constructor(
@@ -74,7 +74,7 @@ export class RegisterComponent {
       .register(email, password)
       .subscribe(
         (token: string) => {
-          if (this.isClient) {
+          if (!this.isAdmin) {
             localStorage.setItem(ACCESS_TOKEN_KEY, token);
             this.returnBack();
           }

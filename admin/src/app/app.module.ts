@@ -59,7 +59,8 @@ import { OrderComponent } from './Components/order/order.component';
 import { AuthInterceptor } from './Components/auth.interceptor';
 import { OrdersListComponent } from './Components/orders-list/orders-list.component';
 import { BadRequestInterceptor } from './Components/bad-request.interceptor';
-import { AccountsComponent } from './Components/accounts/accounts.component';
+import { AccountsListComponent } from './Components/accounts-list/accounts-list.component';
+import { AccountComponent } from './Components/account/account.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { AccountsComponent } from './Components/accounts/accounts.component';
     ChooseFacilitiesForAdminComponent,
     OrderComponent,
     OrdersListComponent,
-    AccountsComponent
+    AccountsListComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,

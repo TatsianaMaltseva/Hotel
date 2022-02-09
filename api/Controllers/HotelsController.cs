@@ -198,9 +198,9 @@ namespace iTechArt.Hotels.Api.Controllers
             string[] names = await _hotelsDb.Hotels
                 .Where(h => h.Name.Contains(name))
                 .OrderBy(h => h.Name)
-                .Distinct()
                 .Take(number)
                 .Select(h => h.Name)
+                .Distinct()
                 .ToArrayAsync();
             return names;
         }
@@ -216,9 +216,9 @@ namespace iTechArt.Hotels.Api.Controllers
             string[] names = await _hotelsDb.Hotels
                 .Where(h => h.Country.Contains(country))
                 .OrderBy(h => h.Country)
-                .Distinct()
                 .Take(number)
                 .Select(h => h.Country)
+                .Distinct()
                 .ToArrayAsync();
             return names;
         }
@@ -234,9 +234,9 @@ namespace iTechArt.Hotels.Api.Controllers
             string[] names = await _hotelsDb.Hotels
                 .Where(h => h.City.Contains(city))
                 .OrderBy(h => h.City)
-                .Distinct()
                 .Take(number)
                 .Select(h => h.City)
+                .Distinct()
                 .ToArrayAsync();
             return names;
         }

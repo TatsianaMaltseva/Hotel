@@ -9,6 +9,7 @@ import { PageParameters } from './Core/page-parameters';
 import { Params } from '@angular/router';
 import { AccountsResponse } from './Core/accounts-response';
 import { AccountFilterParams } from './Core/account-filter-params';
+import { AccountToEdit } from './Dtos/account';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +49,7 @@ export class AccountService {
 
   public changePassword(oldPassword: string, newPassword: string): Observable<string> {
     return this.http.put<string>(
-        `${this.apiUrl}api/accounts/${this.accountId}`,
+        `${this.apiUrl}api/accounts/${this.accountId}/password`,
         { oldPassword, newPassword }
       );
   }
@@ -64,6 +65,13 @@ export class AccountService {
   public deleteAccount(accountId: number): Observable<string> {
     return this.http.delete<string>(
       `${this.apiUrl}api/accounts/${accountId}`
+    );
+  }
+
+  public editAccount(accountId: number, account: AccountToEdit): Observable<string> {
+    return this.http.put<string>(
+      `${this.apiUrl}api/accounts/${accountId}`,
+      account
     );
   }
 }

@@ -1,0 +1,31 @@
+<div [formGroup]="accountForm">
+    <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+        <mat-error>
+            Please enter a valid email address
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Role</mat-label>
+        <mat-select matInput formControlName="role">
+            <mat-option *ngFor="let role of roleOptions" [value]="role">
+                {{ role }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password">
+        <mat-error *ngIf="checkIfHasMinError('password')">
+            Password is required to have at least {{ password?.errors?.minlength.requiredLength }} symbols
+        </mat-error>
+    </mat-form-field>
+    <button
+        mat-button
+        (click)="editAccount()"
+        [disabled]="accountForm.invalid"
+    >
+        Save changes
+    </button>
+</div>

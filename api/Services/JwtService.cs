@@ -27,7 +27,7 @@ namespace iTechArt.Hotels.Api.Services
 
             var claims = new List<Claim>() {
                 new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                new Claim(ClaimTypes.Name, account.Id.ToString()),
+                new Claim("name", account.Id.ToString()),
                 new Claim("role", account.Role.ToString())
             };
             var token = new JwtSecurityToken(
