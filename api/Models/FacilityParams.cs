@@ -1,8 +1,9 @@
-﻿namespace iTechArt.Hotels.Api.Models
+﻿using static iTechArt.Hotels.Api.Constants;
+
+namespace iTechArt.Hotels.Api.Models
 {
     public class FacilityParams
     {
-        public int? HotelId { get; set; }
-        public int? RoomId { get; set; }
+        public Realm? Realm { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace iTechArt.Hotels.Api.Models
         public int Number { get; set; }
         public decimal Price { get; set; }
         public int? MainImageId { get; set; }
-        public List<Facility> Facilities { get; set; }
+        public List<Facility> Facilities { get; set; } = new List<Facility>();
     }
 }
