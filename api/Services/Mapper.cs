@@ -28,6 +28,9 @@ namespace iTechArt.Hotels.Api.Services
             CreateMap<ImageEntity, Image>()
                 .ReverseMap();
 
+            CreateMap<AccountEntity, AccountToAdd>()
+                .ReverseMap();
+
             CreateMap<AccountEntity, Account>()
                 .ReverseMap();
 

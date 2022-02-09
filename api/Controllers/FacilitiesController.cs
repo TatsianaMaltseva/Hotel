@@ -25,7 +25,7 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<Facility[]> GetFacilities([FromQuery] FacilityParams facilityParams)
         {
             if (facilityParams.RoomId != null)
@@ -48,7 +48,7 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> AddFacility([FromBody] FacilityToAdd request)
         {
             FacilityEntity facility = _mapper.Map<FacilityEntity>(request);
@@ -63,7 +63,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{facilityId}")]
         [HttpDelete]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> DeleteFacility([FromRoute] int facilityId)
         {
             FacilityEntity facility = await GetFacilityEntityAsync(facilityId);
@@ -74,7 +74,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{facilityId}")]
         [HttpPut]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> ChangeFacility([FromRoute] int facilityId, [FromBody] FacilityToEdit request)
         {
             FacilityEntity facilityEntity = await GetFacilityEntityAsync(facilityId);

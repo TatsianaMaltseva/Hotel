@@ -36,7 +36,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/images")]
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> AddHotelImage([FromRoute] int hotelId)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
@@ -72,7 +72,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms/{roomId}/images")]
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> AddRoomImage([FromRoute] int hotelId, [FromRoute] int roomId)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
@@ -111,7 +111,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{hotelId}/images/{imageId}")]
         [Route("{hotelId}/rooms/{roomId}/images/{imageId}")]
         [HttpDelete]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> DeleteImage([FromRoute] int imageId)
         {
             ImageEntity image = await GetImageEntityAsync(imageId);

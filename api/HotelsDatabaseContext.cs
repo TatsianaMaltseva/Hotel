@@ -97,6 +97,10 @@ namespace iTechArt.Hotels.Api
             modelBuilder.Entity<FacilityEntity>()
                 .Property(e => e.Realm)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<AccountEntity>()
+                .Property(e => e.Role)
+                .HasConversion<string>();
         }
     }
 }

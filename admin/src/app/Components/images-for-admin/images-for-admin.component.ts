@@ -11,7 +11,7 @@ import { Room } from 'src/app/Dtos/room';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { PageEvent } from '@angular/material/paginator';
 import { PageParameters } from 'src/app/Core/page-parameters';
-import { ImagesResponce } from 'src/app/Core/images-response';
+import { ImagesResponse } from 'src/app/Core/images-response';
 
 @Component({
   selector: 'app-images-for-admin',
@@ -26,7 +26,7 @@ export class ImagesForAdminComponent implements OnInit {
   public images: Image[] = [];
   public imageCount: number = 0;
   public pageSize: number = 5;
-  public pageIndex: number = 0;
+  public pageIndex: number = 0;//
 
   public constructor(
     private readonly imageService: ImageService,
@@ -116,9 +116,9 @@ export class ImagesForAdminComponent implements OnInit {
         this.room?.id
       )
       .subscribe(
-        (responce: ImagesResponce) => {
-          this.images = responce.images;
-          this.imageCount = responce.imageCount;
+        (response: ImagesResponse) => {
+          this.images = response.images;
+          this.imageCount = response.imageCount;
         }
       );
   }

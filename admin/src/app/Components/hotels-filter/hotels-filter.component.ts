@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { delay } from 'rxjs/operators';
 
 import { AccountService } from 'src/app/account.service';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
@@ -42,7 +43,7 @@ export class HotelsFilterComponent implements OnInit {
     this.filterForm = formBuilder.group(
       {
         name: [
-          this.hotelFilterService.name, 
+          this.hotelFilterService.name,
           [Validators.maxLength(hotelParamsMaxLenght.name)]
         ],
         country: [

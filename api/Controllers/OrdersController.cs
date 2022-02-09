@@ -35,7 +35,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("orders")]
         [HttpPost]
-        [Authorize(Roles = Role.Client)]
+        [Authorize(Roles = nameof(Role.Client))]
         public async Task<IActionResult> AddOrder([FromBody] OrderToAdd order)
         {
 
@@ -88,7 +88,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("orders/{orderId}")]
         [HttpGet]
-        [Authorize(Roles = Role.Client)]
+        [Authorize(Roles = nameof(Role.Client))]
         public async Task<IActionResult> GetOrder([FromRoute] int orderId)
         {
             Order order = await _hotelsDb.Orders
@@ -103,7 +103,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("orders")]
         [HttpGet]
-        [Authorize(Roles = Role.Client)]
+        [Authorize(Roles = nameof(Role.Client))]
         public async Task<IActionResult> GetOrders([FromQuery] OrderFilterParams filterParams)
         {
             var orders = _hotelsDb.Orders

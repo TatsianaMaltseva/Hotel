@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AccountsComponent } from './Components/accounts/accounts.component';
 import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
 
 import { ChangePasswordComponent } from './Components/change-password/change-password.component';
@@ -7,44 +8,56 @@ import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.compon
 import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-admin.component';
 import { HotelComponent } from './Components/hotel/hotel.component';
 import { OrdersListComponent } from './Components/orders-list/orders-list.component';
-import { roles } from './Core/roles';
+import { Role } from './Core/roles';
 import { AuthGuard } from './Guards/auth.guard';
 import { RoleGuard } from './Guards/role.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/hotels', pathMatch: 'full' },
   { path: 'hotels', component: HotelCardsComponent },
-  { 
-    path: 'hotels/add-new', 
+  {
+    path: 'hotels/add-new',
     canActivate: [RoleGuard],
     data: {
-      roles: [roles.admin]
+      roles: [Role.admin]
     },
-    component: HotelForAdminComponent 
+    component: HotelForAdminComponent
   },
   { path: 'hotels/:id', component: HotelComponent },
-  { 
-    path: 'hotels/:id/edit', 
+  {
+    path: 'hotels/:id/edit',
     canActivate: [RoleGuard],
     data: {
-      roles: [roles.admin]
+      roles: [Role.admin]
     },
-    component: HotelForAdminComponent 
+    component: HotelForAdminComponent
   },
-  { 
+  {
     path: 'change-password',
     canActivate: [AuthGuard],
-    component: ChangePasswordComponent 
+    component: ChangePasswordComponent
   },
   {
     path: 'facilities',
     canActivate: [RoleGuard],
     data: {
-      roles: [roles.admin]
+      roles: [Role.admin]
     },
     component: AddFacilitiesComponent
   },
-  { path: 'orders', component: OrdersListComponent }
+  {
+    path: 'orders',
+    canActivate: [AuthGuard],
+    component: OrdersListComponent
+  },
+  {
+    path: 'accounts',
+    canActivate: [RoleGuard],
+    data: {
+      roles: [Role.admin]
+    },
+    component: AccountsComponent
+  }
 ];
 
 @NgModule({

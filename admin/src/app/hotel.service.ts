@@ -8,7 +8,7 @@ import { PageParameters } from 'src/app/Core/page-parameters';
 import { HotelCardResponse } from './Core/hotel-card-response';
 import { Hotel, HotelToAdd, HotelToEdit } from './Dtos/hotel';
 import { Room } from './Dtos/room';
-import { HotelFilterParameters } from './Core/filter-parameters';
+import { HotelFilterParameters } from './Core/hotel-filter-params';
 import { OrderDateParams } from './Core/order-date-params';
 import { HotelFilterService } from './hotel-filter.service';
 

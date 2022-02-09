@@ -4,7 +4,11 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { roles } from './Core/roles';
+import { Role } from './Core/roles';
+import { PageParameters } from './Core/page-parameters';
+import { Params } from '@angular/router';
+import { AccountsResponse } from './Core/accounts-response';
+import { AccountFilterParams } from './Core/account-filter-params';
 
 @Injectable({
   providedIn: 'root'
@@ -13,25 +17,25 @@ export class AccountService {
   private readonly apiUrl: string;
 
   public get isAdmin(): boolean {
-    return this.authService.role === roles.admin;
+    return this.authService.role === Role.admin;
   }
 
   public get isClient(): boolean {
-    return this.authService.role === roles.client;
+    return this.authService.role === Role.client;
   }
 
-  public get id(): number | null {
+  public get accountId(): number | null {
     return this.authService.id;
   }
 
   public get email(): string | null {
     return this.authService.email;
   }
-    
+
   public constructor(
     private readonly http: HttpClient,
     private readonly authService: AuthService
-  ) { 
+  ) {
     this.apiUrl = environment.api;
   }
 
@@ -43,10 +47,23 @@ export class AccountService {
   }
 
   public changePassword(oldPassword: string, newPassword: string): Observable<string> {
-    return this.http
-      .put<string>(
-        `${this.apiUrl}api/accounts/${this.id}`,
+    return this.http.put<string>(
+        `${this.apiUrl}api/accounts/${this.accountId}`,
         { oldPassword, newPassword }
       );
+  }
+
+  public getAccounts(pageParameters: PageParameters, filterParams: AccountFilterParams): Observable<AccountsResponse> {
+    const params = { ...pageParameters, ...filterParams } as Params;
+    return this.http.get<AccountsResponse>(
+      `${this.apiUrl}api/accounts`,
+      { params: params }
+    );
+  }
+
+  public deleteAccount(accountId: number): Observable<string> {
+    return this.http.delete<string>(
+      `${this.apiUrl}api/accounts/${accountId}`
+    );
   }
 }

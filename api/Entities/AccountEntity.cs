@@ -1,4 +1,6 @@
-﻿namespace iTechArt.Hotels.Api.Entities
+﻿using static iTechArt.Hotels.Api.Constants;
+
+namespace iTechArt.Hotels.Api.Entities
 {
     public class AccountEntity
     {
@@ -6,6 +8,6 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public string Salt { get; set; }
-        public string Role { get; set; }
+        public Role Role { get; set; }
     }
 }

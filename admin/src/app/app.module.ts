@@ -25,6 +25,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatListModule } from '@angular/material/list';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
@@ -58,6 +59,7 @@ import { OrderComponent } from './Components/order/order.component';
 import { AuthInterceptor } from './Components/auth.interceptor';
 import { OrdersListComponent } from './Components/orders-list/orders-list.component';
 import { BadRequestInterceptor } from './Components/bad-request.interceptor';
+import { AccountsComponent } from './Components/accounts/accounts.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +87,8 @@ import { BadRequestInterceptor } from './Components/bad-request.interceptor';
     AddFacilitiesComponent,
     ChooseFacilitiesForAdminComponent,
     OrderComponent,
-    OrdersListComponent
+    OrdersListComponent,
+    AccountsComponent
   ],
   imports: [
     BrowserModule,
@@ -117,6 +120,7 @@ import { BadRequestInterceptor } from './Components/bad-request.interceptor';
     MatNativeDateModule,
     MatTooltipModule,
     MatRadioModule,
+    MatListModule,
     NgxMaterialTimepickerModule,
     JwtModule.forRoot({
       config: {

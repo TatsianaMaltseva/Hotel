@@ -4,7 +4,7 @@ import { ImageService } from 'src/app/image.service';
 import { AccountService } from 'src/app/account.service';
 import { Image } from 'src/app/Dtos/image';
 import { PageParameters } from 'src/app/Core/page-parameters';
-import { ImagesResponce } from 'src/app/Core/images-response';
+import { ImagesResponse } from 'src/app/Core/images-response';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -15,7 +15,7 @@ import { PageEvent } from '@angular/material/paginator';
 export class ImagesComponent implements OnInit {
   @Input() public hotelId?: number;
   @Input() public roomId?: number;
-  
+
   public progress: number = 0;
   public images: Image[] = [];
   public imageCount: number = 0;
@@ -25,7 +25,7 @@ export class ImagesComponent implements OnInit {
   public get isAdmin(): boolean {
     return this.accountService.isAdmin;
   }
-  
+
   public constructor(
     private readonly imageService: ImageService,
     private readonly accountService: AccountService
@@ -42,7 +42,7 @@ export class ImagesComponent implements OnInit {
     }
     return this.imageService
       .createImagePath(
-        this.hotelId, 
+        this.hotelId,
         image.id,
         this.roomId
       );
@@ -65,7 +65,7 @@ export class ImagesComponent implements OnInit {
         this.roomId
       )
       .subscribe(
-        (responce: ImagesResponce) => {
+        (responce: ImagesResponse) => {
           this.images = responce.images;
           this.imageCount = responce.imageCount;
         }

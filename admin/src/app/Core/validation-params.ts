@@ -15,5 +15,6 @@ export const facilityParamsMaxLength = {
 };
 
 export const AccountParams = {
+    emailMaxLength: 125,
     passwordMinLength: 8
 };

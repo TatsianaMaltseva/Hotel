@@ -34,7 +34,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms/{roomId}")]
         [HttpDelete]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> DeleteRoom([FromRoute] int hotelId, [FromRoute] int roomId)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
@@ -66,7 +66,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms/{roomId}")]
         [HttpPut]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> ChangeRoom([FromRoute] int hotelId, [FromRoute] int roomId, [FromBody] RoomToEdit request)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
@@ -129,7 +129,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms")]
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> AddRoom([FromRoute] int hotelId, [FromBody] RoomToAdd request)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))

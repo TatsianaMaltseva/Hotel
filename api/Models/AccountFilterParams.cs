@@ -2,10 +2,12 @@
 
 namespace iTechArt.Hotels.Api.Models
 {
-    public class Account
+    public class AccountFilterParams
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
+
         public string Email { get; set; }
-        public Role Role { get; set; }
+
+        public Role? Role { get; set; }
     }
 }

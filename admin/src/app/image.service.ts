@@ -4,7 +4,7 @@ import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { ImagesResponce } from './Core/images-response';
+import { ImagesResponse } from './Core/images-response';
 import { PageParameters } from './Core/page-parameters';
 
 @Injectable({
@@ -47,15 +47,15 @@ export class ImageService {
     hotelId: number,
     pageParameters: PageParameters,
     roomId?: number
-    ): Observable<ImagesResponce>{
+    ): Observable<ImagesResponse>{
     const httpParams = pageParameters as Params;
     if (roomId === undefined) {
-      return this.http.get<ImagesResponce>(
+      return this.http.get<ImagesResponse>(
         `${this.apiUrl}api/hotels/${hotelId}/images`,
         { params: httpParams }
       );
     }
-    return this.http.get<ImagesResponce>(
+    return this.http.get<ImagesResponse>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`,
       { params: httpParams }
     );

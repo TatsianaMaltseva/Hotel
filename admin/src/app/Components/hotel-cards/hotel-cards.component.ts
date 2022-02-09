@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Router } from '@angular/router';
 
 import { HotelService } from 'src/app/hotel.service';
 import { HotelCard } from 'src/app/Dtos/hotelCard';
@@ -23,7 +22,6 @@ export class HotelCardsComponent implements OnInit {
 
   public constructor(
     private readonly hotelService: HotelService,
-    private readonly router: Router,
     private readonly imageService: ImageService,
     private readonly hotelFilterService: HotelFilterService,
     private readonly pageParametersService: PageParametersService

@@ -36,8 +36,8 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> CreateAccount([FromBody] Account request)
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> CreateAccount([FromBody] AccountToAdd request)
         {
             if (!await CheckIfEmailUniqueAsync(request.Email))
             {
@@ -53,19 +53,7 @@ namespace iTechArt.Hotels.Api.Controllers
             };
             await _hotelsDb.AddAsync(account);
             await _hotelsDb.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAccount), new { id = account.Id }, null);
-        }
-
-        [Route("{id}")]
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetAccount([FromRoute] int Id)
-        {
-            Account account = await _hotelsDb.Accounts
-                .Where(account => account.Id == Id)
-                .ProjectTo<Account>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-            return Ok(account);
+            return CreatedAtAction(nameof(ChangeAccountPassword), new { id = account.Id }, null);
         }
 
         [Route("{id}")]
@@ -83,7 +71,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Wrong old password");
             }
 
-            string newPasswordHashed = _hashPasswordsService.HashPassword(request.NewPassword, Convert.FromBase64String(account.Salt));
+            string newPasswordHashed = _hashPasswordsService
+                .HashPassword(request.NewPassword, Convert.FromBase64String(account.Salt));
 
             if (account.Password == newPasswordHashed)
             {
@@ -95,6 +84,57 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> GetAccounts([FromQuery] PageParameters pageParameters, [FromQuery] AccountFilterParams filterParams)
+        {
+            var filteredAccounts = _hotelsDb.Accounts
+                .AsQueryable()
+                .AsNoTracking();
+
+            if (filterParams.Id.HasValue)
+            {
+                filteredAccounts = filteredAccounts
+                    .Where(account => account.Id == filterParams.Id);
+            }
+            if (!string.IsNullOrEmpty(filterParams.Email))
+            {
+                filteredAccounts = filteredAccounts
+                    .Where(account => account.Email
+                        .Contains(filterParams.Email));
+            }
+            if (filterParams.Role.HasValue)
+            {
+                filteredAccounts = filteredAccounts
+                    .Where(account => account.Role == filterParams.Role);
+            }
+
+            var accounts = await filteredAccounts.Skip(pageParameters.PageIndex * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
+                .ProjectTo<Account>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            int accountCount = await filteredAccounts.CountAsync();
+
+            return Ok(new { accountCount, accounts });
+        }
+
+        [Route("{accountId}")]
+        [HttpDelete]
+        [Authorize(Roles = nameof(Role.Admin))]
+        public async Task<IActionResult> DeleteAccount([FromRoute] int accountId)
+        {
+            AccountEntity account = await GetAccountById(accountId);
+            if (account == null)
+            {
+                return BadRequest("Such account does not exist");
+            }
+
+            _hotelsDb.Accounts.Remove(account);
+            await _hotelsDb.SaveChangesAsync();
+            return NoContent();
+        }
+
         private async Task<AccountEntity> GetAccountById(int id) =>
             await _hotelsDb.Accounts
                 .Where(account => account.Id == id)
@@ -102,8 +142,5 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private async Task<bool> CheckIfEmailUniqueAsync(string email) =>
             !await _hotelsDb.Accounts.AnyAsync(u => u.Email == email);
-
-        private string GenerateJWT(AccountEntity account) =>
-            _jwtService.GenerateJWT(account);
     }
 }

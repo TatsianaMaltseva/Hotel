@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import * as dayjs from 'dayjs';
 
 import { environment } from 'src/environments/environment';
-import { HotelFilterParameters } from './Core/filter-parameters';
+import { HotelFilterParameters } from './Core/hotel-filter-params';
 
 @Injectable({
     providedIn: 'root'

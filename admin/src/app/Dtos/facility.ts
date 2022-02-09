@@ -6,7 +6,7 @@ export interface Facility {
     checked: boolean;
 }
 
-export enum Realm  {
+export enum Realm {
     hotel = 'Hotel',
     room = 'Room'
 }

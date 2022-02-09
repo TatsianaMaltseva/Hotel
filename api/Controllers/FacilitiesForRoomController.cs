@@ -23,7 +23,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms/{roomId}/facilities")]
         [HttpPut]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> SetFacilitiesForRoom([FromRoute] int hotelId, [FromRoute] int roomId, [FromBody] Facility[] facilities)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))

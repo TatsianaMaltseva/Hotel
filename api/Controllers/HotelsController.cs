@@ -100,8 +100,8 @@ namespace iTechArt.Hotels.Api.Controllers
                     .Where(h => h.City
                         .Contains(filterParams.City));
             }
-            int hotelCount = await filteredHotelCards.CountAsync();
-            HotelCard[] hotelCards = await filteredHotelCards
+
+            filteredHotelCards = filteredHotelCards
                 .Include(hotel => hotel.Rooms)
                 .ThenInclude(room => room.ActiveViews)
                 .Include(hotel => hotel.Rooms)
@@ -114,7 +114,11 @@ namespace iTechArt.Hotels.Api.Controllers
                                 - room.ActiveViews.Count()
                         : room.Number - room.ActiveViews.Count())
                     .Any(availableRoomsNumber => availableRoomsNumber > 0)
-                     == true)
+                     == true);
+
+            int hotelCount = await filteredHotelCards.CountAsync();
+
+            HotelCard[] hotelCards = await filteredHotelCards
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
                 .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
@@ -123,7 +127,7 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> AddHotel([FromBody] HotelToAdd request)
         {
             if (request.CheckInTime >= request.CheckOutTime)
@@ -138,7 +142,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}")]
         [HttpPut]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> ChangeHotel([FromRoute] int hotelId, [FromBody] HotelToEdit request)
         {
             if (request.CheckInTime >= request.CheckOutTime)
@@ -157,7 +161,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}")]
         [HttpDelete]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> DeleteHotel([FromRoute] int hotelId)
         {
             HotelEntity hotel = await GetHotelEntityAsync(hotelId);

@@ -24,7 +24,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/facilities")]
         [HttpPut]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> SetFacilitiesForHotel([FromRoute] int hotelId, [FromBody] List<Facility> facilities)
         {
             HotelEntity hotel = await _hotelsDb.Hotels
