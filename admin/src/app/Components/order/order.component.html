@@ -6,7 +6,7 @@
     (change)="changeFacilityStatus($event, facility)"
 >
     {{ facility.name }}
-    <span>- US${{ facility.price > 0 ? facility.price : 'free' }}</span>
+    <span>- {{ facility.price > 0 ? 'US$' + facility.price : 'free' }}</span>
 </mat-checkbox>
 <p>Reserve from {{ order.checkInDate }} to {{ order.checkOutDate }} for {{ days }} day(s)</p>
 <p>Room price per day: US${{ order.room.price }}</p>

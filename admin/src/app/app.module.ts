@@ -61,6 +61,7 @@ import { OrdersListComponent } from './Components/orders-list/orders-list.compon
 import { BadRequestInterceptor } from './Components/bad-request.interceptor';
 import { AccountsListComponent } from './Components/accounts-list/accounts-list.component';
 import { AccountComponent } from './Components/account/account.component';
+import { NotFoundComponent } from './Components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { AccountComponent } from './Components/account/account.component';
     OrderComponent,
     OrdersListComponent,
     AccountsListComponent,
-    AccountComponent
+    AccountComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

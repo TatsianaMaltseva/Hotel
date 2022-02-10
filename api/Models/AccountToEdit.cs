@@ -10,7 +10,6 @@ namespace iTechArt.Hotels.Api.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        //[MinLength(ValidationParams.Account.PasswordMinLength)]
         public string Password { get; set; }
 
         [Required]

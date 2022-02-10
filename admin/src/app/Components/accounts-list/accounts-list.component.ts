@@ -52,9 +52,9 @@ export class AccountsListComponent implements OnInit {
   ) {
     this.filterForm = formBuilder.group(
       {
-        id: [''],
-        email: ['', [Validators.maxLength(AccountParams.emailMaxLength)]],
-        role: ['']
+        id: null,
+        email: [null, [Validators.maxLength(AccountParams.emailMaxLength)]],
+        role: null
       }
     );
   }
@@ -98,8 +98,18 @@ export class AccountsListComponent implements OnInit {
   }
 
   public fetchAccounts(): void {
+    const filterParams: AccountFilterParams = this.filterForm.value as AccountFilterParams;
+    if (!filterParams.id) {
+      delete filterParams.id;
+    }
+    if (!filterParams.email) {
+      delete filterParams.email;
+    }
+    if (!filterParams.role) {
+      delete filterParams.role;
+    }
     this.accountService
-      .getAccounts(this.pageParameters, this.filterForm.value as AccountFilterParams)
+      .getAccounts(this.pageParameters, filterParams)
       .subscribe(
         (response: AccountsResponse) => {
           this.accounts = response.accounts;

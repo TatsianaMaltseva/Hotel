@@ -100,6 +100,10 @@ namespace iTechArt.Hotels.Api.Controllers
             _mapper.Map(request, account);
             if (!string.IsNullOrWhiteSpace(request.Password))
             {
+                if (request.Password.Length < ValidationParams.Account.PasswordMinLength)
+                {
+                    return BadRequest($"Password is required to have at least {ValidationParams.Account.PasswordMinLength} symbols");
+                }    
                 account.Password = _hashPasswordsService
                     .HashPassword(request.Password, Convert.FromBase64String(account.Salt));
             }

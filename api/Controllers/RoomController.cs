@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
 using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using static iTechArt.Hotels.Api.Constants;
-using System.Collections.Generic;
-using System.IO;
 using Microsoft.Extensions.Options;
+using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -137,11 +137,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such hotel does not exist");
             }
             RoomEntity room = _mapper.Map<RoomEntity>(request);
-            HotelEntity hotel = await _hotelsDb.Hotels
-                .Where(hotel => hotel.Id == hotelId)
-                .Include(hotel => hotel.Rooms)
-                .FirstOrDefaultAsync();
-            hotel.Rooms.Add(room);
+            room.HotelId = hotelId;
+            _hotelsDb.Rooms.Add(room);
             await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(ChangeRoom), new { hotelId, roomId = room.Id }, room.Id);
         }

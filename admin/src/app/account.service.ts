@@ -54,7 +54,10 @@ export class AccountService {
       );
   }
 
-  public getAccounts(pageParameters: PageParameters, filterParams: AccountFilterParams): Observable<AccountsResponse> {
+  public getAccounts(
+    pageParameters: PageParameters,
+    filterParams: AccountFilterParams
+  ): Observable<AccountsResponse> {
     const params = { ...pageParameters, ...filterParams } as Params;
     return this.http.get<AccountsResponse>(
       `${this.apiUrl}api/accounts`,

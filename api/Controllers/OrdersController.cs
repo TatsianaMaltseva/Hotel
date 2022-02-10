@@ -33,10 +33,10 @@ namespace iTechArt.Hotels.Api.Controllers
             _viewsOptions = viewsOptions;
         }
 
-        [Route("orders")]
+        [Route("accounts/{accountId}/orders")]
         [HttpPost]
         [Authorize(Roles = nameof(Role.Client))]
-        public async Task<IActionResult> AddOrder([FromBody] OrderToAdd order)
+        public async Task<IActionResult> AddOrder([FromRoute] int accountId, [FromBody] OrderToAdd order)
         {
 
             if (!await CheckIfHotelExistsAsync(order.HotelId))
@@ -52,7 +52,7 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 HotelId = order.HotelId,
                 RoomId = order.RoomId,
-                AccountId = Convert.ToInt32(User.Identity.Name),
+                AccountId = accountId,
                 Price = ((order.CheckOutDate - order.CheckInDate).Days + 1)
                     * await GetPricePerDay(order.HotelId, order.RoomId, order.FacilityIds),
                 CheckInDate = order.CheckInDate,
@@ -101,10 +101,10 @@ namespace iTechArt.Hotels.Api.Controllers
             return Ok(order);
         }
 
-        [Route("orders")]
+        [Route("accounts/{accountId}/orders")]
         [HttpGet]
         [Authorize(Roles = nameof(Role.Client))]
-        public async Task<IActionResult> GetOrders([FromQuery] OrderFilterParams filterParams)
+        public async Task<IActionResult> GetOrders([FromRoute] int accountId, [FromQuery] OrderFilterParams filterParams)
         {
             var orders = _hotelsDb.Orders
                 .AsQueryable();
@@ -118,7 +118,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 orders = orders.Where(order => order.CheckOutDate < DateTime.Today);
             }
             List<Order> ordersToReturn = await orders
-                .Where(order => order.AccountId == Convert.ToInt32(User.Identity.Name))
+                .Where(order => order.AccountId == accountId)
                 .Include(order => order.Hotel)
                 .Include(order => order.Room)
                 .Include(order => order.Facilities)
