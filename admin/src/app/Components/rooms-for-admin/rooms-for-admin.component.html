@@ -1,6 +1,6 @@
 <form [formGroup]="roomsForm">
     <ng-container formArrayName="rooms">
-        <ng-container *ngFor="let roomForm of rooms.controls; let i = index">    
+        <ng-container *ngFor="let roomForm of rooms.controls; let i = index">
             <mat-card [formGroupName]="i">
                 <mat-form-field>
                     <mat-label>Room name</mat-label>
@@ -9,10 +9,11 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Number of sleeps</mat-label>
-                    <input 
-                        matInput 
-                        formControlName="sleeps" 
+                    <input
+                        matInput
+                        formControlName="sleeps"
                         type="number"
+                        min="0"
                     >
                     <mat-error>Number of sleeps is required</mat-error>
                 </mat-form-field>
@@ -23,15 +24,17 @@
                         matInput
                         formControlName="price"
                         type="number"
+                        min="0"
                     >
                     <mat-error>Price is required</mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Number of rooms</mat-label>
-                    <input 
-                        matInput 
-                        formControlName="number" 
+                    <input
+                        matInput
+                        formControlName="number"
                         type="number"
+                        min="0"
                     >
                     <mat-error>Number of rooms is required</mat-error>
                 </mat-form-field>
@@ -62,7 +65,7 @@
                     <button
                         mat-button
                         [disabled]="roomForm.invalid"
-                        (click)="addRoom(roomForm.value)"
+                        (click)="addRoom(i, roomForm.value)"
                     >
                         <mat-icon>save</mat-icon>add room
                     </button>

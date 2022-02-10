@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
@@ -26,6 +27,17 @@ export class HotelForAdminComponent implements OnInit {
   public serverErrorResponse: string = '';
   public countries: string[] = [];
   public cities: string[] = [];
+  public timePickerStyle: NgxMaterialTimepickerTheme = {
+    container: {
+      buttonColor: '#37393B'
+    },
+    dial: {
+      dialBackgroundColor: '#B814D8'
+    },
+    clockFace: {
+      clockHandColor: '#B814D8'
+    }
+  };
 
   public get hotel(): Hotel {
     return this.hotelForm.value as Hotel;
@@ -188,9 +200,6 @@ export class HotelForAdminComponent implements OnInit {
           this.hotelForm.patchValue(hotel);
           this.isHotelExistInDataBase = true;
           this.isHotelLoaded = true;
-        },
-        (serverError: HttpErrorResponse) => {
-          this.openErrorSnackBar(serverError.error as string);
         }
       )
       .add(

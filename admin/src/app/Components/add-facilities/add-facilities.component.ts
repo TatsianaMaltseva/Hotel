@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -12,8 +11,7 @@ import { FacilityService } from '../../facility.service';
   styleUrls: ['./add-facilities.component.css']
 })
 export class AddFacilitiesComponent implements OnInit {
-  public facilitiesForm: FormGroup; 
-  public serverErrorResponse: string = '';
+  public facilitiesForm: FormGroup;
   public readonly realmOptions = [Realm.hotel, Realm.room];
 
   public get facilities(): FormArray {
@@ -25,13 +23,13 @@ export class AddFacilitiesComponent implements OnInit {
       {
         id: [],
         name: [
-          '', 
+          '',
           [
             Validators.required,
             Validators.maxLength(facilityParamsMaxLength.name)
           ]
         ],
-        realm: ['', [Validators.required]]
+        realm: [null, [Validators.required]]
       }
     );
     return facilityGroup;
@@ -81,16 +79,13 @@ export class AddFacilitiesComponent implements OnInit {
     this.facilities.removeAt(index);
   }
 
-  public addFacility(facility: Facility): void {
+  public addFacility(index: number, facility: Facility): void {
     this.facilityService
       .addFacility(facility)
       .subscribe(
         (id) => {
-          facility.id = id;
-          this.serverErrorResponse = '';
-        },
-        (serverError: HttpErrorResponse) => {
-          this.serverErrorResponse = serverError.error as string;
+          const facilityFormGroup = this.facilities.controls[index]  as FormGroup;
+          facilityFormGroup.controls.id.setValue(id);
         }
       );
   }

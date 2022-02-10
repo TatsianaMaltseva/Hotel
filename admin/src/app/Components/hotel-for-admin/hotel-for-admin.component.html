@@ -85,7 +85,7 @@
                     [ngxTimepicker]="checkInTimepicker"
                 >
             </mat-form-field>
-            <ngx-material-timepicker #checkInTimepicker></ngx-material-timepicker>
+            <ngx-material-timepicker #checkInTimepicker [theme]="timePickerStyle"></ngx-material-timepicker>
             <mat-form-field class="input-field">
                 <input
                     matInput
@@ -97,7 +97,7 @@
                     [ngxTimepicker]="checkOutTimepicker"
                 >
             </mat-form-field>
-            <ngx-material-timepicker #checkOutTimepicker></ngx-material-timepicker>
+            <ngx-material-timepicker #checkOutTimepicker [theme]="timePickerStyle"></ngx-material-timepicker>
             <mat-error *ngIf="serverErrorResponse">
                 {{ serverErrorResponse }}
             </mat-error>

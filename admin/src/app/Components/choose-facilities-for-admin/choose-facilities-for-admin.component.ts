@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { Facility } from 'src/app/Dtos/facility';
@@ -29,7 +29,7 @@ export class ChooseFacilitiesForAdminComponent {
         id: [],
         name: [],
         checked: [],
-        price: []
+        price: [null, [Validators.required]]
       }
     );
     return facilityGroup;
@@ -38,7 +38,8 @@ export class ChooseFacilitiesForAdminComponent {
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: FacilititesDialogData,
     private readonly facilityService: FacilityService,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly matDialogRef: MatDialogRef<ChooseFacilitiesForAdminComponent>
   ) {
     this.hotel = data.hotel;
     this.room = data.room;
@@ -48,9 +49,12 @@ export class ChooseFacilitiesForAdminComponent {
       }
     );
 
-    this.data.facilities.forEach(facility => facility.checked = true);
-    this.data.facilities.forEach(facility => this.addFacilityToForm(facility));
-    console.log(data);
+    if (this.data.facilities) {
+      this.data.facilities
+        .forEach(facility => facility.checked = true);
+      this.data.facilities
+        .forEach(facility => this.addFacilityToForm(facility));
+    }
   }
 
   public changeFacilitiesStatus(): void {
@@ -70,6 +74,7 @@ export class ChooseFacilitiesForAdminComponent {
           } else if (this.hotel) {
             this.hotel.facilities = checkedFacilitites;
           }
+          this.matDialogRef.close();
         }
       );
   }

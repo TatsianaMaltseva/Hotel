@@ -95,7 +95,7 @@ export class RoomsForAdminComponent implements OnInit {
     this.rooms.removeAt(index);
   }
 
-  public addRoom(room: Room): void {
+  public addRoom(index: number, room: Room): void {
     if (!this.hotel) {
       return;
     }
@@ -103,7 +103,8 @@ export class RoomsForAdminComponent implements OnInit {
       .addRoom(this.hotel.id, room)
       .subscribe(
         (id) => {
-          room.id = id;
+          const roomFormGroup = this.rooms.controls[index] as FormGroup;
+          roomFormGroup.controls.id.setValue(id);
         }
       );
   }

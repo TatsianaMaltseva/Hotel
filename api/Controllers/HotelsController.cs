@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static iTechArt.Hotels.Api.Constants;
 
@@ -79,6 +80,9 @@ namespace iTechArt.Hotels.Api.Controllers
             [FromQuery] HotelFilterParameters filterParams
         )
         {
+            Role role = Enum.Parse<Role>((HttpContext.User.Identity as ClaimsIdentity)
+                .FindFirst(ClaimTypes.Role)
+                .Value);
             var filteredHotelCards = _hotelsDb.Hotels
                 .AsQueryable()
                 .AsNoTracking();
@@ -101,21 +105,23 @@ namespace iTechArt.Hotels.Api.Controllers
                         .Contains(filterParams.City));
             }
 
-            filteredHotelCards = filteredHotelCards
-                .Include(hotel => hotel.Rooms)
-                .ThenInclude(room => room.ActiveViews)
-                .Include(hotel => hotel.Rooms)
-                .ThenInclude(room => room.Orders)
-                .Where(hotel => hotel.Rooms
-                    .Select(room => (filterParams.CheckInDate != null && filterParams.CheckOutDate != null)
-                        ? room.Number - room.Orders
-                            .Where(order => !(filterParams.CheckOutDate < order.CheckInDate
-                                || filterParams.CheckInDate > order.CheckOutDate)).Count()
-                                - room.ActiveViews.Count()
-                        : room.Number - room.ActiveViews.Count())
-                    .Any(availableRoomsNumber => availableRoomsNumber > 0)
-                     == true);
-
+            if (role != Role.Admin)
+            {
+                filteredHotelCards = filteredHotelCards
+                    .Include(hotel => hotel.Rooms)
+                    .ThenInclude(room => room.ActiveViews)
+                    .Include(hotel => hotel.Rooms)
+                    .ThenInclude(room => room.Orders)
+                    .Where(hotel => hotel.Rooms
+                        .Select(room => (filterParams.CheckInDate != null && filterParams.CheckOutDate != null)
+                            ? room.Number - room.Orders
+                                .Where(order => !(filterParams.CheckOutDate < order.CheckInDate
+                                    || filterParams.CheckInDate > order.CheckOutDate)).Count()
+                                    - room.ActiveViews.Count()
+                            : room.Number - room.ActiveViews.Count())
+                        .Any(availableRoomsNumber => availableRoomsNumber > 0)
+                         == true);
+            }
             int hotelCount = await filteredHotelCards.CountAsync();
 
             HotelCard[] hotelCards = await filteredHotelCards

@@ -46,7 +46,7 @@
                     [src]="createImagePath(room)"
                 />
                 <p class="img__description" (click)="showImagesDialog(room)">
-                    Click to see other images
+                    Other images
                 </p>
             </div>
         </td>
@@ -91,7 +91,6 @@
                 [disabled]="!areAllShownRoomsAvailable"
             >
                 Reserve
-                <mat-icon matTooltip="Select dates">help_outline</mat-icon>
             </button>
         </td>
     </ng-container>

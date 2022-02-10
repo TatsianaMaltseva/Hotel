@@ -138,6 +138,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
             var accounts = await filteredAccounts.Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
+                .OrderBy(account => account.Id)
                 .ProjectTo<Account>(_mapper.ConfigurationProvider)
                 .ToListAsync();
 

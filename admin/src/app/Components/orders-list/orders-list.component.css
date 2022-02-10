@@ -6,8 +6,7 @@
 }
 
 app-hotels-filter {
-    width: 24%;
-    margin-right: 5px;
+    width: 30%;
 }
 
 .card {
@@ -18,7 +17,15 @@ app-hotels-filter {
     width: 70%;
 }
 
+mat-radio-group {
+    display: flex;
+}
+
 mat-radio-button {
-    margin-top: 8%;
-    margin-left: 5px;
+    margin-right: 2%;
+}
+
+mat-form-field {
+    display: block;
+    width: 100%;
 }

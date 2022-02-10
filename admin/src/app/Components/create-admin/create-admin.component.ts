@@ -57,8 +57,8 @@ export class CreateAdminComponent {
           ],
           confirmPassword: ['']
         },
-        { 
-          validators: CustomValidators.match('password', 'confirmPassword') 
+        {
+          validators: CustomValidators.match('password', 'confirmPassword')
         }
       );
   }
@@ -74,6 +74,7 @@ export class CreateAdminComponent {
         () => {
           this.serverErrorResponse = '';
           this.openSuccessSnackBar(`Successfully created! Email: ${email}`);
+          this.matDialogRef.close();
         },
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;
@@ -85,7 +86,7 @@ export class CreateAdminComponent {
     this.snackBar.open(
       `${message}`,
       'Confirm',
-      { 
+      {
         duration: 5000
       }
     );

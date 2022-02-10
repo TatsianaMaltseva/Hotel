@@ -16,13 +16,15 @@ img {
 .img__description {
     position: absolute;
     visibility: hidden;
-    background: rgba(100, 38, 109, 0.5);
+    background: rgba(0, 0, 0, 0.5);
     color: rgb(255, 255, 255);
     inset: 0;
     opacity: 0;
     transition: opacity .2s, visibility .2s;
-    font-size: 30px;
+    font-size: 26px;
     margin: 0;
+    text-align: center;
+    line-height: 100px;
 }
 
 .img__wrap:hover .img__description {

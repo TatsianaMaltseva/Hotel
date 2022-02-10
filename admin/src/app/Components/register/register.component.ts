@@ -6,6 +6,7 @@ import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/custom
 import { AccountParams } from 'src/app/Core/validation-params';
 import { ACCESS_TOKEN_KEY } from 'src/app/Core/get-token';
 import { AccountService } from 'src/app/account.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-register',
@@ -39,7 +40,8 @@ export class RegisterComponent {
   public constructor(
     private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder,
-    private readonly accountService: AccountService
+    private readonly accountService: AccountService,
+    private readonly matDialogRef: MatDialogRef<RegisterComponent>
   ) {
       this.registerForm = formBuilder.group(
         {
@@ -78,6 +80,7 @@ export class RegisterComponent {
             localStorage.setItem(ACCESS_TOKEN_KEY, token);
             this.returnBack();
           }
+          this.matDialogRef.close();
         }
       );
   }

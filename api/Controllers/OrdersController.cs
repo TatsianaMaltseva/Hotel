@@ -38,7 +38,6 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = nameof(Role.Client))]
         public async Task<IActionResult> AddOrder([FromRoute] int accountId, [FromBody] OrderToAdd order)
         {
-
             if (!await CheckIfHotelExistsAsync(order.HotelId))
             {
                 return BadRequest("Such hotel does not exist");
@@ -62,6 +61,12 @@ namespace iTechArt.Hotels.Api.Controllers
                         .Contains(facility.Id))
                     .ToListAsync()
             };
+
+            ViewEntity view = await _hotelsDb.Views
+                .Where(view => view.RoomId == order.RoomId)
+                .FirstOrDefaultAsync();
+
+            _hotelsDb.Views.Remove(view);
 
             await _hotelsDb.AddAsync(orderEntity);
             await _hotelsDb.SaveChangesAsync();
@@ -107,6 +112,7 @@ namespace iTechArt.Hotels.Api.Controllers
         public async Task<IActionResult> GetOrders([FromRoute] int accountId, [FromQuery] OrderFilterParams filterParams)
         {
             var orders = _hotelsDb.Orders
+                .Include(order => order.Hotel)
                 .AsQueryable();
 
             if (filterParams.Date == OrderDate.Future)
@@ -117,6 +123,16 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 orders = orders.Where(order => order.CheckOutDate < DateTime.Today);
             }
+
+            if (!string.IsNullOrEmpty(filterParams.Country))
+            {
+                orders = orders.Where(order => order.Hotel.Country.Contains(filterParams.Country));
+            }
+            if (!string.IsNullOrEmpty(filterParams.City))
+            {
+                orders = orders.Where(order => order.Hotel.City.Contains(filterParams.City));
+            }
+
             List<Order> ordersToReturn = await orders
                 .Where(order => order.AccountId == accountId)
                 .Include(order => order.Hotel)
