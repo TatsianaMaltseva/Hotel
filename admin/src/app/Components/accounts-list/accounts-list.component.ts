@@ -29,10 +29,6 @@ export class AccountsListComponent implements OnInit {
   public filterForm: FormGroup;
   public roleOptions = [Role.admin, Role.client];
 
-  public get id(): AbstractControl | null {
-    return this.filterForm.get('id');
-  }
-
   public get email(): AbstractControl | null {
     return this.filterForm.get('email');
   }
@@ -52,7 +48,6 @@ export class AccountsListComponent implements OnInit {
   ) {
     this.filterForm = formBuilder.group(
       {
-        id: null,
         email: [null, [Validators.maxLength(AccountParams.emailMaxLength)]],
         role: null
       }
@@ -99,9 +94,6 @@ export class AccountsListComponent implements OnInit {
 
   public fetchAccounts(): void {
     const filterParams: AccountFilterParams = this.filterForm.value as AccountFilterParams;
-    if (!filterParams.id) {
-      delete filterParams.id;
-    }
     if (!filterParams.email) {
       delete filterParams.email;
     }

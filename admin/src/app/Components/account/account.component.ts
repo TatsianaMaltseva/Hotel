@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AccountService } from 'src/app/account.service';
 
 import { Role } from 'src/app/Core/roles';
@@ -31,7 +31,8 @@ export class AccountComponent {
   public constructor(
     @Inject(MAT_DIALOG_DATA) public account: Account,
     private readonly accountService: AccountService,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly matDialogRef: MatDialogRef<AccountComponent>
   ) {
       this.accountForm = formBuilder.group({
         email: [
@@ -53,7 +54,12 @@ export class AccountComponent {
   }
 
   public editAccount(): void {
-    this.accountService.editAccount(this.account.id, this.accountForm.value as AccountToEdit)
-    .subscribe();
+    this.accountService
+      .editAccount(this.account.id, this.accountForm.value as AccountToEdit)
+      .subscribe(
+        () => {
+          this.matDialogRef.close();
+        }
+      );
   }
 }

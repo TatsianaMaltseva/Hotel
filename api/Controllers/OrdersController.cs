@@ -62,20 +62,19 @@ namespace iTechArt.Hotels.Api.Controllers
                     .ToListAsync()
             };
 
-            ViewEntity view = await _hotelsDb.Views
-                .Where(view => view.RoomId == order.RoomId)
-                .FirstOrDefaultAsync();
-
-            _hotelsDb.Views.Remove(view);
+            var view = _hotelsDb.Views
+                .Where(view => view.RoomId == order.RoomId && view.AccountId == accountId);;
+            _hotelsDb.Views.RemoveRange(view);
 
             await _hotelsDb.AddAsync(orderEntity);
             await _hotelsDb.SaveChangesAsync();
             return CreatedAtAction(nameof(GetOrder), new { orderId = orderEntity.Id }, null);
         }
 
-        [Route("viewed-rooms/{roomId}")]
+        [Route("accounts/{accountId}/viewed-rooms/{roomId}")]
         [HttpPost]
-        public async Task<IActionResult> AddRoomToViewed([FromRoute] int roomId)
+        [Authorize(Roles = nameof(Role.Client))]
+        public async Task<IActionResult> AddRoomToViewed([FromRoute] int accountId, [FromRoute] int roomId)
         {
             if (!await CheckIfRoomExistsAsync(roomId))
             {
@@ -84,6 +83,7 @@ namespace iTechArt.Hotels.Api.Controllers
             ViewEntity view = new ViewEntity()
             {
                 RoomId = roomId,
+                AccountId = accountId,
                 ExpireTime = DateTime.Now.Add(_viewsOptions.Value.ExpireTime)
             };
             await _hotelsDb.Views.AddAsync(view);

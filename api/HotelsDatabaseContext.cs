@@ -101,6 +101,11 @@ namespace iTechArt.Hotels.Api
             modelBuilder.Entity<AccountEntity>()
                 .Property(e => e.Role)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<ViewEntity>()
+                .HasOne<AccountEntity>()
+                .WithMany()
+                .HasForeignKey(view => view.AccountId);
         }
     }
 }

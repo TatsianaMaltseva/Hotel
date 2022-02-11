@@ -18,14 +18,14 @@
             </div>
         </ng-container>
         <button
-            mat-button
+            mat-raised-button
             (click)="fetchAvilableFacilities()"
             [disabled]="seeOtherClicked"
         >
             <mat-icon>add</mat-icon>see other facilities to add
         </button>
         <button
-            mat-button
+            mat-raised-button
             (click)="changeFacilitiesStatus()"
             [disabled]="facilitiesForm.invalid"
         >

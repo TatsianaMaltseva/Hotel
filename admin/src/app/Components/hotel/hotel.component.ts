@@ -6,7 +6,6 @@ import { Location } from '@angular/common';
 import { HotelService } from 'src/app/hotel.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { AccountService } from 'src/app/account.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-hotel',

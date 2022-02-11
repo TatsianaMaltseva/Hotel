@@ -7,14 +7,6 @@
     </button>
     <div [formGroup]="filterForm">
         <mat-form-field>
-            <mat-label>Account id</mat-label>
-            <input
-                matInput
-                formControlName="id"
-                type="number"
-            >
-        </mat-form-field>
-        <mat-form-field>
             <mat-label>Account email</mat-label>
             <input matInput formControlName="email">
         </mat-form-field>
@@ -39,7 +31,7 @@
         <span *ngFor="let account of accounts">
             <mat-list-item>
                 <span class="inlineLeft">
-                    {{ account.role }} {{ account.email }}  id{{ account.id }}
+                    {{ account.role }} {{ account.email }}
                 </span>
                 <span class="inlineRight">
                     <button mat-raised-button (click)="openEditAccountDialog(account)">

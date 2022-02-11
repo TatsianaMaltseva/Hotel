@@ -8,8 +8,8 @@
                     <input matInput formControlName="name">
                     <mat-error>Facility name is required</mat-error>
                 </mat-form-field>
-                _
                 <mat-form-field>
+                    <mat-label>Facility type</mat-label>
                     <mat-select
                         matInput
                         formControlName="realm"
@@ -22,7 +22,6 @@
                     <mat-error>Realm is required</mat-error>
                 </mat-form-field>
                 <span *ngIf="facilityExistsInDatabase(facilityForm.value); else newFacilityButtons">
-                    <span>id{{ facilityForm.value.id }}</span>
                     <button
                         mat-button
                         (click)="editFacility(facilityForm.value)"

@@ -116,14 +116,7 @@ namespace iTechArt.Hotels.Api.Controllers
         public async Task<IActionResult> GetAccounts([FromQuery] PageParameters pageParameters, [FromQuery] AccountFilterParams filterParams)
         {
             var filteredAccounts = _hotelsDb.Accounts
-                .AsQueryable()
-                .AsNoTracking();
-
-            if (filterParams.Id.HasValue)
-            {
-                filteredAccounts = filteredAccounts
-                    .Where(account => account.Id == filterParams.Id);
-            }
+                .AsQueryable();
             if (!string.IsNullOrEmpty(filterParams.Email))
             {
                 filteredAccounts = filteredAccounts

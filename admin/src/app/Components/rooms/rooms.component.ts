@@ -62,21 +62,23 @@ export class RoomsComponent implements OnInit {
         ]
       }
     );
+  }
+
+  public ngOnInit(): void {
+    if (this.hotelFilterService.checkInDate && this.hotelFilterService.checkOutDate) {
+      this.areAllShownRoomsAvailable = true;
+    }
 
     this.dateForm
       .valueChanges
       .subscribe(
         () =>
           this.areAllShownRoomsAvailable = false
-        );
+      );
 
-    if (this.hotelFilterService.checkInDate && this.hotelFilterService.checkOutDate) {
-      this.areAllShownRoomsAvailable = true;
+    if (this.areAllShownRoomsAvailable || this.isAdmin) {
+      this.fetchRooms();
     }
-  }
-
-  public ngOnInit(): void {
-    this.fetchRooms();
   }
 
   public loadAvailableRooms(): void {
@@ -118,25 +120,27 @@ export class RoomsComponent implements OnInit {
 
     this.orderService
       .addRoomToViewed(room)
-      .subscribe();
-
-    const dialogRef = this.matDialog.open(
-      OrderComponent,
-      {
-        width: '400px',
-        data: {
-          hotel: this.hotel,
-          room: room,
-          facilities: [ ...this.hotel.facilities, ...room.facilities ] as Facility[]
-        } as Order
-      }
-    );
-
-    dialogRef
-      .afterClosed()
       .subscribe(
         () => {
-          this.rooms = this.rooms.filter(room => room.number > 0);
+          const dialogRef = this.matDialog.open(
+            OrderComponent,
+            {
+              width: '400px',
+              data: {
+                hotel: this.hotel,
+                room: room,
+                facilities: [ ...this.hotel!.facilities, ...room.facilities ] as Facility[]
+              } as Order
+            }
+          );
+
+          dialogRef
+            .afterClosed()
+            .subscribe(
+              () => {
+                this.rooms = this.rooms.filter(room => room.number > 0);
+              }
+            );
         }
       );
   }

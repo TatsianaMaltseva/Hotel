@@ -28,7 +28,7 @@ export class OrderService {
 
   public addRoomToViewed(room: Room): Observable<string> {
     return this.http.post<string>(
-      `${this.apiUrl}api/viewed-rooms/${room.id}`,
+      `${this.apiUrl}api/accounts/${this.accountId}/viewed-rooms/${room.id}`,
       room
     );
   }
