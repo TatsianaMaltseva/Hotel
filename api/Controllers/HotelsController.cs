@@ -80,12 +80,10 @@ namespace iTechArt.Hotels.Api.Controllers
             [FromQuery] HotelFilterParameters filterParams
         )
         {
-            Role role = Enum.Parse<Role>((HttpContext.User.Identity as ClaimsIdentity)
-                .FindFirst(ClaimTypes.Role)
-                .Value);
+            Claim role = (HttpContext.User.Identity as ClaimsIdentity)
+                .FindFirst(ClaimTypes.Role);
             var filteredHotelCards = _hotelsDb.Hotels
-                .AsQueryable()
-                .AsNoTracking();
+                .AsQueryable();
             if (!string.IsNullOrEmpty(filterParams.Name))
             {
                 filteredHotelCards = filteredHotelCards
@@ -105,7 +103,7 @@ namespace iTechArt.Hotels.Api.Controllers
                         .Contains(filterParams.City));
             }
 
-            if (role != Role.Admin)
+            if (role == null || Enum.Parse<Role>(role.Value) != Role.Admin)
             {
                 filteredHotelCards = filteredHotelCards
                     .Include(hotel => hotel.Rooms)
