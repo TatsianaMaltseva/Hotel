@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -173,10 +174,6 @@ namespace iTechArt.Hotels.Api.Controllers
             return PhysicalFile(fullPath, $"image/{extension}");
         }
 
-        private async Task<ImageEntity> GetImageEntityAsync(int imageId) =>
-            await _hotelsDb.Images
-                .FirstOrDefaultAsync(image => image.Id == imageId);
-
         private async Task<string> SaveFileAsync(IFormFile file)
         {
             string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
@@ -187,6 +184,10 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             return fileName;
         }
+
+        private Task<ImageEntity> GetImageEntityAsync(int imageId) =>
+            _hotelsDb.Images
+                .FirstOrDefaultAsync(image => image.Id == imageId);
 
         private Task<bool> CheckIfHotelExistsAsync(int hotelId) =>
             _hotelsDb.Hotels.AnyAsync(hotel => hotel.Id == hotelId);

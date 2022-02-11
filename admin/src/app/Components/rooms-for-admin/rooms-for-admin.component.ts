@@ -3,13 +3,15 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ImageForAdminDialogData } from 'src/app/Core/image-dialog-admin-data';
+import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
+import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
+import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 import { roomParamsMaxLength } from 'src/app/Core/validation-params';
-import { Room } from 'src/app/Dtos/room';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { RoomService } from '../../room.service';
-import { ImagesForAdminDialogComponent } from '../images-for-admin-dialog/images-for-admin-dialog.component';
 import { Hotel } from 'src/app/Dtos/hotel';
+import { Room } from 'src/app/Dtos/room';
 
 @Component({
   selector: 'app-rooms-for-admin',
@@ -18,7 +20,7 @@ import { Hotel } from 'src/app/Dtos/hotel';
 })
 export class RoomsForAdminComponent implements OnInit {
   @Input() public hotel?: Hotel;
-
+  
   public hotelId?: number;
   public roomsForm: FormGroup;
 
@@ -39,9 +41,9 @@ export class RoomsForAdminComponent implements OnInit {
         ],
         sleeps: ['', Validators.required],
         mainImageId: [],
-        facilities: [],
         price: ['', Validators.required],
-        number: ['', Validators.required]
+        number: ['', Validators.required],
+        facilities: []
       }
     );
     return roomForm;
@@ -70,7 +72,9 @@ export class RoomsForAdminComponent implements OnInit {
       .getRooms(this.hotel.id)
       .subscribe(
         (rooms) => {
-          rooms.forEach(room => this.addRoomToForm(room));
+          rooms.forEach(room => {
+            this.addRoomToForm(room);
+          });
         }
       );
   }
@@ -145,6 +149,20 @@ export class RoomsForAdminComponent implements OnInit {
       {
         width: '85%',
         data: { hotel: this.hotel, room: room } as ImageForAdminDialogData
+      }
+    );
+  }
+
+  public openFacilitiesDialog(room: Room): void {
+    this.matDialog.open(
+      ChooseFacilitiesForAdminComponent,
+      {
+        width: '600px',
+        data: { 
+          hotel: this.hotel, 
+          room: room, 
+          facilities: room.facilities 
+        } as FacilititesDialogData
       }
     );
   }

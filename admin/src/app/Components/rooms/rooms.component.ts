@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { Room } from 'src/app/Dtos/room';
+import { Facility } from 'src/app/Dtos/facility';
 import { HotelService } from 'src/app/hotel.service';
 import { ImageService } from 'src/app/image.service';
 import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
-import { RoomService } from '../../room.service';
 import { ImageDialogData } from 'src/app/Core/image-dialog-data';
 
 @Component({
@@ -36,7 +37,6 @@ export class RoomsComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly imageService: ImageService,
     private readonly matDialog: MatDialog,
-    private readonly roomService: RoomService,
     private readonly hotelService: HotelService
   ) { 
     this.roomsForm = formBuilder.group(
@@ -48,6 +48,16 @@ export class RoomsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.fetchRooms();
+  }
+
+  public changeFacilityStatus(
+    event: MatCheckboxChange, 
+    room: Room, 
+    facility: Facility
+  ): void {
+    room.facilities
+      .filter(f => f.id == facility.id)
+      .map(f => f.checked = event.checked);
   }
 
   public createImagePath(room: Room): string {

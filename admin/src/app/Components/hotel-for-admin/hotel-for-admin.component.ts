@@ -1,12 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 
+import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
 import { Hotel, HotelToEdit } from 'src/app/Dtos/hotel';
 import { HotelService } from 'src/app/hotel.service';
+import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 
 @Component({
   selector: 'app-hotel-for-admin',
@@ -20,30 +23,33 @@ export class HotelForAdminComponent implements OnInit {
   public isHotelLoaded = false;
 
   public get hotel(): Hotel {
-    return { id: this.hotelId, ...this.changeHotelForm.value } as Hotel;
+    return this.changeHotelForm.value as Hotel;
   }
 
   public constructor(
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
     private readonly formBuilder: FormBuilder,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly matDialog: MatDialog
   ) {
     this.changeHotelForm = formBuilder.group(
       {
+        id: [''],
         name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
         country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],
         city: ['', Validators.maxLength(hotelParamsMaxLenght.city)],
         address: ['', Validators.maxLength(hotelParamsMaxLenght.address)],
         description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
-        mainImageId: []
+        mainImageId: [],
+        facilities: []
       }
     );
   }
 
   public ngOnInit(): void {
     const id: string | null = this.route.snapshot.paramMap.get('id');
-    if (id === null || !this.isValidId(id)) {
+    if (!id || !this.isValidId(id)) {
       this.openErrorSnackBar('Hotel id is not valid');
     } else {
       this.loading = true;
@@ -65,6 +71,16 @@ export class HotelForAdminComponent implements OnInit {
     return this.changeHotelForm.get(controlName)?.errors?.maxlength.requiredLength;
   }
 
+  public openFacilitiesDialog(): void {
+    this.matDialog.open(
+      ChooseFacilitiesForAdminComponent,
+      {
+        width: '600px',
+        data: { hotel: this.hotel, facilities: this.hotel.facilities } as FacilititesDialogData
+      }
+    );
+  }
+
   private openErrorSnackBar(errorMessage: string): void {
     this.snackBar.open(
       `${errorMessage}`,
@@ -84,8 +100,7 @@ export class HotelForAdminComponent implements OnInit {
       .getHotel(hotelId)
       .subscribe(
         (hotel) => {
-          const { id, ...data } = hotel;
-          this.changeHotelForm.patchValue(data);
+          this.changeHotelForm.patchValue(hotel);
           this.isHotelLoaded = true;
         },
         (serverError: HttpErrorResponse) => {

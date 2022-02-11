@@ -1,4 +1,5 @@
 ﻿using iTechArt.Hotels.Api.Entities;
+using iTechArt.Hotels.Api.JoinEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace iTechArt.Hotels.Api
@@ -14,6 +15,9 @@ namespace iTechArt.Hotels.Api
         public DbSet<HotelEntity> Hotels { get; set; }
         public DbSet<ImageEntity> Images { get; set; }
         public DbSet<RoomEntity> Rooms { get; set; }
+        public DbSet<FacilityEntity> Facilities { get; set; }
+        public DbSet<FacilityHotelEntity> FacilityHotel { get; set; }
+        public DbSet<FacilityRoomEntity> FacilityRoom { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,6 +62,15 @@ namespace iTechArt.Hotels.Api
                 entity.Property(e => e.Description)
                     .HasMaxLength(3000);
             });
+
+            modelBuilder.Entity<HotelEntity>()
+                .HasMany(hotel => hotel.Rooms)
+                .WithOne()
+                .HasForeignKey(room => room.HotelId);
+
+            modelBuilder.Entity<FacilityEntity>()
+                .Property(e => e.Realm)
+                .HasConversion<string>();
         }
     }
 }

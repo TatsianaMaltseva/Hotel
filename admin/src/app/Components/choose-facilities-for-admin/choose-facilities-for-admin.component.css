@@ -1,0 +1,14 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.facility {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.name {
+  padding-top: 15px;
+}

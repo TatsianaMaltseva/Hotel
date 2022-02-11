@@ -1,9 +1,14 @@
+import { Facility } from './facility';
+import { Hotel } from './hotel';
+
 export interface Room {
   id: number;
   name: string;
   sleeps: number;
   number: number;
   price: number;
-  facilities?: string;
+  facilities: Facility[];
   mainImageId?: number;
 }
+
+export type RoomToReserve = Omit<Hotel, 'id'>;

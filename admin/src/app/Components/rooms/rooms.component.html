@@ -30,7 +30,17 @@
 
         <ng-container matColumnDef="facilities">
             <th mat-header-cell *matHeaderCellDef>Additional facilities</th>
-            <td mat-cell *matCellDef="let room">{{ room.facilities }}</td>
+            <td mat-cell *matCellDef="let room">
+                <mat-checkbox
+                    *ngFor="let facility of room.facilities"
+                    class="facilities"
+                    (change)="changeFacilityStatus($event, room, facility)"
+                >
+                    {{ facility.name }} 
+                    <span *ngIf="facility.price">- US${{facility.price}}</span>
+                    <span *ngIf="!facility.price">- free</span>
+                </mat-checkbox>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="price">
@@ -43,9 +53,9 @@
             <td mat-cell *matCellDef="let room">
                 <mat-form-field>
                     <mat-select matInput formControlName="roomsReservedNumber">
-                    <mat-option *ngFor="let roomsToReserveNumber of getNumberArray(room)" [value]="roomsToReserveNumber">
-                        {{ roomsToReserveNumber }}
-                    </mat-option>
+                        <mat-option *ngFor="let roomsToReserveNumber of getNumberArray(room)" [value]="roomsToReserveNumber">
+                            {{ roomsToReserveNumber }}
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
             </td>

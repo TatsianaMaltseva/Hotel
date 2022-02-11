@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
 
 import { ChangePasswordComponent } from './Components/change-password/change-password.component';
 import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.component';
@@ -25,6 +26,14 @@ const routes: Routes = [
     path: 'change-password',
     canActivate: [AuthGuard],
     component: ChangePasswordComponent 
+  },
+  {
+    path: 'facilities',
+    canActivate: [RoleGuard],
+    data: {
+      roles: [roles.admin]
+    },
+    component: AddFacilitiesComponent
   }
 ];
 

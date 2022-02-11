@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Controllers
 {
@@ -30,12 +31,33 @@ namespace iTechArt.Hotels.Api.Controllers
         {
             Hotel hotel = await _hotelsDb.Hotels
                 .Where(hotel => hotel.Id == hotelId)
-                .ProjectTo<Hotel>(_mapper.ConfigurationProvider)
+                .Include(hotel => hotel.FacilityHotels)
+                .ThenInclude(facilityHotel => facilityHotel.Facility)
+                .Select(hotel => new Hotel()
+                {
+                    Id = hotel.Id,
+                    Name = hotel.Name,
+                    Country = hotel.Country,
+                    City = hotel.City,
+                    Address = hotel.Address,
+                    Description = hotel.Description,
+                    MainImageId = hotel.MainImageId,
+                    Facilities = hotel.FacilityHotels
+                        .Select(facilityHotel => new Facility()
+                        {
+                            Id = facilityHotel.FacilityId,
+                            Name = facilityHotel.Facility.Name,
+                            Realm = Realm.Hotel,
+                            Price = facilityHotel.Price
+                        })
+                        .ToList()
+                })
                 .FirstOrDefaultAsync();
             if (hotel == null)
             {
                 return NotFound($"Hotel with {hotelId} id does not exist");
             }
+
             return Ok(hotel);
         }
 

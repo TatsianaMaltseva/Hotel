@@ -1,17 +1,12 @@
-<div class="upload-button">
-    <input 
-        #file
-        type="file"
-        (change)="uploadFile(file.files)"
-        style="display: none"
-    >
-    <button 
-        mat-button
-        (click)="file.click()"
-    >
-        Upload file
-    </button>
-    <div *ngIf="progress > 0">
-        Uploaded {{ progress }}%
-    </div>
+<input 
+    #file
+    class="upload-file-button"
+    type="file"
+    (change)="uploadFile(file.files)"
+>
+<button mat-button (click)="file.click()">
+    <mat-icon>add_photo_alternate</mat-icon>add image
+</button>
+<div *ngIf="progress > 0">
+    Uploaded {{ progress }}%
 </div>

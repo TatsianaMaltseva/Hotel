@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Controllers
 {

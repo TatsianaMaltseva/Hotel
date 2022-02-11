@@ -29,3 +29,7 @@ img {
     visibility: visible;
     opacity: 1;
 }
+
+.facilities {
+    display: block;
+}

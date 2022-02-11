@@ -6,8 +6,13 @@
     <mat-card-subtitle>
         {{ hotel.country }} {{ hotel.city }} {{ hotel.address }}
     </mat-card-subtitle>
-    <app-images [hotelId]="hotelId"></app-images>
+    <app-images [hotelId]="hotelId"></app-images><br>
     <mat-card-content>
+        <mat-chip-list>
+            <mat-chip *ngFor="let facility of hotel.facilities">
+                {{ facility.name }}
+            </mat-chip>
+          </mat-chip-list><br>
         {{ hotel.description }}
     </mat-card-content>
     <app-rooms [hotelId]="hotelId"></app-rooms>
