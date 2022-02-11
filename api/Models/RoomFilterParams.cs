@@ -7,5 +7,7 @@ namespace iTechArt.Hotels.Api.Models
         public DateTime? CheckInDate { get; set; }
 
         public DateTime? CheckOutDate { get; set; }
+
+        public int? Sleeps { get; set; }
     }
 }

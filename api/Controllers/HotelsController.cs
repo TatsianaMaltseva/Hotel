@@ -44,27 +44,31 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(hotel => hotel.Id == hotelId)
                 .Include(hotel => hotel.FacilityHotels)
                 .ThenInclude(facilityHotel => facilityHotel.Facility)
-                .Select(hotel => new Hotel()
-                {
-                    Id = hotel.Id,
-                    Name = hotel.Name,
-                    Country = hotel.Country,
-                    City = hotel.City,
-                    Address = hotel.Address,
-                    Description = hotel.Description,
-                    MainImageId = hotel.MainImageId,
-                    Facilities = hotel.FacilityHotels
-                        .Select(facilityHotel => new Facility()
-                        {
-                            Id = facilityHotel.FacilityId,
-                            Name = facilityHotel.Facility.Name,
-                            Realm = Realm.Hotel,
-                            Price = facilityHotel.Price
-                        })
-                        .ToList(),
-                    CheckInTime = hotel.CheckInTime.ToString(timeFormat),
-                    CheckOutTime = hotel.CheckOutTime.ToString(timeFormat)
-                })
+                .Select(hotel => 
+                    new Hotel
+                    {
+                        Id = hotel.Id,
+                        Name = hotel.Name,
+                        Country = hotel.Country,
+                        City = hotel.City,
+                        Address = hotel.Address,
+                        Description = hotel.Description,
+                        MainImageId = hotel.MainImageId,
+                        Facilities = hotel.FacilityHotels
+                            .Select(facilityHotel => 
+                                new Facility
+                                {
+                                    Id = facilityHotel.FacilityId,
+                                    Name = facilityHotel.Facility.Name,
+                                    Realm = Realm.Hotel,
+                                    Price = facilityHotel.Price
+                                }
+                            )
+                            .ToList(),
+                        CheckInTime = hotel.CheckInTime.ToString(timeFormat),
+                        CheckOutTime = hotel.CheckOutTime.ToString(timeFormat)
+                    }
+                )
                 .FirstOrDefaultAsync();
             if (hotel == null)
             {
@@ -82,8 +86,33 @@ namespace iTechArt.Hotels.Api.Controllers
         {
             Claim role = (HttpContext.User.Identity as ClaimsIdentity)
                 .FindFirst(ClaimTypes.Role);
+
             var filteredHotelCards = _hotelsDb.Hotels
                 .AsQueryable();
+
+            if (role == null || Enum.Parse<Role>(role.Value) != Role.Admin)
+            {
+                filteredHotelCards = filteredHotelCards
+                    .Include(hotel => hotel.Rooms)
+                    .ThenInclude(room => room.ActiveViews)
+                    .Include(hotel => hotel.Rooms)
+                    .ThenInclude(room => room.Orders)
+                    .Where(hotel =>
+                        hotel.Rooms
+                            .Select(room =>
+                                (filterParams.CheckInDate != null && filterParams.CheckOutDate != null)
+                                    ? room.Number - room.Orders
+                                        .Where(order => 
+                                            !(filterParams.CheckOutDate < order.CheckInDate 
+                                                || filterParams.CheckInDate > order.CheckOutDate)
+                                        )
+                                        .Count() - room.ActiveViews.Count()
+                                    : room.Number - room.ActiveViews.Count()
+                             )
+                            .Any(availableRoomsNumber => availableRoomsNumber > 0)
+                    );
+            }
+
             if (!string.IsNullOrEmpty(filterParams.Name))
             {
                 filteredHotelCards = filteredHotelCards
@@ -103,23 +132,18 @@ namespace iTechArt.Hotels.Api.Controllers
                         .Contains(filterParams.City));
             }
 
-            if (role == null || Enum.Parse<Role>(role.Value) != Role.Admin)
+            if (filterParams.Sleeps.HasValue)
             {
                 filteredHotelCards = filteredHotelCards
-                    .Include(hotel => hotel.Rooms)
-                    .ThenInclude(room => room.ActiveViews)
-                    .Include(hotel => hotel.Rooms)
-                    .ThenInclude(room => room.Orders)
-                    .Where(hotel => hotel.Rooms
-                        .Select(room => (filterParams.CheckInDate != null && filterParams.CheckOutDate != null)
-                            ? room.Number - room.Orders
-                                .Where(order => !(filterParams.CheckOutDate < order.CheckInDate
-                                    || filterParams.CheckInDate > order.CheckOutDate)).Count()
-                                    - room.ActiveViews.Count()
-                            : room.Number - room.ActiveViews.Count())
-                        .Any(availableRoomsNumber => availableRoomsNumber > 0)
-                         == true);
+                    .Where(hotel =>
+                        hotel.Rooms
+                            .Select(room => room.Sleeps)
+                            .Any(sleeps =>
+                                sleeps == filterParams.Sleeps
+                            )
+                    );
             }
+
             int hotelCount = await filteredHotelCards.CountAsync();
 
             HotelCard[] hotelCards = await filteredHotelCards

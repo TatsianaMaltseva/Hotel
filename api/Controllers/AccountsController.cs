@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -68,14 +69,20 @@ namespace iTechArt.Hotels.Api.Controllers
 
             AccountEntity account = await GetAccountEntityAsync(id);
 
-            if (!_hashPasswordsService
-                .CheckIfPasswordIsCorrect(account.Password, request.OldPassword, Convert.FromBase64String(account.Salt)))
+            if (!_hashPasswordsService.CheckIfPasswordIsCorrect(
+                    account.Password, 
+                    request.OldPassword, 
+                    Convert.FromBase64String(account.Salt)
+                )
+            )
             {
                 return BadRequest("Wrong old password");
             }
 
-            string newPasswordHashed = _hashPasswordsService
-                .HashPassword(request.NewPassword, Convert.FromBase64String(account.Salt));
+            string newPasswordHashed = _hashPasswordsService.HashPassword(
+                request.NewPassword, 
+                Convert.FromBase64String(account.Salt)
+            );
 
             if (account.Password == newPasswordHashed)
             {
@@ -104,8 +111,10 @@ namespace iTechArt.Hotels.Api.Controllers
                 {
                     return BadRequest($"Password is required to have at least {ValidationParams.Account.PasswordMinLength} symbols");
                 }    
-                account.Password = _hashPasswordsService
-                    .HashPassword(request.Password, Convert.FromBase64String(account.Salt));
+                account.Password = _hashPasswordsService.HashPassword(
+                    request.Password,
+                    Convert.FromBase64String(account.Salt)
+                );
             }
             await _hotelsDb.SaveChangesAsync();
             return Ok();
@@ -113,7 +122,10 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> GetAccounts([FromQuery] PageParameters pageParameters, [FromQuery] AccountFilterParams filterParams)
+        public async Task<IActionResult> GetAccounts(
+            [FromQuery] PageParameters pageParameters,
+            [FromQuery] AccountFilterParams filterParams
+        )
         {
             var filteredAccounts = _hotelsDb.Accounts
                 .AsQueryable();
@@ -121,7 +133,8 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 filteredAccounts = filteredAccounts
                     .Where(account => account.Email
-                        .Contains(filterParams.Email));
+                        .Contains(filterParams.Email)
+                    );
             }
             if (filterParams.Role.HasValue)
             {
@@ -129,7 +142,8 @@ namespace iTechArt.Hotels.Api.Controllers
                     .Where(account => account.Role == filterParams.Role);
             }
 
-            var accounts = await filteredAccounts.Skip(pageParameters.PageIndex * pageParameters.PageSize)
+            List<Account> accounts = await filteredAccounts
+                .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
                 .OrderBy(account => account.Id)
                 .ProjectTo<Account>(_mapper.ConfigurationProvider)
@@ -162,6 +176,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 .FirstOrDefaultAsync();
 
         private async Task<bool> CheckIfEmailUniqueAsync(string email) =>
-            !await _hotelsDb.Accounts.AnyAsync(u => u.Email == email);
+            !await _hotelsDb.Accounts
+                .Where(u => u.Email == email)
+                .AnyAsync();
     }
 }

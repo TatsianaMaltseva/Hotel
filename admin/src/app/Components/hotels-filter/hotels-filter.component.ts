@@ -53,6 +53,9 @@ export class HotelsFilterComponent implements OnInit {
           this.hotelFilterService.city,
           [Validators.maxLength(hotelParamsMaxLenght.city)]
         ],
+        sleeps: [
+          this.hotelFilterService.sleeps
+        ],
         checkInDate: [this.hotelFilterService.checkInDate],
         checkOutDate: [this.hotelFilterService.checkOutDate]
       }

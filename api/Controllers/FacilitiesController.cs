@@ -27,7 +27,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [HttpGet]
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<Facility[]> GetFacilities([FromQuery] FacilityParams facilityParams)
-        {//
+        {
             if (facilityParams.RoomId != null)
             {
                 return await _hotelsDb.Facilities

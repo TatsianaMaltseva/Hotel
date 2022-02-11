@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAnnotationsExtensions;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace iTechArt.Hotels.Api.Models
@@ -17,5 +18,8 @@ namespace iTechArt.Hotels.Api.Models
 
         [MaxLength(ValidationParams.Hotel.CityMaxLength)]
         public string City { get; set; }
+
+        [Min(0)]
+        public int? Sleeps { get; set; }
     }
 }

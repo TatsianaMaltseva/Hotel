@@ -47,18 +47,22 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such room does not exist");
             }
 
+            int days = (order.CheckOutDate - order.CheckInDate).Days + 1;
+            decimal pricePerDay = await GetPricePerDay(order.HotelId, order.RoomId, order.FacilityIds);
+
             OrderEntity orderEntity = new()
             {
                 HotelId = order.HotelId,
                 RoomId = order.RoomId,
                 AccountId = accountId,
-                Price = ((order.CheckOutDate - order.CheckInDate).Days + 1)
-                    * await GetPricePerDay(order.HotelId, order.RoomId, order.FacilityIds),
+                Price = days * pricePerDay,
                 CheckInDate = order.CheckInDate,
                 CheckOutDate = order.CheckOutDate,
                 Facilities = await _hotelsDb.Facilities
-                    .Where(facility => order.FacilityIds
-                        .Contains(facility.Id))
+                    .Where(facility => 
+                        order.FacilityIds
+                            .Contains(facility.Id)
+                    )
                     .ToListAsync()
             };
 
@@ -80,7 +84,7 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("Such room does not exist");
             }
-            ViewEntity view = new ViewEntity()
+            ViewEntity view = new()
             {
                 RoomId = roomId,
                 AccountId = accountId,
@@ -154,19 +158,20 @@ namespace iTechArt.Hotels.Api.Controllers
                 .ThenInclude(room => room.FacilityRooms)
                 .FirstOrDefaultAsync();
 
-            RoomEntity room = hotel.Rooms
-                .FirstOrDefault();
+            RoomEntity room = hotel.Rooms.FirstOrDefault();
 
             decimal pricePerDay = room.Price;
 
             decimal hotelFacilityPrice = hotel.FacilityHotels
-                .Where(facilityHotel => orderesFacilities
-                    .Contains(facilityHotel.FacilityId))
+                .Where(facilityHotel =>
+                    orderesFacilities
+                        .Contains(facilityHotel.FacilityId))
                 .Sum(facilityHotel => facilityHotel.Price);
 
             decimal roomFacilityPrice = room.FacilityRooms
-                .Where(facilityRoom => orderesFacilities
-                    .Contains(facilityRoom.FacilityId))
+                .Where(facilityRoom =>
+                    orderesFacilities
+                        .Contains(facilityRoom.FacilityId))
                 .Sum(facilityRoom => facilityRoom.Price);
 
             return pricePerDay + hotelFacilityPrice + roomFacilityPrice;

@@ -155,11 +155,6 @@ export class RoomsForAdminComponent implements OnInit {
   }
 
   public openFacilitiesDialog(room: Room): void {
-    console.log(         {
-      hotel: this.hotel,
-      room: room,
-      facilities: room.facilities
-    } as FacilititesDialogData)
     this.matDialog.open(
       ChooseFacilitiesForAdminComponent,
       {

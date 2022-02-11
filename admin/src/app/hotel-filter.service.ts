@@ -11,9 +11,10 @@ import { HotelFilterParameters } from './Core/hotel-filter-params';
     providedIn: 'root'
 })
 export class HotelFilterService{
-  public name: string = '';
-  public country: string = '';
-  public city: string = '';
+  public name?: string;
+  public country?: string;
+  public city?: string;
+  public sleeps?: number;
   public checkInDate: string = '';
   public checkOutDate: string = '';
   private readonly autocompleteVariantNumber = 2;
@@ -29,6 +30,9 @@ export class HotelFilterService{
     }
     if (this.city) {
       filter.city = this.city;
+    }
+    if (this.sleeps) {
+      filter.sleeps = this.sleeps;
     }
     if (this.checkInDate) {
       filter.checkInDate = this.checkInDate;
@@ -50,6 +54,7 @@ export class HotelFilterService{
     this.name = data.name;
     this.country = data.country;
     this.city = data.city;
+    this.sleeps = data.sleeps;
     if (data.checkInDate) {
       this.checkInDate = dayjs(new Date(data.checkInDate)).format(format);
     }

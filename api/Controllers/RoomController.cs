@@ -53,6 +53,7 @@ namespace iTechArt.Hotels.Api.Controllers
             var roomImages = _hotelsDb.Images
                 .Where(image => image.RoomId == roomId);
             _hotelsDb.Images.RemoveRange(roomImages);
+
             foreach(ImageEntity image in roomImages)
             {
                 string imageFullPath = Path.Combine(_imagesFolder, image.Path);
@@ -126,24 +127,28 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(room => room.HotelId == hotelId)
                 .Include(room => room.FacilityRooms)
                 .ThenInclude(facilityRoom => facilityRoom.Facility)
-                .Select(room => new Room()
-                {
-                    Id = room.Id,
-                    Name = room.Name,
-                    Sleeps = room.Sleeps,
-                    Price = room.Price,
-                    MainImageId = room.MainImageId,
-                    Number = room.Number,
-                    Facilities = room.FacilityRooms
-                        .Select(facilityRoom => new Facility()
-                        {
-                            Id = facilityRoom.FacilityId,
-                            Name = facilityRoom.Facility.Name,
-                            Realm = Realm.Room,
-                            Price = facilityRoom.Price
-                        })
-                        .ToList()
-                })
+                .Select(room =>
+                    new Room
+                    {
+                        Id = room.Id,
+                        Name = room.Name,
+                        Sleeps = room.Sleeps,
+                        Price = room.Price,
+                        MainImageId = room.MainImageId,
+                        Number = room.Number,
+                        Facilities = room.FacilityRooms
+                            .Select(facilityRoom =>
+                                new Facility
+                                {
+                                    Id = facilityRoom.FacilityId,
+                                    Name = facilityRoom.Facility.Name,
+                                    Realm = Realm.Room,
+                                    Price = facilityRoom.Price
+                                }
+                            )
+                            .ToList()
+                    }
+                )
                 .Where(room => room.Number > 0)
                 .ToListAsync();
             return roomsForAdmin;
@@ -151,35 +156,46 @@ namespace iTechArt.Hotels.Api.Controllers
 
         private async Task<List<Room>> GetRoomsForClientAsync(int hotelId, RoomFilterParams roomFilterParams)
         {
-            List<Room> roomsForCLient = await _hotelsDb.Rooms
-                .Where(room => room.HotelId == hotelId)
+            var rooms = _hotelsDb.Rooms
+                .Where(room => room.HotelId == hotelId);
+            if (roomFilterParams.Sleeps.HasValue)
+            {
+                rooms = rooms.Where(room => room.Sleeps == roomFilterParams.Sleeps);
+            }
+            List<Room> roomsForCLient = await rooms
                 .Include(room => room.FacilityRooms)
                 .ThenInclude(facilityRoom => facilityRoom.Facility)
                 .Include(room => room.Orders)
                 .Include(room => room.ActiveViews)
-                .Select(room => new Room()
-                {
-                    Id = room.Id,
-                    Name = room.Name,
-                    Sleeps = room.Sleeps,
-                    Price = room.Price,
-                    MainImageId = room.MainImageId,
-                    Number = (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
-                        ? room.Number - room.Orders
-                            .Where(order => !(roomFilterParams.CheckOutDate < order.CheckInDate
-                                || roomFilterParams.CheckInDate > order.CheckOutDate))
-                            .Count() - room.ActiveViews.Count()
-                        : room.Number - room.ActiveViews.Count(),
-                    Facilities = room.FacilityRooms
-                        .Select(facilityRoom => new Facility()
-                        {
-                            Id = facilityRoom.FacilityId,
-                            Name = facilityRoom.Facility.Name,
-                            Realm = Realm.Room,
-                            Price = facilityRoom.Price
-                        })
-                        .ToList()
-                })
+                .Select(room => 
+                    new Room
+                    {
+                        Id = room.Id,
+                        Name = room.Name,
+                        Sleeps = room.Sleeps,
+                        Price = room.Price,
+                        MainImageId = room.MainImageId,
+                        Number = (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
+                            ? room.Number - room.Orders
+                                .Where(order => 
+                                    !(roomFilterParams.CheckOutDate < order.CheckInDate
+                                        || roomFilterParams.CheckInDate > order.CheckOutDate)
+                                )
+                                .Count() - room.ActiveViews.Count()
+                            : room.Number - room.ActiveViews.Count(),
+                        Facilities = room.FacilityRooms
+                            .Select(facilityRoom =>
+                                new Facility
+                                {
+                                    Id = facilityRoom.FacilityId,
+                                    Name = facilityRoom.Facility.Name,
+                                    Realm = Realm.Room,
+                                    Price = facilityRoom.Price
+                                }
+                            )
+                            .ToList()
+                    }
+                )
                 .Where(room => room.Number > 0)
                 .ToListAsync();
             return roomsForCLient;
