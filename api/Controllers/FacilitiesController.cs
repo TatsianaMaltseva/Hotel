@@ -28,21 +28,12 @@ namespace iTechArt.Hotels.Api.Controllers
         [Authorize(Roles = nameof(Role.Admin))]
         public async Task<Facility[]> GetFacilities([FromQuery] FacilityParams facilityParams)
         {
-            if (facilityParams.RoomId != null)
+            IQueryable<FacilityEntity> facilities = _hotelsDb.Facilities.AsQueryable();
+            if (facilityParams.Realm != null)
             {
-                return await _hotelsDb.Facilities
-                    .Where(facility => facility.Realm == Realm.Room)
-                    .ProjectTo<Facility>(_mapper.ConfigurationProvider)
-                    .ToArrayAsync();
+                facilities = facilities.Where(facility => facility.Realm == facilityParams.Realm);
             }
-            if (facilityParams.HotelId != null)
-            {
-                return await _hotelsDb.Facilities
-                    .Where(facility => facility.Realm == Realm.Hotel)
-                    .ProjectTo<Facility>(_mapper.ConfigurationProvider)
-                    .ToArrayAsync();
-            }
-            return await _hotelsDb.Facilities
+            return await facilities
                 .ProjectTo<Facility>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }

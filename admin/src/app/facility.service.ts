@@ -24,10 +24,10 @@ export class FacilityService {
   public getCheckedFacilities(hotelId?: number, roomId?: number): Observable<Facility[]> {
     let httpParams = new HttpParams();
     if (hotelId) {
-      httpParams = httpParams.set('hotelId', `${hotelId}`);
+      httpParams = httpParams.set('realm', Realm.hotel);
     }
     if (roomId) {
-      httpParams = httpParams.set('roomId', `${roomId}`);
+      httpParams = httpParams.set('realm', Realm.room);
     }
     return this.http.get<Facility[]>(
       `${this.apiUrl}api/facilities`,
@@ -53,7 +53,7 @@ export class FacilityService {
   public addFacility(facility: Facility): Observable<number> {
     return this.http.post<number>(
       `${this.apiUrl}api/facilities`,
-      { ...facility }
+      facility
     );
   }
 
@@ -66,7 +66,7 @@ export class FacilityService {
   public editFacility(facilityId: number, editedFacility: Facility): Observable<string> {
     return this.http.put<string>(
       `${this.apiUrl}api/facilities/${facilityId}`,
-      { ...editedFacility }
+      editedFacility
     );
   }
 }
