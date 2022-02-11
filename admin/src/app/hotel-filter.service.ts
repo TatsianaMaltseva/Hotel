@@ -20,13 +20,22 @@ export class HotelFilterService{
   private readonly apiUrl: string;
 
   public get filterParameters(): HotelFilterParameters {
-    const filter: HotelFilterParameters = {
-      name: this.name,
-      country: this.country,
-      city: this.city,
-      checkInDate: this.checkInDate,
-      checkOutDate: this.checkOutDate
-    };
+    const filter: HotelFilterParameters = {};
+    if (this.name) {
+      filter.name = this.name;
+    }
+    if (this.country) {
+      filter.country = this.country;
+    }
+    if (this.city) {
+      filter.city = this.city;
+    }
+    if (this.checkInDate) {
+      filter.checkInDate = this.checkInDate;
+    }
+    if (this.checkOutDate) {
+      filter.checkOutDate = this.checkOutDate;
+    }
     return filter;
   }
 
