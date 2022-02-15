@@ -27,7 +27,10 @@ export class ClientErrorResponseInterceptor implements HttpInterceptor {
       .pipe(
         catchError(
           (response: HttpErrorResponse) => {
-            if (response.status === HttpStatusCode.BadRequest || response.status === HttpStatusCode.NotFound) {
+            if (
+              response.status === HttpStatusCode.BadRequest
+              || response.status === HttpStatusCode.NotFound
+            ) {
               this.openSnackBar(response.error as string);
             }
             if (response.status === HttpStatusCode.Unauthorized) {

@@ -17,8 +17,13 @@ import { PageParametersService } from 'src/app/page-parameters.service';
 export class HotelCardsComponent implements OnInit {
   public hotels: HotelCard[] = [];
   public hotelCount: number = 0;
-  public pageSize: number;
-  public pageIndex: number;
+
+  public get pageIndex(): number {
+    return this.pageParametersService.pageIndex;
+  }
+  public get pageSize(): number {
+    return this.pageParametersService.pageSize;
+  }
 
   public constructor(
     private readonly hotelService: HotelService,
@@ -26,8 +31,6 @@ export class HotelCardsComponent implements OnInit {
     private readonly hotelFilterService: HotelFilterService,
     private readonly pageParametersService: PageParametersService
   ) {
-    this.pageSize = this.pageParametersService.pageSize;
-    this.pageIndex = this.pageParametersService.pageIndex;
   }
 
   public ngOnInit(): void {

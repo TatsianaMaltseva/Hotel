@@ -76,7 +76,7 @@ export class ChangePasswordComponent{
       `${message}`,
       'Close',
       {
-        duration: 15000
+        duration: 5000
       }
     );
   }

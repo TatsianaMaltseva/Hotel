@@ -87,19 +87,16 @@ export class AccountsListComponent implements OnInit {
   }
 
   public onPaginationChange(event: PageEvent): void {
-    this.pageParameters.pageIndex = event.pageIndex;
-    this.pageParameters.pageSize = event.pageSize;
+    this.pageParameters = event as PageParameters;
     this.fetchAccounts();
   }
 
   public fetchAccounts(): void {
-    const filterParams: AccountFilterParams = this.filterForm.value as AccountFilterParams;
-    if (!filterParams.email) {
-      delete filterParams.email;
-    }
-    if (!filterParams.role) {
-      delete filterParams.role;
-    }
+    const filterParams = Object.fromEntries(
+      Object.entries(this.filterForm.value as AccountFilterParams)
+      .filter(([_, value]) => value)
+    );
+
     this.accountService
       .getAccounts(this.pageParameters, filterParams)
       .subscribe(

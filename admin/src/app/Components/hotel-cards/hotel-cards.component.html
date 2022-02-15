@@ -7,10 +7,7 @@
                     <mat-card-title>{{ hotel.name }}</mat-card-title>
                 </mat-grid-tile>
                 <mat-grid-tile colspan="2" rowspan="3">
-                    <img
-                        *ngIf="hotel.mainImageId"
-                        [src]="createImagePath(hotel.id, hotel.mainImageId)"
-                    >
+                    <img *ngIf="hotel.mainImageId" [src]="createImagePath(hotel.id, hotel.mainImageId)">
                 </mat-grid-tile>
                 <mat-grid-tile colspan="3" rowspan="1">
                     <mat-card-subtitle>{{ hotel.country }} - {{ hotel.city }}</mat-card-subtitle>

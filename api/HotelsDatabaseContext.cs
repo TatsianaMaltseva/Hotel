@@ -66,7 +66,7 @@ namespace iTechArt.Hotels.Api
             });
 
             modelBuilder.Entity<ImageEntity>()
-                .HasOne(i => i.Hotel)
+                .HasOne<HotelEntity>()
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -106,6 +106,10 @@ namespace iTechArt.Hotels.Api
                 .HasOne<AccountEntity>()
                 .WithMany()
                 .HasForeignKey(view => view.AccountId);
+
+            modelBuilder.Entity<OrderEntity>()
+                .HasMany(o => o.Facilities)
+                .WithMany(nameof(Orders));
         }
     }
 }

@@ -16,7 +16,7 @@
         <button mat-button (click)="updateFilterParameters()">Find orders</button>
     </div>
     <div class="cards">
-        <mat-card class="card" *ngFor="let order of orders">
+        <mat-card *ngFor="let order of orders" class="card">
             <mat-grid-list cols="6" rowHeight="60px">
                 <mat-grid-tile colspan="6" rowspan="1">
                     <mat-card-title [routerLink]="['/hotels', order.hotel.id]">

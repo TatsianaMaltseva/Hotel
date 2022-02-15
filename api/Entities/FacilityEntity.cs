@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using static iTechArt.Hotels.Api.Constants;
+﻿using static iTechArt.Hotels.Api.Constants;
 
 namespace iTechArt.Hotels.Api.Entities
 {
@@ -10,7 +9,5 @@ namespace iTechArt.Hotels.Api.Entities
         public string Name { get; set; }
 
         public Realm Realm { get; set; }
-
-        public List<OrderEntity> Orders { get; }
     }
 }

@@ -66,7 +66,6 @@ export class RoomsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    console.log(this.hotelFilterService.params);
     if (this.hotelFilterService.params.checkInDate && this.hotelFilterService.params.checkOutDate) {
       this.areAllShownRoomsAvailable = true;
     }
@@ -90,7 +89,7 @@ export class RoomsComponent implements OnInit {
   }
 
   public createImagePath(room: Room): string {
-    if (!this.hotel || room.mainImageId === undefined) {
+    if (!this.hotel || !room.mainImageId) {
       return '';
     }
     let url = this.imageService

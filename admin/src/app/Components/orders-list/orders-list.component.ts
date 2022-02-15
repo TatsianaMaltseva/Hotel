@@ -50,13 +50,10 @@ export class OrdersListComponent implements OnInit {
   }
 
   private fetchOrders(): void {
-    const filterParams: OrderFilterParams = this.ordersFilterForm.value as OrderFilterParams;
-    if (!filterParams.country) {
-      delete filterParams.country;
-    }
-    if (!filterParams.city) {
-      delete filterParams.city;
-    }
+    const filterParams = Object.fromEntries(
+      Object.entries(this.ordersFilterForm.value as OrderFilterParams).filter(([_, value]) => value)
+    ) as OrderFilterParams;
+    
     this.orderService
       .getOrders(filterParams)
       .subscribe(
