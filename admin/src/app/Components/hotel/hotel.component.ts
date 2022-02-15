@@ -48,6 +48,7 @@ export class HotelComponent implements OnInit{
       .subscribe(
         () => {
           this.location.back();
+          this.openSnackBar('Successfully deleted');
         }
       );
   }
@@ -57,7 +58,7 @@ export class HotelComponent implements OnInit{
       `${message}`,
       'Close',
       {
-        duration: 15000
+        duration: 5000
       }
     );
   }

@@ -1,6 +1,6 @@
 <aside [formGroup]="filterForm" >
     <mat-form-field *ngIf="!isAdmin">
-        <mat-label>Enter a date range</mat-label>
+        <mat-label>Date range</mat-label>
         <mat-date-range-input [rangePicker]="picker" [min]="today">
             <input
                 matStartDate
@@ -62,11 +62,12 @@
         </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field class="sleeps">
         <mat-label>Sleeps</mat-label>
         <input
             matInput
             formControlName="sleeps"
+            type="number"
             min="0"
         >
     </mat-form-field>

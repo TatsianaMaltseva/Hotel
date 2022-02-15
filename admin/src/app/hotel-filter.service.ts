@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Params } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as dayjs from 'dayjs';
+import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { HotelFilterParameters } from './Core/hotel-filter-params';
@@ -11,56 +11,41 @@ import { HotelFilterParameters } from './Core/hotel-filter-params';
     providedIn: 'root'
 })
 export class HotelFilterService{
-  public name?: string;
-  public country?: string;
-  public city?: string;
-  public sleeps?: number;
-  public checkInDate: string = '';
-  public checkOutDate: string = '';
+  public params: HotelFilterParameters = {};
   private readonly autocompleteVariantNumber = 2;
   private readonly apiUrl: string;
 
-  public get filterParameters(): HotelFilterParameters {
-    const filter: HotelFilterParameters = {};
-    if (this.name) {
-      filter.name = this.name;
-    }
-    if (this.country) {
-      filter.country = this.country;
-    }
-    if (this.city) {
-      filter.city = this.city;
-    }
-    if (this.sleeps) {
-      filter.sleeps = this.sleeps;
-    }
-    if (this.checkInDate) {
-      filter.checkInDate = this.checkInDate;
-    }
-    if (this.checkOutDate) {
-      filter.checkOutDate = this.checkOutDate;
-    }
-    return filter;
-  }
-
   public constructor(
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
   ) {
     this.apiUrl = environment.api;
+    this.route.queryParams
+      .subscribe(
+        params => {
+          this.updateParameters(params);
+        }
+      );
   }
 
   public updateParameters(data: Params | any): void {
     const format = 'YYYY-MM-DD';
-    this.name = data.name;
-    this.country = data.country;
-    this.city = data.city;
-    this.sleeps = data.sleeps;
+    this.params = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value)
+    );
+
     if (data.checkInDate) {
-      this.checkInDate = dayjs(new Date(data.checkInDate)).format(format);
+      this.params.checkInDate = dayjs(new Date(data.checkInDate)).format(format);
     }
     if (data.checkOutDate) {
-      this.checkOutDate = dayjs(new Date(data.checkOutDate)).format(format);
+      this.params.checkOutDate = dayjs(new Date(data.checkOutDate)).format(format);
     }
+
+    void this.router.navigate(
+      [],
+      { queryParams: this.params }
+    );
   }
 
   public getHotelNames(enteredName: string): Observable<string[]> {

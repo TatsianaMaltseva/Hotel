@@ -9,7 +9,7 @@ import { HotelCardResponse } from './Core/hotel-card-response';
 import { Hotel, HotelToAdd, HotelToEdit } from './Dtos/hotel';
 import { Room } from './Dtos/room';
 import { HotelFilterParameters } from './Core/hotel-filter-params';
-import { OrderDateParams } from './Core/order-date-params';
+import { RoomFilterParams } from './Core/room-filter-params';
 import { HotelFilterService } from './hotel-filter.service';
 
 @Injectable({
@@ -53,11 +53,8 @@ export class HotelService {
   }
 
   public getRooms(hotelId: number): Observable<Room[]> {
-    const orderDateParams = {
-      checkInDate: this.hotelFilterService.checkInDate,
-      checkOutDate: this.hotelFilterService.checkOutDate
-    } as OrderDateParams;
-    const params = new HttpParams({ fromObject: orderDateParams as Params });
+    const roomFilterParams = this.hotelFilterService.params as RoomFilterParams;
+    const params = new HttpParams({ fromObject: roomFilterParams as Params });
     return this.http.get<Room[]>(
       `${this.apiUrl}api/hotels/${hotelId}/rooms`,
       { params: params }

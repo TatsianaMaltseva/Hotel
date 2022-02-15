@@ -23,7 +23,7 @@ import { Order } from 'src/app/Dtos/order';
 export class RoomsComponent implements OnInit {
   @Input() public hotel?: Hotel;
 
-  public dateForm: FormGroup;
+  public roomFilterForm: FormGroup;
   public today = new Date();
   public readonly tableColumns: string[] = [
     'image',
@@ -50,14 +50,15 @@ export class RoomsComponent implements OnInit {
     private readonly orderService: OrderService,
     private readonly accountService: AccountService
   ) {
-    this.dateForm = formBuilder.group(
+    this.roomFilterForm = formBuilder.group(
       {
+        sleeps: [this.hotelFilterService.params.sleeps],
         checkInDate: [
-          this.hotelFilterService.checkInDate,
+          this.hotelFilterService.params.checkInDate,
           [Validators.required]
         ],
         checkOutDate: [
-          this.hotelFilterService.checkOutDate,
+          this.hotelFilterService.params.checkOutDate,
           [Validators.required]
         ]
       }
@@ -65,11 +66,12 @@ export class RoomsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    if (this.hotelFilterService.checkInDate && this.hotelFilterService.checkOutDate) {
+    console.log(this.hotelFilterService.params);
+    if (this.hotelFilterService.params.checkInDate && this.hotelFilterService.params.checkOutDate) {
       this.areAllShownRoomsAvailable = true;
     }
 
-    this.dateForm
+    this.roomFilterForm
       .valueChanges
       .subscribe(
         () =>
@@ -82,7 +84,7 @@ export class RoomsComponent implements OnInit {
   }
 
   public loadAvailableRooms(): void {
-    this.hotelFilterService.updateParameters(this.dateForm.value);
+    this.hotelFilterService.updateParameters(this.roomFilterForm.value);
     this.fetchRooms();
     this.areAllShownRoomsAvailable = true;
   }

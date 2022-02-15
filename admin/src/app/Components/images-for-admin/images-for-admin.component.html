@@ -28,8 +28,8 @@
 <mat-paginator
     [length]="imageCount"
     [pageSizeOptions]="[5, 10]"
-    [pageSize]="pageSize"
-    [pageIndex]="pageIndex"
+    [pageSize]="pageParameters.pageSize"
+    [pageIndex]="pageParameters.pageIndex"
     (page)="onPaginationChange($event)"
 ></mat-paginator>
 <app-images-upload-button

@@ -39,3 +39,11 @@ mat-form-field {
 button {
     margin-left: 2%;
 }
+
+.sleeps {
+    width: 10%;
+}
+
+.calendar {
+    width: 30%;
+}

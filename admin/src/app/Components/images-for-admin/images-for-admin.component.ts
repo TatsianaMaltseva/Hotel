@@ -25,8 +25,10 @@ export class ImagesForAdminComponent implements OnInit {
   public progress: number = 0;
   public images: Image[] = [];
   public imageCount: number = 0;
-  public pageSize: number = 5;
-  public pageIndex: number = 0;//
+  public pageParameters = {
+    pageSize: 5,
+    pageIndex: 0
+  };
 
   public constructor(
     private readonly imageService: ImageService,
@@ -100,8 +102,7 @@ export class ImagesForAdminComponent implements OnInit {
 
 
   public onPaginationChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
+    this.pageParameters = event as PageParameters;
     this.fetchImages();
   }
 
@@ -112,7 +113,7 @@ export class ImagesForAdminComponent implements OnInit {
     this.imageService
       .getImages(
         this.hotel.id,
-        { pageSize: this.pageSize, pageIndex: this.pageIndex } as PageParameters,
+        this.pageParameters,
         this.room?.id
       )
       .subscribe(

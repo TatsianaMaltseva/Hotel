@@ -56,9 +56,8 @@ import { RoomsForAdminComponent } from './Components/rooms-for-admin/rooms-for-a
 import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
 import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilities-for-admin/choose-facilities-for-admin.component';
 import { OrderComponent } from './Components/order/order.component';
-import { AuthInterceptor } from './Components/auth.interceptor';
+import { ClientErrorResponseInterceptor } from './Components/client-error-response-interceptor';
 import { OrdersListComponent } from './Components/orders-list/orders-list.component';
-import { BadRequestInterceptor } from './Components/bad-request.interceptor';
 import { AccountsListComponent } from './Components/accounts-list/accounts-list.component';
 import { AccountComponent } from './Components/account/account.component';
 import { NotFoundComponent } from './Components/not-found/not-found.component';
@@ -137,12 +136,7 @@ import { NotFoundComponent } from './Components/not-found/not-found.component';
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: BadRequestInterceptor,
+      useClass: ClientErrorResponseInterceptor,
       multi: true
     }
   ]

@@ -54,7 +54,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(image => image.RoomId == roomId);
             _hotelsDb.Images.RemoveRange(roomImages);
 
-            foreach(ImageEntity image in roomImages)
+            foreach (ImageEntity image in roomImages)
             {
                 string imageFullPath = Path.Combine(_imagesFolder, image.Path);
                 if (System.IO.File.Exists(imageFullPath))
@@ -83,7 +83,7 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             _mapper.Map(request, roomEntity);
             await _hotelsDb.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         [Route("{hotelId}/rooms")]

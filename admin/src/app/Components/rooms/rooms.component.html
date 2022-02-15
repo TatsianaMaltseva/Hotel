@@ -1,11 +1,16 @@
-<div *ngIf="!isAdmin">
-    <mat-form-field>
-        <mat-label>Check in and check out dates</mat-label>
-        <mat-date-range-input
-            [formGroup]="dateForm"
-            [rangePicker]="picker"
-            [min]="today"
+<div *ngIf="!isAdmin" [formGroup]="roomFilterForm">
+    <mat-form-field class="sleeps">
+        <mat-label>Sleeps</mat-label>
+        <input
+            matInput
+            formControlName="sleeps"
+            type="number"
+            min="0"
         >
+    </mat-form-field>
+    <mat-form-field class="calendar">
+        <mat-label>Check in and check out dates</mat-label>
+        <mat-date-range-input [rangePicker]="picker" [min]="today">
             <input
                 matStartDate
                 readonly
@@ -27,7 +32,7 @@
     <button
         mat-raised-button
         (click)="loadAvailableRooms()"
-        [disabled]="dateForm.invalid"
+        [disabled]="roomFilterForm.invalid"
     >
         Show available rooms
         <mat-icon matTooltip="Select dates and click me">help_outline</mat-icon>

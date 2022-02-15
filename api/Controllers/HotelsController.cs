@@ -184,7 +184,7 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             _mapper.Map(request, hotelEntity);
             await _hotelsDb.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         [Route("{hotelId}")]

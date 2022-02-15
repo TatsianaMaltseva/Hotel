@@ -41,7 +41,7 @@ export class HotelCardsComponent implements OnInit {
 
   public fetchHotels(): void {
     this.hotelService
-      .getHotelCards(this.pageParametersService.pageParameters, this.hotelFilterService.filterParameters)
+      .getHotelCards(this.pageParametersService.pageParameters, this.hotelFilterService.params)
       .subscribe(
         (response: HotelCardResponse) => {
             this.hotelCount = response.hotelCount;

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 import { AccountService } from 'src/app/account.service';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
@@ -7,7 +8,8 @@ import { HotelFilterService } from 'src/app/hotel-filter.service';
 
 @Component({
   selector: 'app-hotels-filter',
-  templateUrl: './hotels-filter.component.html'
+  templateUrl: './hotels-filter.component.html',
+  styleUrls: ['./hotels-filter.component.css']
 })
 export class HotelsFilterComponent implements OnInit {
   @Output() public filterParametersUpdated = new EventEmitter<void>();
@@ -17,6 +19,7 @@ export class HotelsFilterComponent implements OnInit {
   public countries: string[] = [];
   public cities: string[] = [];
   public today = new Date();
+  private readonly autocompleteDelay = 300;
 
   public get name(): AbstractControl | null {
     return this.filterForm.get('name');
@@ -42,43 +45,47 @@ export class HotelsFilterComponent implements OnInit {
     this.filterForm = formBuilder.group(
       {
         name: [
-          this.hotelFilterService.name,
+          this.hotelFilterService.params.name,
           [Validators.maxLength(hotelParamsMaxLenght.name)]
         ],
         country: [
-          this.hotelFilterService.country,
+          this.hotelFilterService.params.country,
           [Validators.maxLength(hotelParamsMaxLenght.country)]
         ],
         city: [
-          this.hotelFilterService.city,
+          this.hotelFilterService.params.city,
           [Validators.maxLength(hotelParamsMaxLenght.city)]
         ],
         sleeps: [
-          this.hotelFilterService.sleeps
+          this.hotelFilterService.params.sleeps
         ],
-        checkInDate: [this.hotelFilterService.checkInDate],
-        checkOutDate: [this.hotelFilterService.checkOutDate]
+        checkInDate: [this.hotelFilterService.params.checkInDate],
+        checkOutDate: [this.hotelFilterService.params.checkOutDate]
       }
     );
   }
 
   public ngOnInit(): void {
-    if (!this.isEmpty(this.hotelFilterService.filterParameters)) {
-      this.filterForm.patchValue(this.hotelFilterService.filterParameters);
+    if (!this.isEmpty(this.hotelFilterService.params)) {
+      this.filterForm.patchValue(this.hotelFilterService.params);
     }
     this.name?.valueChanges
+      .pipe(debounceTime(this.autocompleteDelay))
       .subscribe(
-        (value) => {
-            this.fetchNameAutocompleteValues(value);
-        }
+        (value: string) => {
+          this.fetchNameAutocompleteValues(value);
+          }
       );
+
     this.country?.valueChanges
+      .pipe(debounceTime(this.autocompleteDelay))
       .subscribe(
         (value) => {
           this.fetchCountryAutocompleteValues(value);
         }
       );
     this.city?.valueChanges
+      .pipe(debounceTime(this.autocompleteDelay))
       .subscribe(
         (value) => {
           this.fetchCityAutocompleteValues(value);

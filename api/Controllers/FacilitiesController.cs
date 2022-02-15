@@ -75,7 +75,7 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             _mapper.Map(request, facilityEntity);
             await _hotelsDb.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         private Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>

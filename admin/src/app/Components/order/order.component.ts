@@ -26,8 +26,8 @@ export class OrderComponent {
       this.order = {
         room: orderDetails.room,
         hotel: orderDetails.hotel,
-        checkInDate: this.hotelFilterService.checkInDate,
-        checkOutDate: this.hotelFilterService.checkOutDate,
+        checkInDate: this.hotelFilterService.params.checkInDate!,
+        checkOutDate: this.hotelFilterService.params.checkOutDate!,
         price: orderDetails.room.price,
         facilities: orderDetails.facilities
       };

@@ -12,6 +12,7 @@ import { ImageService } from 'src/app/image.service';
 import { RoomService } from '../../room.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { Room } from 'src/app/Dtos/room';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-rooms-for-admin',
@@ -54,7 +55,8 @@ export class RoomsForAdminComponent implements OnInit {
     private readonly hotelService: HotelService,
     private readonly imageService: ImageService,
     private readonly matDialog: MatDialog,
-    private readonly roomService: RoomService
+    private readonly roomService: RoomService,
+    private readonly snackBar: MatSnackBar
   ) {
     this.roomsForm = this.formBuilder.group(
       {
@@ -118,6 +120,7 @@ export class RoomsForAdminComponent implements OnInit {
       .subscribe(
         () => {
           this.rooms.removeAt(index);
+          this.openSnackBar('Successfully deleted');
         }
       );
   }
@@ -128,7 +131,11 @@ export class RoomsForAdminComponent implements OnInit {
     }
     this.roomService
       .editRoom(this.hotel.id, room.id, room)
-      .subscribe();
+      .subscribe(
+        () => {
+          this.openSnackBar('Succesfully saved');
+        }
+      );
   }
 
   public createImagePath(room: Room): string {
@@ -172,5 +179,15 @@ export class RoomsForAdminComponent implements OnInit {
     const roomForm = this.emptyRoomForm;
     roomForm.patchValue(room);
     this.rooms.push(roomForm);
+  }
+
+  private openSnackBar(message: string): void {
+    this.snackBar.open(
+      `${message}`,
+      'Close',
+      {
+        duration: 5000
+      }
+    );
   }
 }
