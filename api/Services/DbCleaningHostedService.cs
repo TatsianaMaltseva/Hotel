@@ -29,8 +29,8 @@ namespace iTechArt.Hotels.Api.Services
             using (var scope = _scopeFactory.CreateScope())
             {
                 var _hotelDb = scope.ServiceProvider.GetRequiredService<HotelsDatabaseContext>();
-                var viewsToDelete = _hotelDb.Views.Where(view => view.ExpireTime < DateTime.Now);
-                _hotelDb.Views.RemoveRange(viewsToDelete);
+                var viewsToDelete = _hotelDb.RoomViews.Where(view => view.ExpireTime < DateTime.Now);
+                _hotelDb.RoomViews.RemoveRange(viewsToDelete);
                 _hotelDb.SaveChanges();
             }
         }

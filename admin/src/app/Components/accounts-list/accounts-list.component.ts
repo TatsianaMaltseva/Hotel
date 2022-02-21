@@ -67,7 +67,7 @@ export class AccountsListComponent implements OnInit {
     );
   }
 
-  public openClientAdminDialog(): void {
+  public openAddClientDialog(): void {
     this.matDialog.open(
       RegisterComponent,
       {
@@ -107,13 +107,12 @@ export class AccountsListComponent implements OnInit {
       );
   }
 
-  public deleteAccount(accountId: number): void {
+  public deleteAccount(account: Account): void {
     this.accountService
-      .deleteAccount(accountId)
+      .deleteAccount(account.id)
       .subscribe(
         () => {
-          this.accounts = this.accounts
-            .filter(account => account.id !== accountId);
+          this.fetchAccounts();
         }
       );
   }

@@ -177,8 +177,7 @@ namespace iTechArt.Hotels.Api.Controllers
                         MainImageId = room.MainImageId,
                         Number = (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
                             ? room.Number - room.Orders
-                                .Where(order => 
-                                    !(roomFilterParams.CheckOutDate < order.CheckInDate
+                                .Where(order => !(roomFilterParams.CheckOutDate < order.CheckInDate
                                         || roomFilterParams.CheckInDate > order.CheckOutDate)
                                 )
                                 .Count() - room.ActiveViews.Count()

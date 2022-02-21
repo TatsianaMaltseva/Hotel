@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { AccountService } from 'src/app/account.service';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
@@ -69,8 +69,12 @@ export class HotelsFilterComponent implements OnInit {
     if (!this.isEmpty(this.hotelFilterService.params)) {
       this.filterForm.patchValue(this.hotelFilterService.params);
     }
+
     this.name?.valueChanges
-      .pipe(debounceTime(this.autocompleteDelay))
+      .pipe(
+        debounceTime(this.autocompleteDelay),
+        distinctUntilChanged()
+      )
       .subscribe(
         (value: string) => {
           this.fetchNameAutocompleteValues(value);
@@ -78,14 +82,21 @@ export class HotelsFilterComponent implements OnInit {
       );
 
     this.country?.valueChanges
-      .pipe(debounceTime(this.autocompleteDelay))
+      .pipe(
+        debounceTime(this.autocompleteDelay),
+        distinctUntilChanged()
+      )
       .subscribe(
         (value) => {
           this.fetchCountryAutocompleteValues(value);
         }
       );
+      
     this.city?.valueChanges
-      .pipe(debounceTime(this.autocompleteDelay))
+      .pipe(
+        debounceTime(this.autocompleteDelay),
+        distinctUntilChanged()
+      )
       .subscribe(
         (value) => {
           this.fetchCityAutocompleteValues(value);

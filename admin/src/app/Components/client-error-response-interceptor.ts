@@ -8,11 +8,11 @@ import {
   HttpStatusCode
 } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthenticationDialogComponent } from './authenticationDialog/authenticationDialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class ClientErrorResponseInterceptor implements HttpInterceptor {

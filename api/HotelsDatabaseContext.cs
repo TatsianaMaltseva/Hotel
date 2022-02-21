@@ -19,7 +19,7 @@ namespace iTechArt.Hotels.Api
         public DbSet<FacilityHotelEntity> FacilityHotel { get; set; }
         public DbSet<FacilityRoomEntity> FacilityRoom { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
-        public DbSet<ViewEntity> Views { get; set; }
+        public DbSet<RoomViewEntity> RoomViews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -102,7 +102,7 @@ namespace iTechArt.Hotels.Api
                 .Property(e => e.Role)
                 .HasConversion<string>();
 
-            modelBuilder.Entity<ViewEntity>()
+            modelBuilder.Entity<RoomViewEntity>()
                 .HasOne<AccountEntity>()
                 .WithMany()
                 .HasForeignKey(view => view.AccountId);

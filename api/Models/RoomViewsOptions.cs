@@ -2,7 +2,7 @@
 
 namespace iTechArt.Hotels.Api.Models
 {
-    public class ViewsOptions
+    public class RoomViewsOptions
     {
         public TimeSpan ExpireTime { get; set; }
     }

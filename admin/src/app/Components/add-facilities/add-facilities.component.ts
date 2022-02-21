@@ -84,7 +84,7 @@ export class AddFacilitiesComponent implements OnInit {
       .addFacility(facility)
       .subscribe(
         (id) => {
-          const facilityFormGroup = this.facilities.controls[index]  as FormGroup;
+          const facilityFormGroup = this.facilities.controls[index] as FormGroup;
           facilityFormGroup.controls.id.setValue(id);
         }
       );

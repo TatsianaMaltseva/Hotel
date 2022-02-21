@@ -15,23 +15,34 @@ import { RoleGuard } from './Guards/role.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/hotels', pathMatch: 'full' },
-  { path: 'hotels', component: HotelCardsComponent },
+
   {
-    path: 'hotels/add-new',
-    canActivate: [RoleGuard],
-    data: {
-      roles: [Role.admin]
-    },
-    component: HotelForAdminComponent
-  },
-  { path: 'hotels/:id', component: HotelComponent },
-  {
-    path: 'hotels/:id/edit',
-    canActivate: [RoleGuard],
-    data: {
-      roles: [Role.admin]
-    },
-    component: HotelForAdminComponent
+    path: 'hotels',
+    children: [
+      { path: '', component: HotelCardsComponent },
+      {
+        path: 'add-new',
+        canActivate: [RoleGuard],
+        data: {
+          roles: [Role.admin]
+        },
+        component: HotelForAdminComponent
+      },
+      {
+        path: ':id',
+        children: [
+          { path: '', component: HotelComponent },
+          {
+            path: 'edit',
+            canActivate: [RoleGuard],
+            data: {
+              roles: [Role.admin]
+            },
+            component: HotelForAdminComponent
+          }
+        ]
+      }
+    ]
   },
   {
     path: 'change-password',

@@ -35,7 +35,7 @@ namespace iTechArt.Hotels.Api
             AuthOptions authOptions = authOptionsConfiguration.Get<AuthOptions>();
 
             services.Configure<ResourcesOptions>(Configuration.GetSection("Resources"));
-            services.Configure<ViewsOptions>(Configuration.GetSection("Views"));
+            services.Configure<RoomViewsOptions>(Configuration.GetSection("Views"));
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

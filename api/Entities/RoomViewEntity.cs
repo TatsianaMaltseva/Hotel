@@ -2,7 +2,7 @@
 
 namespace iTechArt.Hotels.Api.Entities
 {
-    public class ViewEntity
+    public class RoomViewEntity
     {
         public int Id { get; set; }
 

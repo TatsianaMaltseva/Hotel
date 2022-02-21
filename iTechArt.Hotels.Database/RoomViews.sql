@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Views] (
+﻿CREATE TABLE [dbo].[RoomViews] (
     [Id] INT IDENTITY (1,1) NOT NULL,
     [RoomId] INT NOT NULL,
     [AccountId] INT NOT NULL,

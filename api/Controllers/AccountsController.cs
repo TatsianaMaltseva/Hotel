@@ -127,8 +127,7 @@ namespace iTechArt.Hotels.Api.Controllers
             [FromQuery] AccountFilterParams filterParams
         )
         {
-            var filteredAccounts = _hotelsDb.Accounts
-                .AsQueryable();
+            var filteredAccounts = _hotelsDb.Accounts.AsQueryable();
             if (!string.IsNullOrEmpty(filterParams.Email))
             {
                 filteredAccounts = filteredAccounts

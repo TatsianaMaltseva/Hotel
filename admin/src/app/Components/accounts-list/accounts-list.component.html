@@ -2,7 +2,7 @@
     <button mat-raised-button (click)="openAddAdminDialog()">
         Add admin account
     </button>
-    <button mat-raised-button (click)="openClientAdminDialog()">
+    <button mat-raised-button (click)="openAddClientDialog()">
         Add client account
     </button>
     <div [formGroup]="filterForm">
@@ -37,7 +37,7 @@
                     <button mat-raised-button (click)="openEditAccountDialog(account)">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-raised-button (click)="deleteAccount(account.id)">
+                    <button mat-raised-button (click)="deleteAccount(account)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </span>

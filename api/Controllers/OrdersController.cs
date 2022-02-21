@@ -20,12 +20,12 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
-        private readonly IOptions<ViewsOptions> _viewsOptions;
+        private readonly IOptions<RoomViewsOptions> _viewsOptions;
 
         public OrdersController(
             HotelsDatabaseContext hotelDb, 
             IMapper mapper,
-            IOptions<ViewsOptions> viewsOptions
+            IOptions<RoomViewsOptions> viewsOptions
         )
         {
             _hotelsDb = hotelDb;
@@ -66,9 +66,9 @@ namespace iTechArt.Hotels.Api.Controllers
                     .ToListAsync()
             };
 
-            var view = _hotelsDb.Views
+            var view = _hotelsDb.RoomViews
                 .Where(view => view.RoomId == order.RoomId && view.AccountId == accountId);;
-            _hotelsDb.Views.RemoveRange(view);
+            _hotelsDb.RoomViews.RemoveRange(view);
 
             await _hotelsDb.AddAsync(orderEntity);
             await _hotelsDb.SaveChangesAsync();
@@ -84,13 +84,13 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("Such room does not exist");
             }
-            ViewEntity view = new()
+            RoomViewEntity view = new()
             {
                 RoomId = roomId,
                 AccountId = accountId,
                 ExpireTime = DateTime.Now.Add(_viewsOptions.Value.ExpireTime)
             };
-            await _hotelsDb.Views.AddAsync(view);
+            await _hotelsDb.RoomViews.AddAsync(view);
             await _hotelsDb.SaveChangesAsync();
             return Ok();
         }
@@ -113,28 +113,28 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("accounts/{accountId}/orders")]
         [HttpGet]
         [Authorize(Roles = nameof(Role.Client))]
-        public async Task<IActionResult> GetOrders([FromRoute] int accountId, [FromQuery] OrderFilterParams filterParams)
+        public async Task<IActionResult> GetOrders([FromRoute] int accountId, [FromQuery] OrderFilterParams orderFilterParams)
         {
             var orders = _hotelsDb.Orders
                 .Include(order => order.Hotel)
                 .AsQueryable();
 
-            if (filterParams.Date == OrderDate.Future)
+            if (orderFilterParams.Date == OrderDate.Future)
             {
                 orders = orders.Where(order => order.CheckOutDate >= DateTime.Today);
             }
-            else if (filterParams.Date == OrderDate.Past)
+            else if (orderFilterParams.Date == OrderDate.Past)
             {
                 orders = orders.Where(order => order.CheckOutDate < DateTime.Today);
             }
 
-            if (!string.IsNullOrEmpty(filterParams.Country))
+            if (!string.IsNullOrEmpty(orderFilterParams.Country))
             {
-                orders = orders.Where(order => order.Hotel.Country.Contains(filterParams.Country));
+                orders = orders.Where(order => order.Hotel.Country.Contains(orderFilterParams.Country));
             }
-            if (!string.IsNullOrEmpty(filterParams.City))
+            if (!string.IsNullOrEmpty(orderFilterParams.City))
             {
-                orders = orders.Where(order => order.Hotel.City.Contains(filterParams.City));
+                orders = orders.Where(order => order.Hotel.City.Contains(orderFilterParams.City));
             }
 
             List<Order> ordersToReturn = await orders
