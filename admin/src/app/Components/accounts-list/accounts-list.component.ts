@@ -78,13 +78,23 @@ export class AccountsListComponent implements OnInit {
   }
 
   public openEditAccountDialog(account: Account): void {
-    this.matDialog.open(
+    const dialogRef = this.matDialog.open(
       AccountComponent,
       {
         width: '400px',
         data: account
       }
     );
+
+    dialogRef
+      .afterClosed()
+      .subscribe(
+        () => {
+          const id = this.accounts
+            .findIndex(accountToEdit => accountToEdit.id === account.id);
+          this.accounts[id] = dialogRef.componentInstance.accountForm.value as Account;
+        }
+      );
   }
 
   public onPaginationChange(event: PageEvent): void {
