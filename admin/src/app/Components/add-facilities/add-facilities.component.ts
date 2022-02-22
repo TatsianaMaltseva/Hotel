@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 
 import { facilityParamsMaxLength } from 'src/app/Core/validation-params';
 import { Facility, Realm } from 'src/app/Dtos/facility';
 import { FacilityService } from '../../facility.service';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-add-facilities',
@@ -37,7 +39,8 @@ export class AddFacilitiesComponent implements OnInit {
 
   public constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly facilityService: FacilityService
+    private readonly facilityService: FacilityService,
+    private readonly matDialog: MatDialog
   ) {
     this.facilitiesForm = this.formBuilder.group(
       {
@@ -66,11 +69,27 @@ export class AddFacilitiesComponent implements OnInit {
   }
 
   public deleteFacility(index: number, facility: Facility): void {
-    this.facilityService
-      .deleteFacility(facility.id)
+    const dialogRef = this.matDialog.open(
+      DeleteDialogComponent,
+      {
+        width: '300px',
+        data: `Are you sure you want to delete ${facility.name}?`
+      }
+    );
+
+    dialogRef
+      .afterClosed()
       .subscribe(
         () => {
-          this.facilities.removeAt(index);
+          if (dialogRef.componentInstance.isDeletionApproved) {
+            this.facilityService
+              .deleteFacility(facility.id)
+              .subscribe(
+                () => {
+                  this.facilities.removeAt(index);
+                }
+              );
+          }
         }
       );
   }

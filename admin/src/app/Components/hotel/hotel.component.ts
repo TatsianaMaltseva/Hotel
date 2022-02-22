@@ -6,6 +6,8 @@ import { Location } from '@angular/common';
 import { HotelService } from 'src/app/hotel.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { AccountService } from 'src/app/account.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-hotel',
@@ -27,7 +29,8 @@ export class HotelComponent implements OnInit{
     private readonly route: ActivatedRoute,
     private readonly accountService: AccountService,
     private readonly snackBar: MatSnackBar,
-    private readonly location: Location
+    private readonly location: Location,
+    private readonly matDialog: MatDialog
   ) {
   }
 
@@ -43,12 +46,28 @@ export class HotelComponent implements OnInit{
   }
 
   public deleteHotel(): void {
-    this.hotelService
-      .deleteHotel(this.hotel.id)
+    const dialogRef = this.matDialog.open(
+      DeleteDialogComponent,
+      {
+        width: '300px',
+        data: `Are you sure you want to delete ${this.hotel.name}?`
+      }
+    );
+
+    dialogRef
+      .afterClosed()
       .subscribe(
         () => {
-          this.location.back();
-          this.openSnackBar('Successfully deleted');
+          if (dialogRef.componentInstance.isDeletionApproved) {
+            this.hotelService
+              .deleteHotel(this.hotel.id)
+              .subscribe(
+                () => {
+                  this.location.back();
+                  this.openSnackBar('Successfully deleted');
+                }
+              );
+          }
         }
       );
   }

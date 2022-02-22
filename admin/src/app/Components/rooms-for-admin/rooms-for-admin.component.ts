@@ -13,6 +13,7 @@ import { RoomService } from '../../room.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { Room } from 'src/app/Dtos/room';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-rooms-for-admin',
@@ -115,12 +116,29 @@ export class RoomsForAdminComponent implements OnInit {
     if (!this.hotel) {
       return;
     }
-    this.roomService
-      .deleteRoom(this.hotel.id, room.id)
+
+    const dialogRef = this.matDialog.open(
+      DeleteDialogComponent,
+      {
+        width: '300px',
+        data: `Are you sure you want to delete ${room.name} room?`
+      }
+    );
+
+    dialogRef
+      .afterClosed()
       .subscribe(
         () => {
-          this.rooms.removeAt(index);
-          this.openSnackBar('Successfully deleted');
+          if (dialogRef.componentInstance.isDeletionApproved) {
+            this.roomService
+              .deleteRoom(this.hotel!.id, room.id)
+              .subscribe(
+                () => {
+                  this.rooms.removeAt(index);
+                  this.openSnackBar('Successfully deleted');
+                }
+              );
+          }
         }
       );
   }
