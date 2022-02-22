@@ -12,6 +12,7 @@ import { AccountParams } from 'src/app/Core/validation-params';
 import { Account } from 'src/app/Dtos/account';
 import { AccountComponent } from '../account/account.component';
 import { CreateAdminComponent } from '../create-admin/create-admin.component';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { RegisterComponent } from '../register/register.component';
 
 @Component({
@@ -107,12 +108,29 @@ export class AccountsListComponent implements OnInit {
       );
   }
 
-  public deleteAccount(accountId: number): void {
-    this.accountService
-      .deleteAccount(accountId)
+
+  public deleteAccount(account: Account): void {
+    const dialogRef = this.matDialog.open(
+      DeleteDialogComponent,
+      {
+        width: '300px',
+        data: `Are you sure you want to delete ${account.email}?`
+      }
+    );
+
+    dialogRef
+      .afterClosed()
       .subscribe(
         () => {
-          this.fetchAccounts();
+          if (dialogRef.componentInstance.isDeletionApproved) {
+            this.accountService
+              .deleteAccount(account.id)
+              .subscribe(
+                () => {
+                  this.fetchAccounts();
+                }
+              );
+          }
         }
       );
   }

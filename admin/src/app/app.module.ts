@@ -61,6 +61,7 @@ import { OrdersListComponent } from './Components/orders-list/orders-list.compon
 import { AccountsListComponent } from './Components/accounts-list/accounts-list.component';
 import { AccountComponent } from './Components/account/account.component';
 import { NotFoundComponent } from './Components/not-found/not-found.component';
+import { DeleteDialogComponent } from './Components/delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { NotFoundComponent } from './Components/not-found/not-found.component';
     OrdersListComponent,
     AccountsListComponent,
     AccountComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
