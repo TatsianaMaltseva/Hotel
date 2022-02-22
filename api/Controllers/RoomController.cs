@@ -121,7 +121,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 rooms = rooms.Where(room => room.Sleeps == roomFilterParams.Sleeps);
             }
             List<Room> roomsForCLient = rooms
-                .Include(room => room.ActiveViews)
+                .Include(room => room.PreOrders)
                 .Include(room => room.FacilityRooms)
                 .ThenInclude(facilityRoom => facilityRoom.Facility)
                 .AsEnumerable()
@@ -149,7 +149,7 @@ namespace iTechArt.Hotels.Api.Controllers
                         Sleeps = data.room.Sleeps,
                         Price = data.room.Price,
                         MainImageId = data.room.MainImageId,
-                        Number = data.room.Number - data.ordersNumber - (roomFilterParams.ShowAvailableRoomsOnly ? data.room.ActiveViews.Count() : 0),
+                        Number = data.room.Number - data.ordersNumber - (roomFilterParams.ShowAvailableRoomsOnly ? data.room.PreOrders.Count() : 0),
                         Facilities = data.room.FacilityRooms
                             .Select(facilityRoom =>
                                 new Facility

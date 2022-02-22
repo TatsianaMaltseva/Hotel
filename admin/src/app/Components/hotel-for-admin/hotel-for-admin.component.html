@@ -102,7 +102,7 @@
                 {{ serverErrorResponse }}
             </mat-error>
 
-            <div *ngIf="isHotelExistInDataBase; else newHotel">
+            <div *ngIf="!isHotelNew; else newHotel">
                 <mat-card-actions>
                     <button
                         mat-button
@@ -115,8 +115,8 @@
                         <mat-icon>add_shopping_cart</mat-icon>facilities
                     </button>
                 </mat-card-actions>
-                <app-images-for-admin *ngIf="isHotelExistInDataBase" [hotel]="hotel"></app-images-for-admin>
-                <app-rooms-for-admin *ngIf="isHotelExistInDataBase" [hotel]="hotel"></app-rooms-for-admin>
+                <app-images-for-admin *ngIf="!isHotelNew" [hotel]="hotel"></app-images-for-admin>
+                <app-rooms-for-admin *ngIf="!isHotelNew" [hotel]="hotel"></app-rooms-for-admin>
             </div>
             <ng-template #newHotel>
                 <mat-card-actions>

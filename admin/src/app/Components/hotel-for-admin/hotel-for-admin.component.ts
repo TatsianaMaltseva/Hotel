@@ -13,6 +13,11 @@ import { HotelFilterService } from 'src/app/hotel-filter.service';
 import { HotelService } from 'src/app/hotel.service';
 import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 
+export enum Mode {
+  create,
+  edit
+}
+
 @Component({
   selector: 'app-hotel-for-admin',
   templateUrl: './hotel-for-admin.component.html',
@@ -23,7 +28,7 @@ export class HotelForAdminComponent implements OnInit {
   public hotelForm: FormGroup;
   public loading: boolean = false;
   public isHotelLoaded: boolean = false;
-  public isHotelExistInDataBase: boolean = false;
+  public hotelMode: Mode = Mode.create;
   public serverErrorResponse: string = '';
   public countries: string[] = [];
   public cities: string[] = [];
@@ -49,6 +54,10 @@ export class HotelForAdminComponent implements OnInit {
 
   public get city(): AbstractControl | null {
     return this.hotelForm.get('city');
+  }
+
+  public get isHotelNew(): boolean {
+    return this.hotelMode === Mode.create;
   }
 
   public constructor(
@@ -198,7 +207,7 @@ export class HotelForAdminComponent implements OnInit {
       .subscribe(
         (hotel) => {
           this.hotelForm.patchValue(hotel);
-          this.isHotelExistInDataBase = true;
+          this.hotelMode = Mode.edit;
           this.isHotelLoaded = true;
         }
       )

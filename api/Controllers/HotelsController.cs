@@ -86,7 +86,7 @@ namespace iTechArt.Hotels.Api.Controllers
         {
             var filteredHotels = _hotelsDb.Hotels
                 .Include(hotel => hotel.Rooms)
-                .ThenInclude(room => room.ActiveViews)
+                .ThenInclude(room => room.PreOrders)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(hotelFilterParams.Name))
@@ -130,8 +130,8 @@ namespace iTechArt.Hotels.Api.Controllers
                         hotel,
                         totalHotelRoomNumber = hotel.Rooms
                             .Sum(room => room.Number),
-                        totalHotelActiveViewsNumber = hotel.Rooms
-                            .Sum(room => room.ActiveViews.Count()),
+                        totalHotelPreOrdersNumber = hotel.Rooms
+                            .Sum(room => room.PreOrders.Count()),
                         totalHotelOrdersNumber = (hotelFilterParams.CheckInDate != null && hotelFilterParams.CheckOutDate != null)
                             ? orders
                                 .Where(order =>
@@ -146,7 +146,8 @@ namespace iTechArt.Hotels.Api.Controllers
             
             if (hotelFilterParams.ShowAvailableRoomsOnly)
             {
-                hotelsWithCountedData = hotelsWithCountedData.Where(data => data.totalHotelRoomNumber - data.totalHotelOrdersNumber - data.totalHotelActiveViewsNumber > 0);
+                hotelsWithCountedData = hotelsWithCountedData
+                    .Where(data => data.totalHotelRoomNumber - data.totalHotelOrdersNumber - data.totalHotelPreOrdersNumber > 0);
             }
 
             List<HotelCard> hotelCards = hotelsWithCountedData

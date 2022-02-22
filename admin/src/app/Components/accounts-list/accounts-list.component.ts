@@ -107,9 +107,9 @@ export class AccountsListComponent implements OnInit {
       );
   }
 
-  public deleteAccount(account: Account): void {
+  public deleteAccount(accountId: number): void {
     this.accountService
-      .deleteAccount(account.id)
+      .deleteAccount(accountId)
       .subscribe(
         () => {
           this.fetchAccounts();

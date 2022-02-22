@@ -20,12 +20,12 @@ namespace iTechArt.Hotels.Api.Controllers
     {
         private readonly HotelsDatabaseContext _hotelsDb;
         private readonly IMapper _mapper;
-        private readonly IOptions<RoomViewsOptions> _viewsOptions;
+        private readonly IOptions<RoomPreOrderOptions> _viewsOptions;
 
         public OrdersController(
             HotelsDatabaseContext hotelDb, 
             IMapper mapper,
-            IOptions<RoomViewsOptions> viewsOptions
+            IOptions<RoomPreOrderOptions> viewsOptions
         )
         {
             _hotelsDb = hotelDb;
@@ -66,9 +66,9 @@ namespace iTechArt.Hotels.Api.Controllers
                     .ToListAsync()
             };
 
-            var view = _hotelsDb.RoomViews
+            var view = _hotelsDb.RoomPreOrders
                 .Where(view => view.RoomId == order.RoomId && view.AccountId == accountId);;
-            _hotelsDb.RoomViews.RemoveRange(view);
+            _hotelsDb.RoomPreOrders.RemoveRange(view);
 
             await _hotelsDb.AddAsync(orderEntity);
             await _hotelsDb.SaveChangesAsync();
@@ -84,13 +84,13 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("Such room does not exist");
             }
-            RoomViewEntity view = new()
+            RoomPreOrderEntity view = new()
             {
                 RoomId = roomId,
                 AccountId = accountId,
                 ExpireTime = DateTime.Now.Add(_viewsOptions.Value.ExpireTime)
             };
-            await _hotelsDb.RoomViews.AddAsync(view);
+            await _hotelsDb.RoomPreOrders.AddAsync(view);
             await _hotelsDb.SaveChangesAsync();
             return Ok();
         }
@@ -130,11 +130,17 @@ namespace iTechArt.Hotels.Api.Controllers
 
             if (!string.IsNullOrEmpty(orderFilterParams.Country))
             {
-                orders = orders.Where(order => order.Hotel.Country.Contains(orderFilterParams.Country));
+                orders = orders
+                    .Where(order => order.Hotel.Country
+                        .Contains(orderFilterParams.Country)
+                    );
             }
             if (!string.IsNullOrEmpty(orderFilterParams.City))
             {
-                orders = orders.Where(order => order.Hotel.City.Contains(orderFilterParams.City));
+                orders = orders
+                    .Where(order => order.Hotel.City
+                        .Contains(orderFilterParams.City)
+                    );
             }
 
             List<Order> ordersToReturn = await orders
@@ -154,7 +160,8 @@ namespace iTechArt.Hotels.Api.Controllers
                 .Where(hotel => hotel.Id == hotelId)
                 .Include(hotel => hotel.FacilityHotels)
                 .Include(hotel => hotel.Rooms
-                    .Where(room => room.Id == roomId))
+                    .Where(room => room.Id == roomId)
+                )
                 .ThenInclude(room => room.FacilityRooms)
                 .FirstOrDefaultAsync();
 

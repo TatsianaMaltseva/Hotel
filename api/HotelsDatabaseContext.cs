@@ -19,7 +19,7 @@ namespace iTechArt.Hotels.Api
         public DbSet<FacilityHotelEntity> FacilityHotel { get; set; }
         public DbSet<FacilityRoomEntity> FacilityRoom { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
-        public DbSet<RoomViewEntity> RoomViews { get; set; }
+        public DbSet<RoomPreOrderEntity> RoomPreOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,6 +68,7 @@ namespace iTechArt.Hotels.Api
             modelBuilder.Entity<ImageEntity>()
                 .HasOne<HotelEntity>()
                 .WithMany()
+                .HasForeignKey(image => image.HotelId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<FacilityEntity>()
@@ -90,7 +91,7 @@ namespace iTechArt.Hotels.Api
                 .HasForeignKey(order => order.HotelId);
 
             modelBuilder.Entity<RoomEntity>()
-                .HasMany(room => room.ActiveViews)
+                .HasMany(room => room.PreOrders)
                 .WithOne()
                 .HasForeignKey(viev => viev.RoomId);
 
@@ -102,7 +103,7 @@ namespace iTechArt.Hotels.Api
                 .Property(e => e.Role)
                 .HasConversion<string>();
 
-            modelBuilder.Entity<RoomViewEntity>()
+            modelBuilder.Entity<RoomPreOrderEntity>()
                 .HasOne<AccountEntity>()
                 .WithMany()
                 .HasForeignKey(view => view.AccountId);

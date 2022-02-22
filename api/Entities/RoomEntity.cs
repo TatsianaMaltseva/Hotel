@@ -34,6 +34,6 @@ namespace iTechArt.Hotels.Api.Entities
 
         public List<FacilityRoomEntity> FacilityRooms { get; }
 
-        public List<RoomViewEntity> ActiveViews { get; }
+        public List<RoomPreOrderEntity> PreOrders { get; }
     }
 }
