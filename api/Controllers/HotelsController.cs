@@ -79,78 +79,83 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHotelCards(
+        public IActionResult GetHotelCards(
             [FromQuery] PageParameters pageParameters,
-            [FromQuery] HotelFilterParameters filterParams
+            [FromQuery] HotelFilterParameters hotelFilterParams
         )
         {
-            Claim role = (HttpContext.User.Identity as ClaimsIdentity)
-                .FindFirst(ClaimTypes.Role);
-
-            var filteredHotelCards = _hotelsDb.Hotels
+            var filteredHotels = _hotelsDb.Hotels
+                .Include(hotel => hotel.Rooms)
+                .ThenInclude(room => room.ActiveViews)
                 .AsQueryable();
 
-            if (role == null || Enum.Parse<Role>(role.Value) != Role.Admin)
+            if (!string.IsNullOrEmpty(hotelFilterParams.Name))
             {
-                filteredHotelCards = filteredHotelCards
-                    .Include(hotel => hotel.Rooms)
-                    .ThenInclude(room => room.ActiveViews)
-                    .Include(hotel => hotel.Rooms)
-                    .ThenInclude(room => room.Orders)
-                    .Where(hotel =>
-                        hotel.Rooms
-                            .Select(room =>
-                                (filterParams.CheckInDate != null && filterParams.CheckOutDate != null)
-                                    ? room.Number - room.Orders
-                                        .Where(order => 
-                                            !(filterParams.CheckOutDate < order.CheckInDate 
-                                                || filterParams.CheckInDate > order.CheckOutDate)
-                                        )
-                                        .Count() - room.ActiveViews.Count()
-                                    : room.Number - room.ActiveViews.Count()
-                             )
-                            .Any(availableRoomsNumber => availableRoomsNumber > 0)
-                    );
-            }
-
-            if (!string.IsNullOrEmpty(filterParams.Name))
-            {
-                filteredHotelCards = filteredHotelCards
+                filteredHotels = filteredHotels
                     .Where(h => h.Name
-                        .Contains(filterParams.Name));
+                        .Contains(hotelFilterParams.Name));
             }
-            if (!string.IsNullOrEmpty(filterParams.Country))
+            if (!string.IsNullOrEmpty(hotelFilterParams.Country))
             {
-                filteredHotelCards = filteredHotelCards
+                filteredHotels = filteredHotels
                     .Where(h => h.Country
-                        .Contains(filterParams.Country));
+                        .Contains(hotelFilterParams.Country));
             }
-            if (!string.IsNullOrEmpty(filterParams.City))
+            if (!string.IsNullOrEmpty(hotelFilterParams.City))
             {
-                filteredHotelCards = filteredHotelCards
+                filteredHotels = filteredHotels
                     .Where(h => h.City
-                        .Contains(filterParams.City));
+                        .Contains(hotelFilterParams.City));
             }
 
-            if (filterParams.Sleeps.HasValue)
+            if (hotelFilterParams.Sleeps.HasValue)
             {
-                filteredHotelCards = filteredHotelCards
+                filteredHotels = filteredHotels
                     .Where(hotel =>
                         hotel.Rooms
                             .Select(room => room.Sleeps)
                             .Any(sleeps =>
-                                sleeps == filterParams.Sleeps
+                                sleeps == hotelFilterParams.Sleeps
                             )
                     );
             }
 
-            int hotelCount = await filteredHotelCards.CountAsync();
+            var hotelsWithCountedData = filteredHotels
+                .AsEnumerable()
+                .GroupJoin(_hotelsDb.Orders,
+                    hotel => hotel.Id,
+                    order => order.HotelId,
+                    (hotel, orders) => new
+                    {
+                        hotel,
+                        totalHotelRoomNumber = hotel.Rooms
+                            .Sum(room => room.Number),
+                        totalHotelActiveViewsNumber = hotel.Rooms
+                            .Sum(room => room.ActiveViews.Count()),
+                        totalHotelOrdersNumber = (hotelFilterParams.CheckInDate != null && hotelFilterParams.CheckOutDate != null)
+                            ? orders
+                                .Where(order =>
+                                    !(hotelFilterParams.CheckOutDate < order.CheckInDate
+                                        | hotelFilterParams.CheckInDate > order.CheckOutDate)
+                                )
+                                .Count()
+                            : 0
+                    }
+                )
+                .AsQueryable();
+            
+            if (hotelFilterParams.ShowAvailableRoomsOnly)
+            {
+                hotelsWithCountedData = hotelsWithCountedData.Where(data => data.totalHotelRoomNumber - data.totalHotelOrdersNumber - data.totalHotelActiveViewsNumber > 0);
+            }
 
-            HotelCard[] hotelCards = await filteredHotelCards
+            List<HotelCard> hotelCards = hotelsWithCountedData
+                .Select(data => data.hotel)
                 .Skip(pageParameters.PageIndex * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
                 .ProjectTo<HotelCard>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
+                .ToList();
+            int hotelCount = hotelsWithCountedData.Count();
             return Ok(new { hotelCards, hotelCount });
         }
 

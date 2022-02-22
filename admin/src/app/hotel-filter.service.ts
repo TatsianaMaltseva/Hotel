@@ -5,6 +5,7 @@ import * as dayjs from 'dayjs';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
+import { AccountService } from './account.service';
 import { HotelFilterParameters } from './Core/hotel-filter-params';
 
 @Injectable({
@@ -18,21 +19,27 @@ export class HotelFilterService{
   public constructor(
     private readonly http: HttpClient,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly accountService: AccountService
   ) {
     this.apiUrl = environment.api;
+
     this.route.queryParams
       .subscribe(
         params => {
-          this.updateParameters(params);
+          if (Object.keys(params).length) {
+            this.updateParameters(params);
+          }
         }
       );
+
+    this.params.showAvailableRoomsOnly = this.accountService.isAdmin ? false : true;
   }
 
   public updateParameters(data: Params | any): void {
     const format = 'YYYY-MM-DD';
     this.params = Object.fromEntries(
-      Object.entries(data).filter(([_, value]) => value)
+      Object.entries(data).filter(([_, value]) => value !== null)
     );
 
     if (data.checkInDate) {
@@ -41,6 +48,8 @@ export class HotelFilterService{
     if (data.checkOutDate) {
       this.params.checkOutDate = dayjs(new Date(data.checkOutDate)).format(format);
     }
+
+    this.params.showAvailableRoomsOnly = this.accountService.isAdmin ? false : true;
 
     void this.router.navigate(
       [],

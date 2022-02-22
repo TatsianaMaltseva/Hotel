@@ -80,7 +80,7 @@ namespace iTechArt.Hotels.Api
                 .HasForeignKey(room => room.HotelId);
 
             modelBuilder.Entity<RoomEntity>()
-                .HasMany(room => room.Orders)
+                .HasMany<OrderEntity>()
                 .WithOne(order => order.Room)
                 .HasForeignKey(order => order.RoomId);
 

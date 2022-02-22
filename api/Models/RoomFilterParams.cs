@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace iTechArt.Hotels.Api.Models
 {
@@ -9,5 +10,8 @@ namespace iTechArt.Hotels.Api.Models
         public DateTime? CheckOutDate { get; set; }
 
         public int? Sleeps { get; set; }
+
+        [Required]
+        public bool ShowAvailableRoomsOnly { get; set; }
     }
 }

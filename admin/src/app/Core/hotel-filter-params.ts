@@ -5,4 +5,5 @@ export interface HotelFilterParameters {
   sleeps?: number;
   checkInDate?: string;
   checkOutDate?: string;
+  showAvailableRoomsOnly?: boolean;
 }

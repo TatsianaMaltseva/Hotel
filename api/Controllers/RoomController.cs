@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Claims;
-using System;
 using iTechArt.Hotels.Api.Entities;
 using iTechArt.Hotels.Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -95,14 +93,7 @@ namespace iTechArt.Hotels.Api.Controllers
                 return BadRequest("Such hotel does not exist");
             }
 
-            Claim role = (HttpContext.User.Identity as ClaimsIdentity)
-                .FindFirst(ClaimTypes.Role);
-
-            if (role == null || Enum.Parse<Role>(role.Value) != Role.Admin)
-            {
-                return Ok(await GetRoomsForClientAsync(hotelId, roomFilterParams));
-            }
-            return Ok(await GetRoomsForAdminAsync(hotelId));
+            return Ok(GetRoomsForClientAsync(hotelId, roomFilterParams));
         }
 
         [Route("{hotelId}/rooms")]
@@ -121,40 +112,7 @@ namespace iTechArt.Hotels.Api.Controllers
             return CreatedAtAction(nameof(ChangeRoom), new { hotelId, roomId = room.Id }, room.Id);
         }
 
-        private async Task<List<Room>> GetRoomsForAdminAsync(int hotelId)
-        {
-            List<Room> roomsForAdmin = await _hotelsDb.Rooms
-                .Where(room => room.HotelId == hotelId)
-                .Include(room => room.FacilityRooms)
-                .ThenInclude(facilityRoom => facilityRoom.Facility)
-                .Select(room =>
-                    new Room
-                    {
-                        Id = room.Id,
-                        Name = room.Name,
-                        Sleeps = room.Sleeps,
-                        Price = room.Price,
-                        MainImageId = room.MainImageId,
-                        Number = room.Number,
-                        Facilities = room.FacilityRooms
-                            .Select(facilityRoom =>
-                                new Facility
-                                {
-                                    Id = facilityRoom.FacilityId,
-                                    Name = facilityRoom.Facility.Name,
-                                    Realm = Realm.Room,
-                                    Price = facilityRoom.Price
-                                }
-                            )
-                            .ToList()
-                    }
-                )
-                .Where(room => room.Number > 0)
-                .ToListAsync();
-            return roomsForAdmin;
-        }
-
-        private async Task<List<Room>> GetRoomsForClientAsync(int hotelId, RoomFilterParams roomFilterParams)
+        private List<Room> GetRoomsForClientAsync(int hotelId, RoomFilterParams roomFilterParams)
         {
             var rooms = _hotelsDb.Rooms
                 .Where(room => room.HotelId == hotelId);
@@ -162,27 +120,37 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 rooms = rooms.Where(room => room.Sleeps == roomFilterParams.Sleeps);
             }
-            List<Room> roomsForCLient = await rooms
+            List<Room> roomsForCLient = rooms
+                .Include(room => room.ActiveViews)
                 .Include(room => room.FacilityRooms)
                 .ThenInclude(facilityRoom => facilityRoom.Facility)
-                .Include(room => room.Orders)
-                .Include(room => room.ActiveViews)
-                .Select(room => 
+                .AsEnumerable()
+                .GroupJoin(_hotelsDb.Orders,
+                    room => room.Id,
+                    order => order.RoomId,
+                    (room, orders) => new
+                    {
+                        room,
+                        ordersNumber = (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
+                            ? orders
+                                .Where(order =>
+                                    !(roomFilterParams.CheckOutDate < order.CheckInDate
+                                        | roomFilterParams.CheckInDate > order.CheckOutDate)
+                                )
+                                .Count()
+                            : 0
+                    }
+                )
+                .Select(data =>
                     new Room
                     {
-                        Id = room.Id,
-                        Name = room.Name,
-                        Sleeps = room.Sleeps,
-                        Price = room.Price,
-                        MainImageId = room.MainImageId,
-                        Number = (roomFilterParams.CheckInDate != null && roomFilterParams.CheckOutDate != null)
-                            ? room.Number - room.Orders
-                                .Where(order => !(roomFilterParams.CheckOutDate < order.CheckInDate
-                                        || roomFilterParams.CheckInDate > order.CheckOutDate)
-                                )
-                                .Count() - room.ActiveViews.Count()
-                            : room.Number - room.ActiveViews.Count(),
-                        Facilities = room.FacilityRooms
+                        Id = data.room.Id,
+                        Name = data.room.Name,
+                        Sleeps = data.room.Sleeps,
+                        Price = data.room.Price,
+                        MainImageId = data.room.MainImageId,
+                        Number = data.room.Number - data.ordersNumber - (roomFilterParams.ShowAvailableRoomsOnly ? data.room.ActiveViews.Count() : 0),
+                        Facilities = data.room.FacilityRooms
                             .Select(facilityRoom =>
                                 new Facility
                                 {
@@ -196,7 +164,7 @@ namespace iTechArt.Hotels.Api.Controllers
                     }
                 )
                 .Where(room => room.Number > 0)
-                .ToListAsync();
+                .ToList();
             return roomsForCLient;
         }
 

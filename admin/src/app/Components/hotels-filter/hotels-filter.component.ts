@@ -91,7 +91,7 @@ export class HotelsFilterComponent implements OnInit {
           this.fetchCountryAutocompleteValues(value);
         }
       );
-      
+
     this.city?.valueChanges
       .pipe(
         debounceTime(this.autocompleteDelay),
