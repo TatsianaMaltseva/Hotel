@@ -1,0 +1,57 @@
+
+<section *ngIf="areCardsLoaded" id="slider">
+  <input type="radio" name="slider" id="s1" checked>
+  <input type="radio" name="slider" id="s2">
+  <input type="radio" name="slider" id="s3">
+  <input type="radio" name="slider" id="s4">
+  <input type="radio" name="slider" id="s5">
+
+    <label for="s1" id="slide1">
+        <img *ngIf="cards[0].mainImageId" [src]="createImagePath(cards[0].id, cards[0].mainImageId)">
+        <pre class="hotel-data" [routerLink]="[cards[0].id]">
+            {{ cards[0].name }}
+            _________
+            Have your best holiday
+        </pre>
+    </label>
+
+    <label for="s2" id="slide2">
+        <img *ngIf="cards[1].mainImageId" [src]="createImagePath(cards[1].id, cards[1].mainImageId)">
+        <pre class="hotel-data" [routerLink]="[cards[1].id]">
+            {{ cards[1].name }}
+            _________
+            Book your dream hotel
+        </pre>
+    </label>
+    <label for="s3" id="slide3">
+        <img *ngIf="cards[2].mainImageId" [src]="createImagePath(cards[2].id, cards[2].mainImageId)">
+        <pre class="hotel-data" [routerLink]="[cards[0].id]">
+            {{ cards[2].name }}
+            _________
+            Spend time with family
+        </pre>
+    </label>
+    <label for="s4" id="slide4">
+        <img *ngIf="cards[3].mainImageId" [src]="createImagePath(cards[3].id, cards[3].mainImageId)">
+        <pre class="hotel-data" [routerLink]="[cards[3].id]">
+            {{ cards[3].name }}
+            _________
+            Have the best vacation
+        </pre>
+    </label>
+    <label for="s5" id="slide5">
+        <img *ngIf="cards[4].mainImageId" [src]="createImagePath(cards[4].id, cards[4].mainImageId)">
+        <pre class="hotel-data" [routerLink]="[cards[4].id]">
+            {{ cards[4].name }}
+            _________
+            Travel with comfort
+        </pre></label>
+
+    <div id="bullets">
+        <label for="slide1"></label>
+        <label for="slide2"></label>
+        <label for="slide3"></label>
+        <label for="slide4"></label>
+        <label for="slide5"></label>
+    </div>
+</section>

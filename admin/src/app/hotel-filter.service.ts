@@ -33,7 +33,7 @@ export class HotelFilterService{
         }
       );
 
-    this.params.showAvailableRoomsOnly = this.accountService.isAdmin ? false : true;
+    this.params.showAvailableRoomsOnly = !this.accountService.isAdmin;
   }
 
   public updateParameters(data: Params | any): void {
@@ -49,7 +49,7 @@ export class HotelFilterService{
       this.params.checkOutDate = dayjs(new Date(data.checkOutDate)).format(format);
     }
 
-    this.params.showAvailableRoomsOnly = this.accountService.isAdmin ? false : true;
+    this.params.showAvailableRoomsOnly = !this.accountService.isAdmin;
 
     void this.router.navigate(
       [],

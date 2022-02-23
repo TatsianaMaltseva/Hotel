@@ -1,0 +1,111 @@
+#slider {
+  width: 60%;
+  height: 280px;
+  margin: 10% 20%;
+  margin-top: 0px;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+input[type=radio] {
+  display: none;
+}
+
+#slider label,
+#slider label img {
+  position: absolute;
+  width: 90%;
+  height: 100%;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 1000ms ease;
+  font-size: 50px;
+  border-radius: 8px;
+}
+
+#slider label .hotel-data {
+  margin-top: 160px;
+  margin-left: -240px;
+  z-index: 1;
+  font-size: 22px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Active Slide */
+#s1:checked ~ #slide1,
+#s2:checked ~ #slide2,
+#s3:checked ~ #slide3,
+#s4:checked ~ #slide4,
+#s5:checked ~ #slide5 {
+  transform: translate3d(0%, 0, 0px);
+}
+
+/* Next Slide */
+#s1:checked ~ #slide2,
+#s2:checked ~ #slide3,
+#s3:checked ~ #slide4,
+#s4:checked ~ #slide5,
+#s5:checked ~ #slide1 {
+  transform: translate3d(100%, 0, -100px);
+  filter: blur(2px);
+}
+
+/* Next to Next Slide */
+#s1:checked ~ #slide3,
+#s2:checked ~ #slide4,
+#s3:checked ~ #slide5,
+#s4:checked ~ #slide1,
+#s5:checked ~ #slide2 {
+  transform: translate3d(100%, 0, -300px);
+  display: none;
+}
+
+/* Previous to Previous Slide */
+#s1:checked ~ #slide4,
+#s2:checked ~ #slide5,
+#s3:checked ~ #slide1,
+#s4:checked ~ #slide2,
+#s5:checked ~ #slide3 {
+  transform: translate3d(-100%, 0, -300px);
+  display: none;
+}
+
+/* Previous Slide */
+#s1:checked ~ #slide5,
+#s2:checked ~ #slide1,
+#s3:checked ~ #slide2,
+#s4:checked ~ #slide3,
+#s5:checked ~ #slide4 {
+  transform: translate3d(-100%, 0, -100px);
+  filter: blur(2px);
+}
+
+#bullets {
+  position: absolute;
+  margin: 246px 160px 0;
+  text-align: center;
+}
+
+#bullets label {
+  display: inline-block;
+  width: 20px;
+  height: 4px;
+  background: white;
+  margin: 0 4px;
+  z-index: 1;
+  position: relative;
+  opacity: 0.6;
+  border-radius: 0;
+}
+
+#s1:checked ~ #bullets label:nth-child(1),
+#s2:checked ~ #bullets label:nth-child(2),
+#s3:checked ~ #bullets label:nth-child(3),
+#s4:checked ~ #bullets label:nth-child(4),
+#s5:checked ~ #bullets label:nth-child(5) {
+  background: #444;
+}

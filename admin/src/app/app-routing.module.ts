@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { AccountsListComponent } from './Components/accounts-list/accounts-list.component';
 import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
-
 import { ChangePasswordComponent } from './Components/change-password/change-password.component';
 import { HotelCardsComponent } from './Components/hotel-cards/hotel-cards.component';
 import { HotelForAdminComponent } from './Components/hotel-for-admin/hotel-for-admin.component';
@@ -15,7 +15,6 @@ import { RoleGuard } from './Guards/role.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/hotels', pathMatch: 'full' },
-
   {
     path: 'hotels',
     children: [

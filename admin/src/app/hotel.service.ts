@@ -29,7 +29,10 @@ export class HotelService {
     return this.http.get<Hotel>(`${this.apiUrl}api/hotels/${hotelId}`);
   }
 
-  public getHotelCards(pageParameters: PageParameters, filterParameters: HotelFilterParameters): Observable<HotelCardResponse> {
+  public getHotelCards(
+    pageParameters: PageParameters,
+    filterParameters: HotelFilterParameters
+    ): Observable<HotelCardResponse> {
     const params = { ...pageParameters, ...filterParameters } as Params;
     const httpParams = new HttpParams({ fromObject: params });
     return this.http.get<HotelCardResponse>(

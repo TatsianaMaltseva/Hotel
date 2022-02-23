@@ -62,6 +62,7 @@ import { AccountsListComponent } from './Components/accounts-list/accounts-list.
 import { AccountComponent } from './Components/account/account.component';
 import { NotFoundComponent } from './Components/not-found/not-found.component';
 import { DeleteDialogComponent } from './Components/delete-dialog/delete-dialog.component';
+import { CarouselComponent } from './Components/second-carousel/carousel.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { DeleteDialogComponent } from './Components/delete-dialog/delete-dialog.
     AccountsListComponent,
     AccountComponent,
     NotFoundComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    CarouselComponent
   ],
   imports: [
     BrowserModule,

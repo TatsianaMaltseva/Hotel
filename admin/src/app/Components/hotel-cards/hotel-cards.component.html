@@ -1,4 +1,5 @@
 <div class="wrapper">
+    <app-carousel></app-carousel>
     <app-hotels-filter (filterParametersUpdated)="fetchHotels()"></app-hotels-filter>
     <div class="cards">
         <mat-card class="card" *ngFor="let hotel of hotels">
