@@ -1,9 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DataAnnotationsExtensions;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace iTechArt.Hotels.Api.Models
 {
     public class HotelFilterParameters
     {
+        public DateTime? CheckInDate { get; set; }
+
+        public DateTime? CheckOutDate { get; set; }
+
         [MaxLength(ValidationParams.Hotel.NameMaxLength)]
         public string Name { get; set; }
 
@@ -12,5 +18,10 @@ namespace iTechArt.Hotels.Api.Models
 
         [MaxLength(ValidationParams.Hotel.CityMaxLength)]
         public string City { get; set; }
+
+        [Min(0)]
+        public int? Sleeps { get; set; }
+
+        public bool ShowAvailableRoomsOnly { get; set; } = true;
     }
 }

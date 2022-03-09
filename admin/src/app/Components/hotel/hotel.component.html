@@ -13,16 +13,17 @@
                 {{ facility.name }}
             </mat-chip>
           </mat-chip-list><br>
-        {{ hotel.description }}
+        {{ hotel.description }} <p></p>
+        Check in since {{hotel.checkInTime}} <p></p>
+        Check out until {{hotel.checkOutTime}}
     </mat-card-content>
-    <app-rooms [hotelId]="hotelId"></app-rooms>
-    <mat-card-actions>
-        <button 
-            *ngIf="isAdmin" 
-            mat-raised-button 
-            [routerLink]="['/hotels', hotelId, 'edit']"
-        >
+    <app-rooms [hotel]="hotel"></app-rooms>
+    <mat-card-actions *ngIf="isAdmin">
+        <button mat-raised-button [routerLink]="['/hotels', hotelId, 'edit']">
             Edit hotel
+        </button>
+        <button mat-button (click)="deleteHotel()">
+            <mat-icon>delete</mat-icon>delete hotel
         </button>
     </mat-card-actions>
 </mat-card>

@@ -1,15 +1,15 @@
 <mat-card [formGroup]="facilitiesForm">
     <mat-card-title>Facilities</mat-card-title>
     <ng-container formArrayName="facilities">
-        <ng-container *ngFor="let facilityForm of facilities.controls; let i = index">    
+        <ng-container *ngFor="let facilityForm of facilities.controls; let i = index">
             <div class="card" [formGroupName]="i">
                 <mat-form-field>
                     <mat-label>Facility name</mat-label>
                     <input matInput formControlName="name">
                     <mat-error>Facility name is required</mat-error>
                 </mat-form-field>
-                _
                 <mat-form-field>
+                    <mat-label>Facility type</mat-label>
                     <mat-select
                         matInput
                         formControlName="realm"
@@ -22,22 +22,21 @@
                     <mat-error>Realm is required</mat-error>
                 </mat-form-field>
                 <span *ngIf="facilityExistsInDatabase(facilityForm.value); else newFacilityButtons">
-                    <span>id{{ facilityForm.value.id }}</span>
-                    <button 
+                    <button
                         mat-button
                         (click)="editFacility(facilityForm.value)"
                         [disabled]="facilityForm.invalid"
                     >
                         <mat-icon>save</mat-icon>save changes
                     </button>
-                    <button mat-button (click)="deleteFacility(i, facilityForm.value)"> 
+                    <button mat-button (click)="deleteFacility(i, facilityForm.value)">
                         <mat-icon>delete</mat-icon>delete
                     </button>
                 </span>
                 <ng-template #newFacilityButtons>
-                    <button 
+                    <button
                         mat-button
-                        (click)="addFacility(facilityForm.value)"
+                        (click)="addFacility(i, facilityForm.value)"
                         [disabled]="facilityForm.invalid"
                     >
                         <mat-icon>save</mat-icon>add facility
@@ -48,9 +47,6 @@
                 </ng-template>
             </div>
         </ng-container>
-        <mat-error *ngIf="serverErrorResponse">
-            {{ serverErrorResponse }}
-        </mat-error>
     </ng-container>
     <button mat-button (click)="addEmptyFacilityCard()">
         <mat-icon>add_circle_outline</mat-icon>add new facility

@@ -4,10 +4,11 @@ namespace iTechArt.Hotels.Api
 {
     public static class Constants
     {
-        public static class Role
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum Role
         {
-            public const string Admin = "admin";
-            public const string Client = "client";
+            Admin,
+            Client
         }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -15,6 +16,13 @@ namespace iTechArt.Hotels.Api
         {
             Hotel,
             Room
+        }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum OrderDate
+        {
+            Past,
+            Future
         }
     }
 }

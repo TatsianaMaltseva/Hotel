@@ -1,0 +1,31 @@
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 18%;
+    padding-right: 18%;
+}
+
+app-hotels-filter {
+    width: 30%;
+}
+
+.card {
+    margin: 2%;
+}
+
+.cards {
+    width: 70%;
+}
+
+mat-radio-group {
+    display: flex;
+}
+
+mat-radio-button {
+    margin-right: 2%;
+}
+
+mat-form-field {
+    display: block;
+    width: 100%;
+}

@@ -35,6 +35,7 @@ namespace iTechArt.Hotels.Api
             AuthOptions authOptions = authOptionsConfiguration.Get<AuthOptions>();
 
             services.Configure<ResourcesOptions>(Configuration.GetSection("Resources"));
+            services.Configure<RoomPreOrderOptions>(Configuration.GetSection("RoomPreOrders"));
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -53,12 +54,13 @@ namespace iTechArt.Hotels.Api
                             ValidateLifetime = true,
 
                             IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
-                            ValidateIssuerSigningKey = true,
+                            ValidateIssuerSigningKey = true
                         };
                     }
                 );
             services.AddSingleton<HashPasswordsService>();
             services.AddSingleton<JwtService>();
+            services.AddHostedService<DbCleaningHostedService>();
 
             MapperConfiguration mapperConfig = new(mc =>
             {

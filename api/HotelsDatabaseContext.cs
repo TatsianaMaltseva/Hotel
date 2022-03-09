@@ -18,6 +18,8 @@ namespace iTechArt.Hotels.Api
         public DbSet<FacilityEntity> Facilities { get; set; }
         public DbSet<FacilityHotelEntity> FacilityHotel { get; set; }
         public DbSet<FacilityRoomEntity> FacilityRoom { get; set; }
+        public DbSet<OrderEntity> Orders { get; set; }
+        public DbSet<RoomPreOrderEntity> RoomPreOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,14 +65,52 @@ namespace iTechArt.Hotels.Api
                     .HasMaxLength(3000);
             });
 
+            modelBuilder.Entity<ImageEntity>()
+                .HasOne<HotelEntity>()
+                .WithMany()
+                .HasForeignKey(image => image.HotelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FacilityEntity>()
+                .Property(e => e.Realm)
+                .HasConversion<string>();
+
             modelBuilder.Entity<HotelEntity>()
                 .HasMany(hotel => hotel.Rooms)
                 .WithOne()
                 .HasForeignKey(room => room.HotelId);
 
+            modelBuilder.Entity<RoomEntity>()
+                .HasMany<OrderEntity>()
+                .WithOne(order => order.Room)
+                .HasForeignKey(order => order.RoomId);
+
+            modelBuilder.Entity<OrderEntity>()
+                .HasOne(order => order.Hotel)
+                .WithMany()
+                .HasForeignKey(order => order.HotelId);
+
+            modelBuilder.Entity<RoomEntity>()
+                .HasMany(room => room.PreOrders)
+                .WithOne()
+                .HasForeignKey(viev => viev.RoomId);
+
             modelBuilder.Entity<FacilityEntity>()
                 .Property(e => e.Realm)
                 .HasConversion<string>();
+
+            modelBuilder.Entity<AccountEntity>()
+                .Property(e => e.Role)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<RoomPreOrderEntity>()
+                .HasOne<AccountEntity>()
+                .WithMany()
+                .HasForeignKey(roomPreOrder => roomPreOrder.AccountId);
+
+            modelBuilder.Entity<OrderEntity>()
+                .HasMany(o => o.Facilities)
+                .WithMany(nameof(Orders));
         }
     }
 }

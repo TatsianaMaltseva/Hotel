@@ -9,7 +9,7 @@ import { ACCESS_TOKEN_KEY, getToken } from './Core/get-token';
 
 export interface Token {
   email: string;
-  sub:  number;
+  name:  number;
   role: string;
   exp: number;
   iss: string;
@@ -21,7 +21,7 @@ export interface Token {
 })
 export class AuthService {
   private readonly apiUrl: string;
-  
+
   public get isLoggedIn(): boolean {
     const token: string | null = getToken();
     return token !== null && !this.jwtHelper.isTokenExpired(token);
@@ -36,7 +36,7 @@ export class AuthService {
 
   public get id(): number | null {
     if (this.isLoggedIn) {
-      return this.decodedToken.sub;
+      return this.decodedToken.name;
     }
     return null;
   }
@@ -55,7 +55,7 @@ export class AuthService {
   public constructor(
     private readonly http: HttpClient,
     private readonly jwtHelper: JwtHelperService
-  ) { 
+  ) {
     this.apiUrl = environment.api;
   }
 
@@ -66,7 +66,7 @@ export class AuthService {
 
     return this.http
       .post<string>(
-        `${this.apiUrl}api/auth/login`, 
+        `${this.apiUrl}api/auth/login`,
         { email, password },
         options
       )
@@ -76,22 +76,17 @@ export class AuthService {
         })
       );
   }
-  
+
   public register(email: string, password: string): Observable<string> {
     const options: Object = {
       responseType: 'text'
     };
-    
+
     return this.http
       .post<string>(
         `${this.apiUrl}api/auth/registration`,
         { email, password },
         options
-      )
-      .pipe(
-        tap((token: string) => {
-          localStorage.setItem(ACCESS_TOKEN_KEY, token);
-        })
       );
   }
 

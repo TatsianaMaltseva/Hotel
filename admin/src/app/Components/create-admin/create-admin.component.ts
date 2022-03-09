@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { AccountService } from 'src/app/account.service';
 import { ConfirmValidParentMatcher, CustomValidators } from 'src/app/Core/custom-validators';
+import { AccountParams } from 'src/app/Core/validation-params';
 
 @Component({
   selector: 'app-create-admin',
@@ -18,6 +19,7 @@ export class CreateAdminComponent {
   public hidePassword: boolean = true;
   public serverErrorResponse: string = '';
   public passwordsStateMatcher = new ConfirmValidParentMatcher('notSame');
+  public passwordMinLength = AccountParams.passwordMinLength;
 
   public get email(): AbstractControl | null {
     return this.createAdminForm.get('email');
@@ -46,11 +48,17 @@ export class CreateAdminComponent {
               Validators.email
             ]
           ],
-          password: ['', Validators.required],
+          password: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(this.passwordMinLength)
+            ]
+          ],
           confirmPassword: ['']
         },
-        { 
-          validators: CustomValidators.match('password', 'confirmPassword') 
+        {
+          validators: CustomValidators.match('password', 'confirmPassword')
         }
       );
   }
@@ -66,6 +74,7 @@ export class CreateAdminComponent {
         () => {
           this.serverErrorResponse = '';
           this.openSuccessSnackBar(`Successfully created! Email: ${email}`);
+          this.matDialogRef.close();
         },
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;
@@ -77,7 +86,7 @@ export class CreateAdminComponent {
     this.snackBar.open(
       `${message}`,
       'Confirm',
-      { 
+      {
         duration: 5000
       }
     );

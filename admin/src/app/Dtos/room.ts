@@ -5,8 +5,8 @@ export interface Room {
   id: number;
   name: string;
   sleeps: number;
-  number: number;
   price: number;
+  number: number;
   facilities: Facility[];
   mainImageId?: number;
 }

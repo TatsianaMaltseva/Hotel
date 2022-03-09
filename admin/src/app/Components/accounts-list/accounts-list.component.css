@@ -1,0 +1,32 @@
+.wrapper {
+  padding-left: 18%;
+  padding-right: 18%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.inlineLeft, .inlineRight {
+  position: absolute;
+  display: inline;
+}
+
+.inlineRight {
+  right: 2%;
+}
+
+button {
+  margin-right: 8px;
+  margin-bottom: 2%;
+}
+
+mat-form-field {
+  display: block;
+  width: 32%;
+}
+
+.find-accounts-button {
+  margin-left: 8%;
+}

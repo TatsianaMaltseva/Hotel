@@ -36,7 +36,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/images")]
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> AddHotelImage([FromRoute] int hotelId)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
@@ -72,7 +72,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/rooms/{roomId}/images")]
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> AddRoomImage([FromRoute] int hotelId, [FromRoute] int roomId)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
@@ -111,7 +111,7 @@ namespace iTechArt.Hotels.Api.Controllers
         [Route("{hotelId}/images/{imageId}")]
         [Route("{hotelId}/rooms/{roomId}/images/{imageId}")]
         [HttpDelete]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> DeleteImage([FromRoute] int imageId)
         {
             ImageEntity image = await GetImageEntityAsync(imageId);
@@ -131,22 +131,33 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{hotelId}/images")]
         [HttpGet]
-        public async Task<IActionResult> GetHotelImages([FromRoute] int hotelId)
+        public async Task<IActionResult> GetHotelImages([FromRoute] int hotelId, [FromQuery] PageParameters pageParameters)
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
                 return BadRequest("Such hotel does not exist");
             }
-            var images = await _hotelsDb.Images
-                .Where(image => image.HotelId == hotelId && image.RoomId == null)
+            var imagesBeforePagination = _hotelsDb.Images
+                .Where(image => image.HotelId == hotelId && image.RoomId == null);
+
+            int imageCount = await imagesBeforePagination
+                .CountAsync();
+
+            Image[] images = await imagesBeforePagination
+                .Skip(pageParameters.PageIndex * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            return Ok(images);
+            return Ok( new { images, imageCount });
         }
 
         [Route("{hotelId}/rooms/{roomId}/images")]
         [HttpGet]
-        public async Task<IActionResult> GetRoomImages([FromRoute] int hotelId, [FromRoute] int roomId)
+        public async Task<IActionResult> GetRoomImages(
+            [FromRoute] int hotelId,
+            [FromRoute] int roomId,
+            [FromQuery] PageParameters pageParameters
+        )
         {
             if (!await CheckIfHotelExistsAsync(hotelId))
             {
@@ -156,11 +167,18 @@ namespace iTechArt.Hotels.Api.Controllers
             {
                 return BadRequest("Such room does not exist");
             }
-            var images = await _hotelsDb.Images
-                .Where(image => image.HotelId == hotelId && image.RoomId == roomId)
+            var imagesBeforePagination = _hotelsDb.Images
+                .Where(image => image.HotelId == hotelId && image.RoomId == roomId);
+
+            int imageCount = await imagesBeforePagination
+                .CountAsync();
+
+            Image[] images = await imagesBeforePagination
+                .Skip(pageParameters.PageIndex * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
                 .ProjectTo<Image>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
-            return Ok(images);
+            return Ok(new { images, imageCount });
         }
 
         [Route("{hotelId}/images/{imageId}")]

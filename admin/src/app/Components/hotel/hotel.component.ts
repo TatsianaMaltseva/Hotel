@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Location } from '@angular/common';
 
 import { HotelService } from 'src/app/hotel.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { AccountService } from 'src/app/account.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-hotel',
@@ -26,7 +26,8 @@ export class HotelComponent implements OnInit{
     private readonly hotelService: HotelService,
     private readonly route: ActivatedRoute,
     private readonly accountService: AccountService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly location: Location
   ) {
   }
 
@@ -41,17 +42,28 @@ export class HotelComponent implements OnInit{
     }
   }
 
+  public deleteHotel(): void {
+    this.hotelService
+      .deleteHotel(this.hotel.id)
+      .subscribe(
+        () => {
+          this.location.back();
+          this.openSnackBar('Successfully deleted');
+        }
+      );
+  }
+
   private openSnackBar(message: string): void {
     this.snackBar.open(
       `${message}`,
       'Close',
       {
-        duration: 15000
+        duration: 5000
       }
     );
   }
 
-  private isValidId(id: string): boolean { 
+  private isValidId(id: string): boolean {
     return !isNaN(+id);
   }
 
@@ -62,9 +74,6 @@ export class HotelComponent implements OnInit{
         (hotel) => {
           this.hotel = hotel;
           this.isHotelLoaded = true;
-        },
-        (serverError: HttpErrorResponse) => {
-          this.openSnackBar(serverError.error as string);
         }
       )
       .add(

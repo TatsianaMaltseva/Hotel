@@ -1,0 +1,56 @@
+<div class="wrapper">
+    <button mat-raised-button (click)="openAddAdminDialog()">
+        Add admin account
+    </button>
+    <button mat-raised-button (click)="openAddClientDialog()">
+        Add client account
+    </button>
+    <div [formGroup]="filterForm">
+        <mat-form-field>
+            <mat-label>Account email</mat-label>
+            <input matInput formControlName="email">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Account role</mat-label>
+            <mat-select matInput formControlName="role">
+                <mat-option *ngFor="let role of roleOptions" [value]="role">
+                    {{ role }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button
+            mat-raised-button
+            class="find-accounts-button"
+            (click)="fetchAccounts()"
+        >
+            Find accounts
+        </button>
+    </div>
+
+    <mat-list>
+        <span *ngFor="let account of accounts">
+            <mat-list-item>
+                <span class="inlineLeft">
+                    {{ account.role }} {{ account.email }}
+                </span>
+                <span class="inlineRight">
+                    <button mat-raised-button (click)="openEditAccountDialog(account)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-raised-button (click)="deleteAccount(account.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+        </span>
+    </mat-list>
+
+    <mat-paginator
+        [length]="accountCount"
+        [pageSizeOptions]="[10, 20]"
+        [pageSize]="pageParameters.pageSize"
+        [pageIndex]="pageParameters.pageIndex"
+        (page)="onPaginationChange($event)"
+    ></mat-paginator>
+</div>

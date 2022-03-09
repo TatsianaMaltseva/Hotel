@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +21,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatListModule } from '@angular/material/list';
 import { JwtModule } from '@auth0/angular-jwt';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -49,6 +55,12 @@ import { ImagesForAdminDialogComponent } from './Components/images-for-admin-dia
 import { RoomsForAdminComponent } from './Components/rooms-for-admin/rooms-for-admin.component';
 import { AddFacilitiesComponent } from './Components/add-facilities/add-facilities.component';
 import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilities-for-admin/choose-facilities-for-admin.component';
+import { OrderComponent } from './Components/order/order.component';
+import { ClientErrorResponseInterceptor } from './Components/client-error-response-interceptor';
+import { OrdersListComponent } from './Components/orders-list/orders-list.component';
+import { AccountsListComponent } from './Components/accounts-list/accounts-list.component';
+import { AccountComponent } from './Components/account/account.component';
+import { NotFoundComponent } from './Components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +86,12 @@ import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilitie
     ImagesForAdminDialogComponent,
     RoomsForAdminComponent,
     AddFacilitiesComponent,
-    ChooseFacilitiesForAdminComponent
+    ChooseFacilitiesForAdminComponent,
+    OrderComponent,
+    OrdersListComponent,
+    AccountsListComponent,
+    AccountComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -102,6 +119,12 @@ import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilitie
     MatSelectModule,
     MatCheckboxModule,
     MatChipsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTooltipModule,
+    MatRadioModule,
+    MatListModule,
+    NgxMaterialTimepickerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,
@@ -109,6 +132,14 @@ import { ChooseFacilitiesForAdminComponent } from './Components/choose-facilitie
       }
     })
 ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ClientErrorResponseInterceptor,
+      multi: true
+    }
+  ]
 })
+
 export class AppModule { }

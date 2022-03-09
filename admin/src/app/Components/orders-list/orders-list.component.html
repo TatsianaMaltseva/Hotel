@@ -1,0 +1,46 @@
+<div class="wrapper">
+    <div [formGroup]="ordersFilterForm">
+        <mat-radio-group formControlName="date">
+            <mat-radio-button *ngFor="let dateOption of dateOptions" [value]="dateOption">
+                {{ dateOption }} bookings
+            </mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field>
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city">
+        </mat-form-field>
+        <button mat-button (click)="updateFilterParameters()">Find orders</button>
+    </div>
+    <div class="cards">
+        <mat-card *ngFor="let order of orders" class="card">
+            <mat-grid-list cols="6" rowHeight="60px">
+                <mat-grid-tile colspan="6" rowspan="1">
+                    <mat-card-title [routerLink]="['/hotels', order.hotel.id]">
+                        {{ order.hotel.country }} - {{ order.hotel.city }} - {{ order.hotel.name }} - {{ order.room.name }}
+                    </mat-card-title>
+                </mat-grid-tile>
+                <mat-grid-tile *ngIf="order.facilities.length" colspan="6">
+                    <mat-chip-list *ngFor="let facility of order.facilities">
+                        <mat-chip>{{ facility.name }}</mat-chip>
+                    </mat-chip-list>
+                </mat-grid-tile>
+                <mat-grid-tile colspan="6" rowspan="1">
+                    {{ order.checkInDate }} - {{ order.checkOutDate }}
+                </mat-grid-tile>
+                <mat-grid-tile colspan="3" rowspan="1">
+                    Address: {{ order.hotel.address }}
+                </mat-grid-tile>
+                <mat-grid-tile colspan="1" rowspan="1">
+                    Sleeps: {{ order.room.sleeps }}
+                </mat-grid-tile>
+                <mat-grid-tile colspan="2" rowspan="1">
+                    Price: US${{ order.price }}
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-card>
+    </div>
+</div>

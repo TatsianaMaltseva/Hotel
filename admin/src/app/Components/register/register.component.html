@@ -1,5 +1,5 @@
 <form mat-dialog-content [formGroup]="registerForm">
-    <p>Enter your email</p>
+    <p>Enter email</p>
     <mat-form-field class="input-field" appearance="fill">
         <mat-label>email</mat-label>
         <input
@@ -12,15 +12,15 @@
             Please enter a valid email address
         </mat-error>
     </mat-form-field>
-    <p>Enter your password</p>
+    <p>Enter password</p>
     <mat-form-field class="input-field" appearance="fill">
         <mat-label>password</mat-label>
         <input
-            matInput 
+            matInput
             formControlName="password"
             [type]="hidePassword ? 'password' : 'text'"
         >
-        <button 
+        <button
             mat-icon-button
             matSuffix
             (click)="hidePassword = !hidePassword"
@@ -30,19 +30,19 @@
             </mat-icon>
         </button>
         <mat-error>
-            Password is required
+            Password is required to have at least {{ passwordMinLength }} symbols
         </mat-error>
     </mat-form-field>
-    <p>Confirm your password</p>
+    <p>Confirm password</p>
     <mat-form-field class="input-field" appearance="fill">
         <mat-label>password</mat-label>
         <input
-            matInput 
+            matInput
             formControlName="confirmPassword"
             [type]="hidePassword ? 'password' : 'text'"
             [errorStateMatcher]="passwordsStateMatcher"
         >
-        <button 
+        <button
             mat-icon-button
             matSuffix
             (click)="hidePassword = !hidePassword"
@@ -56,14 +56,11 @@
         </mat-error>
     </mat-form-field>
     <button mat-button (click)="returnBack()">Back</button>
-    <button 
-        mat-button 
+    <button
+        mat-button
         [disabled]="registerForm.invalid"
         (click)="register(email?.value, password?.value)"
     >
         Register
     </button>
-    <mat-error *ngIf="serverErrorResponse">
-        {{ serverErrorResponse }}
-    </mat-error>
 </form>

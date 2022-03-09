@@ -12,6 +12,7 @@ import { ImageService } from 'src/app/image.service';
 import { RoomService } from '../../room.service';
 import { Hotel } from 'src/app/Dtos/hotel';
 import { Room } from 'src/app/Dtos/room';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-rooms-for-admin',
@@ -20,7 +21,7 @@ import { Room } from 'src/app/Dtos/room';
 })
 export class RoomsForAdminComponent implements OnInit {
   @Input() public hotel?: Hotel;
-  
+
   public hotelId?: number;
   public roomsForm: FormGroup;
 
@@ -34,8 +35,8 @@ export class RoomsForAdminComponent implements OnInit {
         id: [],
         name: [
           '',
-          [ 
-            Validators.required, 
+          [
+            Validators.required,
             Validators.maxLength(roomParamsMaxLength.name)
           ]
         ],
@@ -54,7 +55,8 @@ export class RoomsForAdminComponent implements OnInit {
     private readonly hotelService: HotelService,
     private readonly imageService: ImageService,
     private readonly matDialog: MatDialog,
-    private readonly roomService: RoomService
+    private readonly roomService: RoomService,
+    private readonly snackBar: MatSnackBar
   ) {
     this.roomsForm = this.formBuilder.group(
       {
@@ -95,7 +97,7 @@ export class RoomsForAdminComponent implements OnInit {
     this.rooms.removeAt(index);
   }
 
-  public addRoom(room: Room): void {
+  public addRoom(index: number, room: Room): void {
     if (!this.hotel) {
       return;
     }
@@ -103,7 +105,8 @@ export class RoomsForAdminComponent implements OnInit {
       .addRoom(this.hotel.id, room)
       .subscribe(
         (id) => {
-          room.id = id;
+          const roomFormGroup = this.rooms.controls[index] as FormGroup;
+          roomFormGroup.controls.id.setValue(id);
         }
       );
   }
@@ -117,6 +120,7 @@ export class RoomsForAdminComponent implements OnInit {
       .subscribe(
         () => {
           this.rooms.removeAt(index);
+          this.openSnackBar('Successfully deleted');
         }
       );
   }
@@ -127,7 +131,11 @@ export class RoomsForAdminComponent implements OnInit {
     }
     this.roomService
       .editRoom(this.hotel.id, room.id, room)
-      .subscribe();
+      .subscribe(
+        () => {
+          this.openSnackBar('Succesfully saved');
+        }
+      );
   }
 
   public createImagePath(room: Room): string {
@@ -136,7 +144,7 @@ export class RoomsForAdminComponent implements OnInit {
     }
     let url = this.imageService
       .createImagePath(
-        this.hotel.id, 
+        this.hotel.id,
         room.mainImageId,
         room.id
       );
@@ -158,10 +166,10 @@ export class RoomsForAdminComponent implements OnInit {
       ChooseFacilitiesForAdminComponent,
       {
         width: '600px',
-        data: { 
-          hotel: this.hotel, 
-          room: room, 
-          facilities: room.facilities 
+        data: {
+          hotel: this.hotel,
+          room: room,
+          facilities: room.facilities
         } as FacilititesDialogData
       }
     );
@@ -171,5 +179,15 @@ export class RoomsForAdminComponent implements OnInit {
     const roomForm = this.emptyRoomForm;
     roomForm.patchValue(room);
     this.rooms.push(roomForm);
+  }
+
+  private openSnackBar(message: string): void {
+    this.snackBar.open(
+      `${message}`,
+      'Close',
+      {
+        duration: 5000
+      }
+    );
   }
 }

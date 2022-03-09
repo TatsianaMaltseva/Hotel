@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <app-hotels-filter></app-hotels-filter>
+    <app-hotels-filter (filterParametersUpdated)="fetchHotels()"></app-hotels-filter>
     <div class="cards">
         <mat-card class="card" *ngFor="let hotel of hotels">
             <mat-grid-list cols="5" rowHeight="60px">
@@ -7,11 +7,7 @@
                     <mat-card-title>{{ hotel.name }}</mat-card-title>
                 </mat-grid-tile>
                 <mat-grid-tile colspan="2" rowspan="3">
-                    <img 
-                        *ngIf="hotel.mainImageId"
-                        mat-card-xl-image
-                        [src]="createImagePath(hotel.id, hotel.mainImageId)"
-                    >
+                    <img *ngIf="hotel.mainImageId" [src]="createImagePath(hotel.id, hotel.mainImageId)">
                 </mat-grid-tile>
                 <mat-grid-tile colspan="3" rowspan="1">
                     <mat-card-subtitle>{{ hotel.country }} - {{ hotel.city }}</mat-card-subtitle>
@@ -29,8 +25,8 @@
 <mat-paginator
     [length]="hotelCount"
     [pageSizeOptions]="[1, 2, 5]"
-    [pageSize]="pageParameters.pageSize"
-    [pageIndex]="pageParameters.pageIndex"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
     (page)="onPaginationChange($event)"
 >
 </mat-paginator>

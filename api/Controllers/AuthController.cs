@@ -49,7 +49,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("registration")]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] Account request)
+        public async Task<IActionResult> Register([FromBody] AccountToAdd request)
         {
             if (!await CheckIfEmailUnique(request.Email))
             {

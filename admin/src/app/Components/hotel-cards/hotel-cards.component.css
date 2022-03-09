@@ -1,36 +1,33 @@
 .wrapper {
-  display: flex;
-  justify-content: space-between;
-  padding-left: 16.8%;
-  padding-right: 16.8%;
+    padding-left: 18%;
+    padding-right: 18%;
 }
 
 app-hotels-filter {
-  width: 26%;
-  margin-right: 5px;
+    width: 80%;
+    margin-right: 5px;
 }
 
 .card {
-  margin: 2%;
+    margin: 2%;
 }
 
 img {
-  min-height: 250px;
-  min-width: 250px;
+    min-height: 250px;
+    min-width: 250px;
 }
 
 .cards {
-  width: 70%;
+    width: 100%;
 }
 
 button {
-  background-color: #B814D8;
-  color: white;
-  margin-left: 40%;
-  margin-right: 40%;
+    background-color: #B814D8;
+    color: white;
+    margin-left: 40%;
 }
 
 mat-paginator {
-  margin-top: 2%;
-  margin-right: 35%;
+    margin-top: 2%;
+    margin-right: 34%;
 }

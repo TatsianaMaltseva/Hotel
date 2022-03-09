@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Image } from './Dtos/image';
+import { ImagesResponse } from './Core/images-response';
+import { PageParameters } from './Core/page-parameters';
 
 @Injectable({
   providedIn: 'root'
@@ -41,12 +43,21 @@ export class ImageService {
     );
   }
 
-  public getImages(hotelId: number, roomId?: number): Observable<Image[]>{
+  public getImages(
+    hotelId: number,
+    pageParameters: PageParameters,
+    roomId?: number
+    ): Observable<ImagesResponse>{
+    const httpParams = pageParameters as Params;
     if (roomId === undefined) {
-      return this.http.get<Image[]>(`${this.apiUrl}api/hotels/${hotelId}/images`);
+      return this.http.get<ImagesResponse>(
+        `${this.apiUrl}api/hotels/${hotelId}/images`,
+        { params: httpParams }
+      );
     }
-    return this.http.get<Image[]>(
-      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`
+    return this.http.get<ImagesResponse>(
+      `${this.apiUrl}api/hotels/${hotelId}/rooms/${roomId}/images`,
+      { params: httpParams }
     );
   }
 

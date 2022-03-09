@@ -25,23 +25,21 @@ namespace iTechArt.Hotels.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<Facility[]> GetFacilities([FromQuery] FacilityParams facilityParams)
         {
+            IQueryable<FacilityEntity> facilities = _hotelsDb.Facilities.AsQueryable();
             if (facilityParams.Realm != null)
             {
-                return await _hotelsDb.Facilities
-                    .Where(facility => facility.Realm == facilityParams.Realm)
-                    .ProjectTo<Facility>(_mapper.ConfigurationProvider)
-                    .ToArrayAsync();
+                facilities = facilities.Where(facility => facility.Realm == facilityParams.Realm);
             }
-            return await _hotelsDb.Facilities
+            return await facilities
                 .ProjectTo<Facility>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
 
         [HttpPost]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> AddFacility([FromBody] FacilityToAdd request)
         {
             FacilityEntity facility = _mapper.Map<FacilityEntity>(request);
@@ -56,7 +54,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{facilityId}")]
         [HttpDelete]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> DeleteFacility([FromRoute] int facilityId)
         {
             FacilityEntity facility = await GetFacilityEntityAsync(facilityId);
@@ -67,7 +65,7 @@ namespace iTechArt.Hotels.Api.Controllers
 
         [Route("{facilityId}")]
         [HttpPut]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = nameof(Role.Admin))]
         public async Task<IActionResult> ChangeFacility([FromRoute] int facilityId, [FromBody] FacilityToEdit request)
         {
             FacilityEntity facilityEntity = await GetFacilityEntityAsync(facilityId);
@@ -77,7 +75,7 @@ namespace iTechArt.Hotels.Api.Controllers
             }
             _mapper.Map(request, facilityEntity);
             await _hotelsDb.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         private Task<FacilityEntity> GetFacilityEntityAsync(int facilityId) =>

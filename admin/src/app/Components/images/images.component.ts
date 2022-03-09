@@ -3,6 +3,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ImageService } from 'src/app/image.service';
 import { AccountService } from 'src/app/account.service';
 import { Image } from 'src/app/Dtos/image';
+import { PageParameters } from 'src/app/Core/page-parameters';
+import { ImagesResponse } from 'src/app/Core/images-response';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-images',
@@ -12,14 +15,19 @@ import { Image } from 'src/app/Dtos/image';
 export class ImagesComponent implements OnInit {
   @Input() public hotelId?: number;
   @Input() public roomId?: number;
-  
+
   public progress: number = 0;
   public images: Image[] = [];
+  public imageCount: number = 0;
+  public pageParameters: PageParameters = {
+    pageSize: 5,
+    pageIndex: 0
+  };
 
   public get isAdmin(): boolean {
     return this.accountService.isAdmin;
   }
-  
+
   public constructor(
     private readonly imageService: ImageService,
     private readonly accountService: AccountService
@@ -36,10 +44,15 @@ export class ImagesComponent implements OnInit {
     }
     return this.imageService
       .createImagePath(
-        this.hotelId, 
+        this.hotelId,
         image.id,
         this.roomId
       );
+  }
+
+  public onPaginationChange(event: PageEvent): void {
+    this.pageParameters = event as PageParameters;
+    this.fetchImages();
   }
 
   private fetchImages(): void {
@@ -47,7 +60,16 @@ export class ImagesComponent implements OnInit {
       return;
     }
     this.imageService
-      .getImages(this.hotelId, this.roomId)
-      .subscribe(images => this.images = images);
+      .getImages(
+        this.hotelId,
+        this.pageParameters,
+        this.roomId
+      )
+      .subscribe(
+        (responce: ImagesResponse) => {
+          this.images = responce.images;
+          this.imageCount = responce.imageCount;
+        }
+      );
   }
 }

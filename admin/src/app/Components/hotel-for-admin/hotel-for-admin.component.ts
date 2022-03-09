@@ -1,15 +1,22 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 
 import { FacilititesDialogData } from 'src/app/Core/facilities-dialog-data';
 import { hotelParamsMaxLenght } from 'src/app/Core/validation-params';
-import { Hotel, HotelToEdit } from 'src/app/Dtos/hotel';
+import { Hotel, HotelToAdd, HotelToEdit } from 'src/app/Dtos/hotel';
+import { HotelFilterService } from 'src/app/hotel-filter.service';
 import { HotelService } from 'src/app/hotel.service';
 import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
+
+export enum Mode {
+  Create,
+  Edit
+}
 
 @Component({
   selector: 'app-hotel-for-admin',
@@ -18,12 +25,39 @@ import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admi
 })
 export class HotelForAdminComponent implements OnInit {
   public hotelId?: number;
-  public changeHotelForm: FormGroup;
-  public loading = false;
-  public isHotelLoaded = false;
+  public hotelForm: FormGroup;
+  public loading: boolean = false;
+  public isHotelLoaded: boolean = false;
+  public hotelMode: Mode = Mode.Create;
+  public serverErrorResponse: string = '';
+  public countries: string[] = [];
+  public cities: string[] = [];
+  public timePickerStyle: NgxMaterialTimepickerTheme = {
+    container: {
+      buttonColor: '#37393B'
+    },
+    dial: {
+      dialBackgroundColor: '#B814D8'
+    },
+    clockFace: {
+      clockHandColor: '#B814D8'
+    }
+  };
 
   public get hotel(): Hotel {
-    return this.changeHotelForm.value as Hotel;
+    return this.hotelForm.value as Hotel;
+  }
+
+  public get country(): AbstractControl | null {
+    return this.hotelForm.get('country');
+  }
+
+  public get city(): AbstractControl | null {
+    return this.hotelForm.get('city');
+  }
+
+  public get isHotelNew(): boolean {
+    return this.hotelMode === Mode.Create;
   }
 
   public constructor(
@@ -31,16 +65,44 @@ export class HotelForAdminComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly formBuilder: FormBuilder,
     private readonly snackBar: MatSnackBar,
-    private readonly matDialog: MatDialog
+    private readonly matDialog: MatDialog,
+    private readonly router: Router,
+    private readonly hotelFilterService: HotelFilterService
   ) {
-    this.changeHotelForm = formBuilder.group(
+    this.hotelForm = formBuilder.group(
       {
-        id: [''],
-        name: ['', Validators.maxLength(hotelParamsMaxLenght.name)],
-        country: ['', Validators.maxLength(hotelParamsMaxLenght.country)],
-        city: ['', Validators.maxLength(hotelParamsMaxLenght.city)],
-        address: ['', Validators.maxLength(hotelParamsMaxLenght.address)],
+        id: [],
+        name: [
+          '',
+          [
+            Validators.required,
+            Validators.maxLength(hotelParamsMaxLenght.name)
+          ]
+        ],
+        country: [
+          '',
+          [
+            Validators.required,
+            Validators.maxLength(hotelParamsMaxLenght.country)
+          ]
+        ],
+        city: [
+          '',
+          [
+            Validators.required,
+            Validators.maxLength(hotelParamsMaxLenght.city)
+          ]
+        ],
+        address: [
+          '',
+          [
+            Validators.required,
+            Validators.maxLength(hotelParamsMaxLenght.address)
+          ]
+        ],
         description: ['', Validators.maxLength(hotelParamsMaxLenght.desciprion)],
+        checkInTime: ['', [Validators.required]],
+        checkOutTime: ['', [Validators.required]],
         mainImageId: [],
         facilities: []
       }
@@ -48,6 +110,24 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.country?.valueChanges
+      .subscribe(
+        (value) => {
+          this.fetchCountryAutocompleteValues(value);
+        }
+      );
+    this.city?.valueChanges
+      .subscribe(
+        (value) => {
+          this.fetchCityAutocompleteValues(value);
+        }
+      );
+
+    if (this.route.routeConfig?.path?.includes('add-new')) {
+      this.isHotelLoaded = true;
+      return;
+    }
+
     const id: string | null = this.route.snapshot.paramMap.get('id');
     if (!id || !this.isValidId(id)) {
       this.openErrorSnackBar('Hotel id is not valid');
@@ -58,17 +138,30 @@ export class HotelForAdminComponent implements OnInit {
     }
   }
 
+  public checkIfHasRequiredError(controlName: string): boolean | undefined {
+    return this.hotelForm.get(controlName)?.hasError('required');
+  }
+
+  public checkIfHasMaxErrorError(controlName: string): boolean | undefined {
+    return this.hotelForm.get(controlName)?.hasError('maxlength');
+  }
+
   public editHotel(): void {
     if (!this.hotelId) {
       return;
     }
     this.hotelService
-      .editHotel(this.hotelId, this.changeHotelForm.value as HotelToEdit)
-      .subscribe();
+      .editHotel(this.hotelId, this.hotelForm.value as HotelToEdit)
+      .subscribe(
+        null,
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string;
+        }
+      );
   }
 
   public getMaxLengthValue(controlName: string): number {
-    return this.changeHotelForm.get(controlName)?.errors?.maxlength.requiredLength;
+    return this.hotelForm.get(controlName)?.errors?.maxlength.requiredLength;
   }
 
   public openFacilitiesDialog(): void {
@@ -81,6 +174,19 @@ export class HotelForAdminComponent implements OnInit {
     );
   }
 
+  public addHotel(): void {
+    this.hotelService
+      .addHotel(this.hotelForm.value as HotelToAdd)
+      .subscribe(
+        (hotelId: number) => {
+          this.router.navigate(['hotels', hotelId, 'edit']);
+        },
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string;
+        }
+      );
+  }
+
   private openErrorSnackBar(errorMessage: string): void {
     this.snackBar.open(
       `${errorMessage}`,
@@ -91,7 +197,7 @@ export class HotelForAdminComponent implements OnInit {
     );
   }
 
-  private isValidId(id: string): boolean { 
+  private isValidId(id: string): boolean {
     return !isNaN(+id);
   }
 
@@ -100,11 +206,9 @@ export class HotelForAdminComponent implements OnInit {
       .getHotel(hotelId)
       .subscribe(
         (hotel) => {
-          this.changeHotelForm.patchValue(hotel);
+          this.hotelForm.patchValue(hotel);
+          this.hotelMode = Mode.Edit;
           this.isHotelLoaded = true;
-        },
-        (serverError: HttpErrorResponse) => {
-          this.openErrorSnackBar(serverError.error as string);
         }
       )
       .add(
@@ -112,5 +216,17 @@ export class HotelForAdminComponent implements OnInit {
           this.loading = false;
         }
       );
+  }
+
+  private fetchCountryAutocompleteValues(filterValue: string): void {
+    this.hotelFilterService
+      .getHotelCountries(filterValue)
+      .subscribe(countries => this.countries = countries);
+  }
+
+  private fetchCityAutocompleteValues(filterValue: string): void {
+    this.hotelFilterService
+      .getHotelCities(filterValue)
+      .subscribe(cities => this.cities = cities);
   }
 }

@@ -13,3 +13,8 @@ export const roomParamsMaxLength = {
 export const facilityParamsMaxLength = {
     name: 60
 };
+
+export const AccountParams = {
+    emailMaxLength: 125,
+    passwordMinLength: 8
+};
