@@ -106,7 +106,7 @@ namespace iTechArt.Hotels.Api
             modelBuilder.Entity<RoomPreOrderEntity>()
                 .HasOne<AccountEntity>()
                 .WithMany()
-                .HasForeignKey(view => view.AccountId);
+                .HasForeignKey(roomPreOrder => roomPreOrder.AccountId);
 
             modelBuilder.Entity<OrderEntity>()
                 .HasMany(o => o.Facilities)

@@ -14,8 +14,8 @@ import { HotelService } from 'src/app/hotel.service';
 import { ChooseFacilitiesForAdminComponent } from '../choose-facilities-for-admin/choose-facilities-for-admin.component';
 
 export enum Mode {
-  create,
-  edit
+  Create,
+  Edit
 }
 
 @Component({
@@ -28,7 +28,7 @@ export class HotelForAdminComponent implements OnInit {
   public hotelForm: FormGroup;
   public loading: boolean = false;
   public isHotelLoaded: boolean = false;
-  public hotelMode: Mode = Mode.create;
+  public hotelMode: Mode = Mode.Create;
   public serverErrorResponse: string = '';
   public countries: string[] = [];
   public cities: string[] = [];
@@ -57,7 +57,7 @@ export class HotelForAdminComponent implements OnInit {
   }
 
   public get isHotelNew(): boolean {
-    return this.hotelMode === Mode.create;
+    return this.hotelMode === Mode.Create;
   }
 
   public constructor(
@@ -207,7 +207,7 @@ export class HotelForAdminComponent implements OnInit {
       .subscribe(
         (hotel) => {
           this.hotelForm.patchValue(hotel);
-          this.hotelMode = Mode.edit;
+          this.hotelMode = Mode.Edit;
           this.isHotelLoaded = true;
         }
       )

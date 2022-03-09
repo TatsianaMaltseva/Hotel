@@ -22,7 +22,6 @@ namespace iTechArt.Hotels.Api.Models
         [Min(0)]
         public int? Sleeps { get; set; }
 
-        [Required]
-        public bool ShowAvailableRoomsOnly { get; set; }
+        public bool ShowAvailableRoomsOnly { get; set; } = true;
     }
 }
